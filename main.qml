@@ -11,6 +11,7 @@ ApplicationWindow {
     title: "Tetris"
     flags: Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
     visible: true
+    Component.onCompleted: game.start()
 
     Rectangle {
         id: playfieldBackground
