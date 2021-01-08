@@ -60,5 +60,8 @@ class Tetromino:
     def y(self):
         return self._y
 
+    def set_y(self, y):
+        self._y = y
+
     def matrix(self):
         return self._matrix

@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from enum import Enum
-from PySide2.QtCore import QAbstractTableModel, Qt
+from PySide2.QtCore import QAbstractTableModel, Qt, Signal
 
 
 class Playfield(QAbstractTableModel):
@@ -55,3 +55,42 @@ class Playfield(QAbstractTableModel):
                     self.dataChanged.emit(INDEX, INDEX)
 
         self._tetromino = tetromino
+
+    def move_tetromino_down(self):
+        if self._is_tetromino_landed():
+            self.tetromino_landed.emit()
+            return
+
+        i = len(self._tetromino.matrix()) - 1
+        for row in reversed(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    self._playfield[Y][X] = 0
+                    self._playfield[Y + 1][X] = self._tetromino.type().value
+                    index = self.createIndex(Y, X)
+                    self.dataChanged.emit(index, index)
+                    index = self.createIndex(Y + 1, X)
+                    self.dataChanged.emit(index, index)
+            i -= 1
+
+        self._tetromino.set_y(self._tetromino.y() + 1)
+
+    def _is_tetromino_landed(self):
+        # Find the last row which contains at least one tetromino block.
+        index = -1
+        for i in range(len(self._tetromino.matrix()) - 1, -1, -1):
+            if 1 in self._tetromino.matrix()[i]:
+                index = i
+                break
+
+        for i, col in enumerate(self._tetromino.matrix()[index]):
+            if col == 1:
+                X = self._tetromino.x() + i
+                Y = self._tetromino.y() + index + 1
+                if Y == self._rows or self._playfield[Y][X] != 0:
+                    return True
+        return False
+
+    tetromino_landed = Signal()

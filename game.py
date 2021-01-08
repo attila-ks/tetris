@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-from PySide2.QtCore import Property, QObject, Slot
+from PySide2.QtCore import Property, QObject, QTimer, Slot
 from tetromino import Tetromino
 from playfield import Playfield
 from random import choice
@@ -10,7 +10,11 @@ class Game(QObject):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
         self._playfield = Playfield(21, 10)
+        self._playfield.tetromino_landed.connect(self._spawn_tetromino)
         self._bag = []
+        self._timer = QTimer()
+        self._timer.setInterval(1000)
+        self._timer.timeout.connect(self._playfield.move_tetromino_down)
 
     def playfield(self):
         return self._playfield
@@ -18,6 +22,7 @@ class Game(QObject):
     @Slot()
     def start(self):
         self._spawn_tetromino()
+        self._timer.start()
 
     def _spawn_tetromino(self):
         TETR = self._select_tetromino()
