@@ -4,16 +4,16 @@ import os
 
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
-from game import Game
+from tetrion import Tetrion
 
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
 
-    game = Game()
+    tetrion = Tetrion()
 
     engine = QQmlApplicationEngine()
-    engine.rootContext().setContextProperty("game", game)
+    engine.rootContext().setContextProperty("tetrion", tetrion)
     engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
 
     if not engine.rootObjects():

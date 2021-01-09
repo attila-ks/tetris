@@ -6,7 +6,7 @@ from playfield import Playfield
 from random import choice
 
 
-class Game(QObject):
+class Tetrion(QObject):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
         self._playfield = Playfield(21, 10)

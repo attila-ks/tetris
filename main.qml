@@ -11,7 +11,7 @@ ApplicationWindow {
     title: "Tetris"
     flags: Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
     visible: true
-    Component.onCompleted: game.start()
+    Component.onCompleted: tetrion.start()
 
     Rectangle {
         id: playfieldBackground
@@ -31,7 +31,7 @@ ApplicationWindow {
             rowSpacing: 1
             columnSpacing: 1
             anchors.bottom: playfieldBackground.bottom
-            model: game.playfield // FIXME: Sometimes throws TypeError.
+            model: tetrion.playfield // FIXME: Sometimes throws TypeError.
             delegate: Rectangle {
                 id: cell
                 implicitWidth: 20
