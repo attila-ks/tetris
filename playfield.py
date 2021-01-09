@@ -56,7 +56,9 @@ class Playfield(QAbstractTableModel):
 
         self._tetromino = tetromino
 
+    # FIXME: Causes lagging.
     def move_tetromino_down(self):
+        """This method is used for both automatic and soft drop."""
         if self._is_tetromino_landed():
             self.tetromino_landed.emit()
             return

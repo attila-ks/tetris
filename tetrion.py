@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from PySide2.QtCore import Property, QObject, QTimer, Slot
+from PySide2.QtGui import Qt
 from tetromino import Tetromino
 from playfield import Playfield
 from random import choice
@@ -23,6 +24,16 @@ class Tetrion(QObject):
     def start(self):
         self._spawn_tetromino()
         self._timer.start()
+
+    @Slot(Qt.Key, bool)
+    def process_input(self, key, is_pressed):
+        if is_pressed:
+            if key == Qt.Key_Down:
+                # TODO: Avoid magic numbers.
+                self._timer.setInterval(1000 / 20)
+        else:
+            if key == Qt.Key_Down:
+                self._timer.setInterval(1000)
 
     def _spawn_tetromino(self):
         TETR = self._select_tetromino()

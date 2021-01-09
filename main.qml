@@ -40,4 +40,14 @@ ApplicationWindow {
             }
         }
     }
+
+    Item {
+        focus: true
+        anchors.fill: parent
+        // This should be done in the Tetrion class.
+        // Cannot pass the event itself for distinguish the key pressing and
+        // releasing, that's why a second argument is needed.
+        Keys.onPressed: tetrion.process_input(event.key, true)
+        Keys.onReleased: tetrion.process_input(event.key, false)
+    }
 }
