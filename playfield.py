@@ -80,19 +80,20 @@ class Playfield(QAbstractTableModel):
         self._tetromino.set_y(self._tetromino.y() + 1)
 
     def _is_tetromino_landed(self):
-        # Find the last row which contains at least one tetromino block.
-        index = -1
-        for i in range(len(self._tetromino.matrix()) - 1, -1, -1):
-            if 1 in self._tetromino.matrix()[i]:
-                index = i
-                break
-
-        for i, col in enumerate(self._tetromino.matrix()[index]):
-            if col == 1:
-                X = self._tetromino.x() + i
-                Y = self._tetromino.y() + index + 1
-                if Y == self._rows or self._playfield[Y][X] != 0:
-                    return True
-        return False
+        # Find and check only the last row in the tetromino matrix which
+        # contains at leas one tetromino block.
+        i = len(self._tetromino.matrix()) - 1
+        for row in reversed(self._tetromino.matrix()):
+            block_found = False
+            for j, col in enumerate(row):
+                if col == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    if Y + 1 == self._rows or self._playfield[Y + 1][X] != 0:
+                        return True
+                    block_found = True
+            if block_found:
+                return False
+            i -= 1
 
     tetromino_landed = Signal()
