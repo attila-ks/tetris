@@ -79,6 +79,29 @@ class Playfield(QAbstractTableModel):
 
         self._tetromino.set_y(self._tetromino.y() + 1)
 
+    def hard_drop_tetromino(self):
+        OLD_Y = self._tetromino.y()
+        new_y = OLD_Y
+        while not self._is_tetromino_landed():
+            new_y += 1
+            self._tetromino.set_y(new_y)
+
+        i = len(self._tetromino.matrix()) - 1
+        for row in reversed(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    self._playfield[OLD_Y + i][X] = 0
+                    self._playfield[Y][X] = self._tetromino.type().value
+                    index = self.createIndex(OLD_Y + i, X)
+                    self.dataChanged.emit(index, index)
+                    index = self.createIndex(Y, X)
+                    self.dataChanged.emit(index, index)
+            i -= 1
+
+        self.tetromino_landed.emit()
+
     def _is_tetromino_landed(self):
         # Find and check only the last row in the tetromino matrix which
         # contains at leas one tetromino block.

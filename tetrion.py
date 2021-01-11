@@ -31,6 +31,13 @@ class Tetrion(QObject):
             if key == Qt.Key_Down:
                 # TODO: Avoid magic numbers.
                 self._timer.setInterval(1000 / 20)
+            elif key == Qt.Key_Space:
+                # Move the tetromino down when _timer.timeout signal emitted is
+                # meaningless when hard drop is applied, so _timer stops for
+                # this time.
+                self._timer.stop()
+                self._playfield.hard_drop_tetromino()
+                self._timer.start()
         else:
             if key == Qt.Key_Down:
                 self._timer.setInterval(1000)
