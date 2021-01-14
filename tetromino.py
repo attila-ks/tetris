@@ -57,6 +57,9 @@ class Tetromino:
     def x(self):
         return self._x
 
+    def set_x(self, x):
+        self._x = x
+
     def y(self):
         return self._y
 

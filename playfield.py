@@ -119,4 +119,54 @@ class Playfield(QAbstractTableModel):
                 return False
             i -= 1
 
+    def move_tetromino_left(self):
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    if X == 0 or self._playfield[Y][X - 1] != 0:
+                        return
+                    else:
+                        break
+
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    self._playfield[Y][X] = 0
+                    self._playfield[Y][X - 1] = self._tetromino.type().value
+                    index = self.createIndex(Y, X)
+                    self.dataChanged.emit(index, index)
+                    index = self.createIndex(Y, X - 1)
+                    self.dataChanged.emit(index, index)
+
+        self._tetromino.set_x(self._tetromino.x() - 1)
+
+    def move_tetromino_right(self):
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j in range(len(row) - 1, -1, -1):
+                if row[j] == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    if X + 1 == self._columns or self._playfield[Y][X + 1] != 0:
+                        return
+                    else:
+                        break
+
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j in range(len(row) - 1, -1, -1):
+                if row[j] == 1:
+                    X = self._tetromino.x() + j
+                    Y = self._tetromino.y() + i
+                    self._playfield[Y][X] = 0
+                    self._playfield[Y][X + 1] = self._tetromino.type().value
+                    index = self.createIndex(Y, X)
+                    self.dataChanged.emit(index, index)
+                    index = self.createIndex(Y, X + 1)
+                    self.dataChanged.emit(index, index)
+
+        self._tetromino.set_x(self._tetromino.x() + 1)
+
     tetromino_landed = Signal()

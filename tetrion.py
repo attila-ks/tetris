@@ -38,6 +38,10 @@ class Tetrion(QObject):
                 self._timer.stop()
                 self._playfield.hard_drop_tetromino()
                 self._timer.start()
+            elif key == Qt.Key_Left:
+                self._playfield.move_tetromino_left()
+            elif key == Qt.Key_Right:
+                self._playfield.move_tetromino_right()
         else:
             if key == Qt.Key_Down:
                 self._timer.setInterval(1000)
