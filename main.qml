@@ -17,12 +17,9 @@ ApplicationWindow {
         id: playfieldBackground
         width: playfield.width
         height: playfield.height - 17
+        color: "#1e3c72"
         clip: true
         anchors.centerIn: parent
-        gradient: Gradient {
-            GradientStop { position: 0; color: "#1e3c72" }
-            GradientStop { position: 1; color: "#2a5298" }
-        }
 
         TableView {
             id: playfield
