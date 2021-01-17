@@ -44,27 +44,27 @@ class Tetromino:
         T = 6
         Z = 7
 
-    def __init__(self, type, x, y):
+    def __init__(self, type, row, column):
         self._type = type
-        self._x = x
-        self._y = y
+        self._row = row
+        self._column = column
         # Tetromino.Type starts from value 1.
         self._matrix = TETROMINO_MATRICES[type - 1]
 
     def type(self):
         return self._type
 
-    def x(self):
-        return self._x
+    def row(self):
+        return self._row
 
-    def set_x(self, x):
-        self._x = x
+    def set_row(self, row):
+        self._row = row
 
-    def y(self):
-        return self._y
+    def column(self):
+        return self._column
 
-    def set_y(self, y):
-        self._y = y
+    def set_column(self, column):
+        self._column = column
 
     def matrix(self):
         return self._matrix

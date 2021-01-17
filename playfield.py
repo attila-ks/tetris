@@ -32,10 +32,10 @@ class Playfield(QAbstractTableModel):
         for i, row in enumerate(tetromino.matrix()):
             for j, col in enumerate(row):
                 if col == 1:
-                    X = tetromino.x() + j
-                    Y = tetromino.y() + i
-                    self._playfield[Y][X] = tetromino.type().value
-                    INDEX = self.createIndex(Y, X)
+                    ROW = tetromino.row() + i
+                    COL = tetromino.column() + j
+                    self._playfield[ROW][COL] = tetromino.type().value
+                    INDEX = self.createIndex(ROW, COL)
                     self.dataChanged.emit(INDEX, INDEX)
 
         self._tetromino = tetromino
@@ -51,36 +51,37 @@ class Playfield(QAbstractTableModel):
         for row in reversed(self._tetromino.matrix()):
             for j, col in enumerate(row):
                 if col == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    self._playfield[Y][X] = 0
-                    self._playfield[Y + 1][X] = self._tetromino.type().value
-                    index = self.createIndex(Y, X)
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    self._playfield[ROW][COL] = 0
+                    self._playfield[ROW +
+                                    1][COL] = self._tetromino.type().value
+                    index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
-                    index = self.createIndex(Y + 1, X)
+                    index = self.createIndex(ROW + 1, COL)
                     self.dataChanged.emit(index, index)
             i -= 1
 
-        self._tetromino.set_y(self._tetromino.y() + 1)
+        self._tetromino.set_row(self._tetromino.row() + 1)
 
     def hard_drop_tetromino(self):
-        OLD_Y = self._tetromino.y()
-        new_y = OLD_Y
+        OLD_ROW = self._tetromino.row()
+        new_row = OLD_ROW
         while not self._is_tetromino_landed():
-            new_y += 1
-            self._tetromino.set_y(new_y)
+            new_row += 1
+            self._tetromino.set_row(new_row)
 
         i = len(self._tetromino.matrix()) - 1
         for row in reversed(self._tetromino.matrix()):
             for j, col in enumerate(row):
                 if col == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    self._playfield[OLD_Y + i][X] = 0
-                    self._playfield[Y][X] = self._tetromino.type().value
-                    index = self.createIndex(OLD_Y + i, X)
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    self._playfield[OLD_ROW + i][COL] = 0
+                    self._playfield[ROW][COL] = self._tetromino.type().value
+                    index = self.createIndex(OLD_ROW + i, COL)
                     self.dataChanged.emit(index, index)
-                    index = self.createIndex(Y, X)
+                    index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
             i -= 1
 
@@ -94,9 +95,10 @@ class Playfield(QAbstractTableModel):
             block_found = False
             for j, col in enumerate(row):
                 if col == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    if Y + 1 == self._rows or self._playfield[Y + 1][X] != 0:
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    if ROW + 1 == self._rows or \
+                       self._playfield[ROW + 1][COL] != 0:
                         return True
                     block_found = True
             if block_found:
@@ -107,9 +109,9 @@ class Playfield(QAbstractTableModel):
         for i, row in enumerate(self._tetromino.matrix()):
             for j, col in enumerate(row):
                 if col == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    if X == 0 or self._playfield[Y][X - 1] != 0:
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    if COL == 0 or self._playfield[ROW][COL - 1] != 0:
                         return
                     else:
                         break
@@ -117,24 +119,26 @@ class Playfield(QAbstractTableModel):
         for i, row in enumerate(self._tetromino.matrix()):
             for j, col in enumerate(row):
                 if col == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    self._playfield[Y][X] = 0
-                    self._playfield[Y][X - 1] = self._tetromino.type().value
-                    index = self.createIndex(Y, X)
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    self._playfield[ROW][COL] = 0
+                    self._playfield[ROW][COL -
+                                         1] = self._tetromino.type().value
+                    index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
-                    index = self.createIndex(Y, X - 1)
+                    index = self.createIndex(ROW, COL - 1)
                     self.dataChanged.emit(index, index)
 
-        self._tetromino.set_x(self._tetromino.x() - 1)
+        self._tetromino.set_column(self._tetromino.column() - 1)
 
     def move_tetromino_right(self):
         for i, row in enumerate(self._tetromino.matrix()):
             for j in range(len(row) - 1, -1, -1):
                 if row[j] == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    if X + 1 == self._columns or self._playfield[Y][X + 1] != 0:
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    if COL + 1 == self._columns or \
+                       self._playfield[ROW][COL + 1] != 0:
                         return
                     else:
                         break
@@ -142,15 +146,16 @@ class Playfield(QAbstractTableModel):
         for i, row in enumerate(self._tetromino.matrix()):
             for j in range(len(row) - 1, -1, -1):
                 if row[j] == 1:
-                    X = self._tetromino.x() + j
-                    Y = self._tetromino.y() + i
-                    self._playfield[Y][X] = 0
-                    self._playfield[Y][X + 1] = self._tetromino.type().value
-                    index = self.createIndex(Y, X)
+                    ROW = self._tetromino.row() + i
+                    COL = self._tetromino.column() + j
+                    self._playfield[ROW][COL] = 0
+                    self._playfield[ROW][COL +
+                                         1] = self._tetromino.type().value
+                    index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
-                    index = self.createIndex(Y, X + 1)
+                    index = self.createIndex(ROW, COL + 1)
                     self.dataChanged.emit(index, index)
 
-        self._tetromino.set_x(self._tetromino.x() + 1)
+        self._tetromino.set_column(self._tetromino.column() + 1)
 
     tetromino_landed = Signal()

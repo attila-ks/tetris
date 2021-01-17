@@ -59,6 +59,6 @@ class Tetrion(QObject):
         return TETR
 
     def _fill_bag(self):
-        self._bag = [Tetromino(type, 3, 0) for type in Tetromino.Type]
+        self._bag = [Tetromino(type, 0, 3) for type in Tetromino.Type]
 
     playfield = Property(QObject, playfield, constant=True)
