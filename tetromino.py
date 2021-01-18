@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from enum import IntEnum
+from color import Color
 
 
 TETROMINO_MATRICES = (
@@ -45,14 +46,11 @@ class Tetromino:
         Z = 7
 
     def __init__(self, type, row, column):
-        self._type = type
         self._row = row
         self._column = column
+        self._color = Color(type)
         # Tetromino.Type starts from value 1.
         self._matrix = TETROMINO_MATRICES[type - 1]
-
-    def type(self):
-        return self._type
 
     def row(self):
         return self._row
@@ -65,6 +63,9 @@ class Tetromino:
 
     def set_column(self, column):
         self._column = column
+
+    def color(self):
+        return self._color
 
     def matrix(self):
         return self._matrix

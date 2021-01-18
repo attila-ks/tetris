@@ -34,7 +34,7 @@ class Playfield(QAbstractTableModel):
                 if col == 1:
                     ROW = tetromino.row() + i
                     COL = tetromino.column() + j
-                    self._playfield[ROW][COL] = tetromino.type().value
+                    self._playfield[ROW][COL] = tetromino.color().value
                     INDEX = self.createIndex(ROW, COL)
                     self.dataChanged.emit(INDEX, INDEX)
 
@@ -55,7 +55,7 @@ class Playfield(QAbstractTableModel):
                     COL = self._tetromino.column() + j
                     self._playfield[ROW][COL] = 0
                     self._playfield[ROW +
-                                    1][COL] = self._tetromino.type().value
+                                    1][COL] = self._tetromino.color().value
                     index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(ROW + 1, COL)
@@ -78,7 +78,7 @@ class Playfield(QAbstractTableModel):
                     ROW = self._tetromino.row() + i
                     COL = self._tetromino.column() + j
                     self._playfield[OLD_ROW + i][COL] = 0
-                    self._playfield[ROW][COL] = self._tetromino.type().value
+                    self._playfield[ROW][COL] = self._tetromino.color().value
                     index = self.createIndex(OLD_ROW + i, COL)
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(ROW, COL)
@@ -123,7 +123,7 @@ class Playfield(QAbstractTableModel):
                     COL = self._tetromino.column() + j
                     self._playfield[ROW][COL] = 0
                     self._playfield[ROW][COL -
-                                         1] = self._tetromino.type().value
+                                         1] = self._tetromino.color().value
                     index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(ROW, COL - 1)
@@ -150,7 +150,7 @@ class Playfield(QAbstractTableModel):
                     COL = self._tetromino.column() + j
                     self._playfield[ROW][COL] = 0
                     self._playfield[ROW][COL +
-                                         1] = self._tetromino.type().value
+                                         1] = self._tetromino.color().value
                     index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(ROW, COL + 1)
