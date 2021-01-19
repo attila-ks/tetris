@@ -51,6 +51,8 @@ class Tetromino:
         self._color = Color(type)
         # Tetromino.Type starts from value 1.
         self._matrix = TETROMINO_MATRICES[type - 1]
+        self._rows = len(self._matrix)
+        self._columns = len(self._matrix[0])
 
     def row(self):
         return self._row
@@ -69,3 +71,9 @@ class Tetromino:
 
     def matrix(self):
         return self._matrix
+
+    def rows(self):
+        return self._rows
+
+    def columns(self):
+        return self._columns
