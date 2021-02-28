@@ -14,7 +14,8 @@ if __name__ == "__main__":
 
     engine = QQmlApplicationEngine()
     engine.rootContext().setContextProperty("tetrion", tetrion)
-    engine.load(os.path.join(os.path.dirname(__file__), "main.qml"))
+    engine.load(os.path.join(os.path.dirname(
+        __file__), "../frontend/main.qml"))
 
     if not engine.rootObjects():
         sys.exit(-1)
