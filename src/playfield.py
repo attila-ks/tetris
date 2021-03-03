@@ -2,6 +2,7 @@
 
 from PySide2.QtCore import QAbstractTableModel, Qt, Signal
 from color import Color
+from copy import copy
 
 
 class Playfield(QAbstractTableModel):
@@ -154,5 +155,49 @@ class Playfield(QAbstractTableModel):
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
+
+    def rotate_tetromino_left(self):
+        temp_tetromino = copy(self._tetromino)
+        temp_tetromino.rotate_left()
+
+        for i, row in enumerate(temp_tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    ROW = temp_tetromino.row() + i
+                    COL = temp_tetromino.column() + j
+                    if ROW < 0 or ROW >= self._rows or COL < 0 or \
+                        COL >= self._columns or self._playfield[ROW][COL] != 0:
+                        return
+
+        self._tetromino.rotate_left()
+
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                ROW = self._tetromino.row() + i
+                COL = self._tetromino.column() + j
+                INDEX = self.createIndex(ROW, COL)
+                self.dataChanged.emit(INDEX, INDEX)
+
+    def rotate_tetromino_right(self):
+        temp_tetromino = copy(self._tetromino)
+        temp_tetromino.rotate_right()
+
+        for i, row in enumerate(temp_tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    ROW = temp_tetromino.row() + i
+                    COL = temp_tetromino.column() + j
+                    if ROW < 0 or ROW >= self._rows or COL < 0 or \
+                        COL >= self._columns or self._playfield[ROW][COL] != 0:
+                        return
+
+        self._tetromino.rotate_right()
+
+        for i, row in enumerate(self._tetromino.matrix()):
+            for j, col in enumerate(row):
+                ROW = self._tetromino.row() + i
+                COL = self._tetromino.column() + j
+                INDEX = self.createIndex(ROW, COL)
+                self.dataChanged.emit(INDEX, INDEX)
 
     tetromino_landed = Signal()
