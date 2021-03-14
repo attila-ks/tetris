@@ -58,6 +58,8 @@ class Playfield(QAbstractTableModel):
         """This method is used for both automatic and soft drop."""
         if self._is_tetromino_landed():
             self._lock_tetromino()
+            self._tetromino = None
+            self._clear_filled_rows()
             self.tetromino_landed.emit()
             return
 
@@ -92,6 +94,8 @@ class Playfield(QAbstractTableModel):
                     index = self.createIndex(ROW, COL)
                     self.dataChanged.emit(index, index)
 
+        self._tetromino = None
+        self._clear_filled_rows()
         self.tetromino_landed.emit()
 
     def _is_tetromino_landed(self):
@@ -166,7 +170,7 @@ class Playfield(QAbstractTableModel):
                     ROW = temp_tetromino.row() + i
                     COL = temp_tetromino.column() + j
                     if ROW < 0 or ROW >= self._rows or COL < 0 or \
-                        COL >= self._columns or self._playfield[ROW][COL] != 0:
+                            COL >= self._columns or self._playfield[ROW][COL] != 0:
                         return
 
         self._tetromino.rotate_left()
@@ -188,7 +192,7 @@ class Playfield(QAbstractTableModel):
                     ROW = temp_tetromino.row() + i
                     COL = temp_tetromino.column() + j
                     if ROW < 0 or ROW >= self._rows or COL < 0 or \
-                        COL >= self._columns or self._playfield[ROW][COL] != 0:
+                            COL >= self._columns or self._playfield[ROW][COL] != 0:
                         return
 
         self._tetromino.rotate_right()
@@ -199,5 +203,38 @@ class Playfield(QAbstractTableModel):
                 COL = self._tetromino.column() + j
                 INDEX = self.createIndex(ROW, COL)
                 self.dataChanged.emit(INDEX, INDEX)
+
+    def _clear_filled_rows(self):
+        i = self._rows - 1
+        while i >= 0:
+            if (self._is_row_filled(i)):
+                self._clear_filled_row(i)
+                self._move_blocks_down(i - 1)
+            else:
+                i -= 1
+
+    def _is_row_filled(self, row_index):
+        for col in self._playfield[row_index]:
+            if col == 0:
+                return False
+        return True
+
+    def _clear_filled_row(self, row_index):
+        for col_index in range(self._columns):
+            if self._playfield[row_index][col_index] != 0:
+                self._playfield[row_index][col_index] = 0
+                INDEX = self.createIndex(row_index, col_index)
+                self.dataChanged.emit(INDEX, INDEX)
+
+    def _move_blocks_down(self, row_index):
+        for i in range(row_index, -1, -1):
+            for j in range(self._columns):
+                if self._playfield[i][j] != 0:
+                    self._playfield[i + 1][j] = self._playfield[i][j]
+                    self._playfield[i][j] = 0
+                    index = self.createIndex(i, j)
+                    self.dataChanged.emit(index, index)
+                    index = self.createIndex(i + 1, j)
+                    self.dataChanged.emit(index, index)
 
     tetromino_landed = Signal()
