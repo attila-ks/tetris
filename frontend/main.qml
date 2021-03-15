@@ -39,6 +39,7 @@ ApplicationWindow {
     }
 
     Item {
+        id: inputHandler
         focus: true
         anchors.fill: parent
         // This should be done in the Tetrion class.
@@ -46,5 +47,24 @@ ApplicationWindow {
         // releasing, that's why a second argument is needed.
         Keys.onPressed: tetrion.process_input(event.key, true)
         Keys.onReleased: tetrion.process_input(event.key, false)
+    }
+
+    Connections {
+        target: tetrion
+
+        function onGame_over() { gameOverDialog.visible = true }
+    }
+
+    GameOverDialog {
+        id: gameOverDialog
+        visible: false
+        anchors.fill: parent
+
+        exitButton.onPressed: Qt.quit()
+        newGameButton.onPressed: {
+            visible = false
+            tetrion.restart()
+            inputHandler.focus = true
+        }
     }
 }

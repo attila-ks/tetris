@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-from PySide2.QtCore import Property, QObject, QTimer, Slot
+from PySide2.QtCore import Property, QObject, QTimer, Signal, Slot
 from PySide2.QtGui import Qt
 from tetromino import Tetromino
 from playfield import Playfield
@@ -24,6 +24,12 @@ class Tetrion(QObject):
     def start(self):
         self._spawn_tetromino()
         self._timer.start()
+
+    @Slot()
+    def restart(self):
+        self._playfield.clear()
+        self._bag.clear()
+        self.start()
 
     @Slot(Qt.Key, bool)
     def process_input(self, key, is_pressed):
@@ -52,7 +58,10 @@ class Tetrion(QObject):
 
     def _spawn_tetromino(self):
         TETR = self._select_tetromino()
-        self._playfield.add_tetromino(TETR)
+        SUCCESS = self._playfield.add_tetromino(TETR)
+        if not SUCCESS:
+            self._timer.stop()
+            self.game_over.emit()
 
     def _select_tetromino(self):
         if len(self._bag) == 0:
@@ -66,3 +75,5 @@ class Tetrion(QObject):
         self._bag = [Tetromino(type, 0, 3) for type in Tetromino.Type]
 
     playfield = Property(QObject, playfield, constant=True)
+
+    game_over = Signal()

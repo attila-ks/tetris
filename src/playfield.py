@@ -43,6 +43,11 @@ class Playfield(QAbstractTableModel):
         return {hash(Qt.UserRole): "cellColor".encode()}
 
     def add_tetromino(self, tetromino):
+        """Returns true if tetromino has been added successfully,
+           otherwise returns false."""
+        if not self._does_tetromino_fit(tetromino):
+            return False
+
         self._tetromino = tetromino
         # Add the tetromino only to the frontend-side of the playfield.
         for i, row in enumerate(tetromino.matrix()):
@@ -52,6 +57,8 @@ class Playfield(QAbstractTableModel):
                     COL = tetromino.column() + j
                     INDEX = self.createIndex(ROW, COL)
                     self.dataChanged.emit(INDEX, INDEX)
+
+        return True
 
     # FIXME: Causes lagging.
     def move_tetromino_down(self):
@@ -204,6 +211,16 @@ class Playfield(QAbstractTableModel):
                 INDEX = self.createIndex(ROW, COL)
                 self.dataChanged.emit(INDEX, INDEX)
 
+    def clear(self):
+        self._tetromino = None
+
+        for i in range(self._rows):
+            for j in range(self._columns):
+                if self._playfield[i][j] != 0:
+                    self._playfield[i][j] = 0
+                    INDEX = self.createIndex(i, j)
+                    self.dataChanged.emit(INDEX, INDEX)
+
     def _clear_filled_rows(self):
         i = self._rows - 1
         while i >= 0:
@@ -236,5 +253,15 @@ class Playfield(QAbstractTableModel):
                     self.dataChanged.emit(index, index)
                     index = self.createIndex(i + 1, j)
                     self.dataChanged.emit(index, index)
+
+    def _does_tetromino_fit(self, tetromino):
+        for i, row in enumerate(tetromino.matrix()):
+            for j, col in enumerate(row):
+                if col == 1:
+                    ROW = tetromino.row() + i
+                    COL = tetromino.column() + j
+                    if self._playfield[ROW][COL] != 0:
+                        return False
+        return True
 
     tetromino_landed = Signal()
