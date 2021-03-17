@@ -13,29 +13,8 @@ ApplicationWindow {
     visible: true
     Component.onCompleted: tetrion.start()
 
-    Rectangle {
-        id: playfieldBackground
-        width: playfield.width
-        height: playfield.height - 17
-        color: "#1e3c72"
-        clip: true
+    Playfield {
         anchors.centerIn: parent
-
-        TableView {
-            id: playfield
-            width: childrenRect.width
-            height: childrenRect.height
-            rowSpacing: 1
-            columnSpacing: 1
-            anchors.bottom: playfieldBackground.bottom
-            model: tetrion.playfield // FIXME: Sometimes throws TypeError.
-            delegate: Rectangle {
-                id: cell
-                implicitWidth: 20
-                implicitHeight: 20
-                color: model.cellColor
-            }
-        }
     }
 
     Item {
