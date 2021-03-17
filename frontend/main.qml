@@ -11,6 +11,13 @@ ApplicationWindow {
     title: "Tetris"
     flags: Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
     visible: true
+    background: Rectangle {
+        gradient: Gradient {
+            GradientStop { position: 0.3; color: "#1866ce" }
+            GradientStop { position: 1; color: "#330867" }
+        }
+    }
+
     Component.onCompleted: tetrion.start()
 
     Playfield {
