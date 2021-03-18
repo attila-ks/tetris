@@ -8,18 +8,9 @@ Item {
     property alias exitButton: exitButton
 
     Rectangle {
-        id: mainBackground
-        color: "black"
-        opacity: 0.3
-        anchors.fill: parent
-    }
-
-    Rectangle {
         id: menuBackground
-        width: root.width / 2
-        height: root.height / 2.6
         border.color: "#2d58ac"
-        anchors.centerIn: root
+        anchors.fill: parent
         anchors.verticalCenterOffset: -10
         gradient: Gradient {
             GradientStop { position: 0; color: "#173d89" }

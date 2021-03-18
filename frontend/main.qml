@@ -2,6 +2,7 @@ import QtQuick 2.13
 import QtQuick.Controls 2.12
 
 ApplicationWindow {
+    id: root
     width: 400
     height: 560
     minimumWidth: 400
@@ -41,10 +42,19 @@ ApplicationWindow {
         function onGame_over() { gameOverDialog.visible = true }
     }
 
+    Rectangle {
+        color: "black"
+        opacity: 0.3
+        visible: gameOverDialog.visible
+        anchors.fill: parent
+    }
+
     GameOverDialog {
         id: gameOverDialog
+        width: root.width / 2
+        height: root.height / 2.6
         visible: false
-        anchors.fill: parent
+        anchors.centerIn: parent
 
         exitButton.onPressed: Qt.quit()
         newGameButton.onPressed: {
