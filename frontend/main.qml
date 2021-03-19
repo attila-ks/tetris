@@ -71,7 +71,7 @@ ApplicationWindow {
         visible: false
         anchors.centerIn: parent
 
-        exitButton.onPressed: Qt.quit()
+        quitButton.onPressed: Qt.quit()
         newGameButton.onPressed: {
             visible = false
             tetrion.restart()

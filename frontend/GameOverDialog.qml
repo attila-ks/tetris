@@ -5,7 +5,7 @@ Item {
     id: root
 
     property alias newGameButton: newGameButton
-    property alias exitButton: exitButton
+    property alias quitButton: quitButton
 
     Rectangle {
         id: menuBackground
@@ -39,8 +39,8 @@ Item {
         }
 
         RoundButton {
-            id: exitButton
-            text: "EXIT"
+            id: quitButton
+            text: "QUIT"
             width: newGameButton.width
             radius: 3
             palette.button: "#0072ff"
