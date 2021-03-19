@@ -40,6 +40,7 @@ Item {
             RoundButton {
                 id: resumeButton
                 width: newGameButton.width
+                height: implicitHeight - 5
                 text: "RESUME"
                 radius: 3
                 palette.button: "#0072ff"
@@ -49,6 +50,7 @@ Item {
             RoundButton {
                 id: newGameButton
                 width: implicitWidth + 15
+                height: implicitHeight - 5
                 text: "NEW GAME"
                 radius: 3
                 palette.button: "#0072ff"
@@ -58,6 +60,7 @@ Item {
             RoundButton {
                 id: optionsButton
                 width: newGameButton.width
+                height: implicitHeight - 5
                 text: "OPTIONS"
                 radius: 3
                 palette.button: "#0072ff"
@@ -67,6 +70,7 @@ Item {
             RoundButton {
                 id: quitButton
                 width: newGameButton.width
+                height: implicitHeight - 5
                 text: "QUIT"
                 radius: 3
                 palette.button: "#0072ff"

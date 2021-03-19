@@ -30,6 +30,7 @@ Item {
         RoundButton {
             id: newGameButton
             width: implicitWidth + 15
+            height: implicitHeight - 5
             text: "NEW GAME"
             radius: 3
             palette.button: "#0072ff"
@@ -43,6 +44,7 @@ Item {
             id: quitButton
             text: "QUIT"
             width: newGameButton.width
+            height: implicitHeight - 5
             radius: 3
             palette.button: "#0072ff"
             palette.buttonText: "white"
