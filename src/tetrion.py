@@ -16,6 +16,7 @@ class Tetrion(QObject):
         self._timer = QTimer()
         self._timer.setInterval(1000)
         self._timer.timeout.connect(self._playfield.move_tetromino_down)
+        self._paused = False
 
     def playfield(self):
         return self._playfield
@@ -29,10 +30,30 @@ class Tetrion(QObject):
     def restart(self):
         self._playfield.clear()
         self._bag.clear()
+        self._paused = False
         self.start()
+
+    @Slot()
+    def pause(self):
+        if self._paused:
+            return
+
+        self._timer.stop()
+        self._paused = True
+
+    @Slot()
+    def resume(self):
+        if not self._paused:
+            return
+
+        self._timer.start()
+        self._paused = False
 
     @Slot(Qt.Key, bool)
     def process_input(self, key, is_pressed):
+        if self._paused:
+            return
+
         if is_pressed:
             if key == Qt.Key_Down:
                 # TODO: Avoid magic numbers.

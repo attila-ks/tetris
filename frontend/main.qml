@@ -32,7 +32,16 @@ ApplicationWindow {
         // This should be done in the Tetrion class.
         // Cannot pass the event itself for distinguish the key pressing and
         // releasing, that's why a second argument is needed.
-        Keys.onPressed: tetrion.process_input(event.key, true)
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Escape) {
+                pauseMenu.visible = !pauseMenu.visible
+                pauseMenu.visible ? tetrion.pause() : tetrion.resume()
+            }
+            else {
+                tetrion.process_input(event.key, true)
+            }
+        }
+
         Keys.onReleased: tetrion.process_input(event.key, false)
     }
 
@@ -57,6 +66,11 @@ ApplicationWindow {
         anchors.centerIn: parent
 
         quitButton.onPressed: Qt.quit()
+        resumeButton.onPressed: {
+            visible = false
+            tetrion.resume()
+            inputHandler.focus = true
+        }
         newGameButton.onPressed: {
             visible = false
             tetrion.restart()
