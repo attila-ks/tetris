@@ -45,8 +45,23 @@ ApplicationWindow {
     Rectangle {
         color: "black"
         opacity: 0.3
-        visible: gameOverDialog.visible
+        visible: pauseMenu.visible || gameOverDialog.visible
         anchors.fill: parent
+    }
+
+    PauseMenu {
+        id: pauseMenu
+        width: root.width / 2
+        height: root.height / 2
+        visible: true
+        anchors.centerIn: parent
+
+        quitButton.onPressed: Qt.quit()
+        newGameButton.onPressed: {
+            visible = false
+            tetrion.restart()
+            inputHandler.focus = true
+        }
     }
 
     GameOverDialog {
