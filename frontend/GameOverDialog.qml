@@ -8,7 +8,7 @@ Item {
     property alias quitButton: quitButton
 
     Rectangle {
-        id: menuBackground
+        id: dialogBackground
         border.color: "#2d58ac"
         anchors.fill: parent
         anchors.verticalCenterOffset: -10
@@ -23,7 +23,7 @@ Item {
             color: "white"
             font.bold: true
             font.pointSize: Qt.application.font.pointSize + 5
-            anchors.horizontalCenter: menuBackground.horizontalCenter
+            anchors.horizontalCenter: dialogBackground.horizontalCenter
             y: 15
         }
 
@@ -33,7 +33,7 @@ Item {
             radius: 3
             palette.button: "#0072ff"
             palette.buttonText: "white"
-            anchors.horizontalCenter: menuBackground.horizontalCenter
+            anchors.horizontalCenter: dialogBackground.horizontalCenter
             anchors.top: label.bottom
             anchors.topMargin: 25
         }
@@ -45,7 +45,7 @@ Item {
             radius: 3
             palette.button: "#0072ff"
             palette.buttonText: "white"
-            anchors.horizontalCenter: menuBackground.horizontalCenter
+            anchors.horizontalCenter: dialogBackground.horizontalCenter
             anchors.top: newGameButton.bottom
             anchors.topMargin: 10
         }
