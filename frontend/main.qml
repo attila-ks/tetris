@@ -53,7 +53,7 @@ ApplicationWindow {
         id: pauseMenu
         width: root.width / 2
         height: root.height / 2
-        visible: true
+        visible: false
         anchors.centerIn: parent
 
         quitButton.onPressed: Qt.quit()
