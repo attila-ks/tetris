@@ -29,6 +29,7 @@ Item {
 
         RoundButton {
             id: newGameButton
+            width: implicitWidth + 15
             text: "NEW GAME"
             radius: 3
             palette.button: "#0072ff"
