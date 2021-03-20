@@ -216,10 +216,10 @@ class Playfield(QAbstractTableModel):
 
         for i in range(self._rows):
             for j in range(self._columns):
-                if self._playfield[i][j] != 0:
-                    self._playfield[i][j] = 0
-                    INDEX = self.createIndex(i, j)
-                    self.dataChanged.emit(INDEX, INDEX)
+                # Would be great to clear only the not empty cells.
+                self._playfield[i][j] = 0
+                INDEX = self.createIndex(i, j)
+                self.dataChanged.emit(INDEX, INDEX)
 
     def _clear_filled_rows(self):
         i = self._rows - 1
