@@ -17,6 +17,7 @@ class Tetrion(QObject):
         self._timer.setInterval(1000)
         self._timer.timeout.connect(self._playfield.move_tetromino_down)
         self._paused = False
+        self._game_over = False
 
     def playfield(self):
         return self._playfield
@@ -31,6 +32,7 @@ class Tetrion(QObject):
         self._playfield.clear()
         self._bag.clear()
         self._paused = False
+        self._game_over = False
         self.start()
 
     @Slot()
@@ -51,7 +53,7 @@ class Tetrion(QObject):
 
     @Slot(Qt.Key, bool)
     def process_input(self, key, is_pressed):
-        if self._paused:
+        if self._paused or self._game_over:
             return
 
         if is_pressed:
@@ -82,6 +84,7 @@ class Tetrion(QObject):
         SUCCESS = self._playfield.add_tetromino(TETR)
         if not SUCCESS:
             self._timer.stop()
+            self._game_over = True
             self.game_over.emit()
 
     def _select_tetromino(self):
