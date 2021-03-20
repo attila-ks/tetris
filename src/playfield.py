@@ -45,10 +45,11 @@ class Playfield(QAbstractTableModel):
     def add_tetromino(self, tetromino):
         """Returns true if tetromino has been added successfully,
            otherwise returns false."""
+        self._tetromino = tetromino
+
         if not self._does_tetromino_fit(tetromino):
             return False
 
-        self._tetromino = tetromino
         # Add the tetromino only to the frontend-side of the playfield.
         for i, row in enumerate(tetromino.matrix()):
             for j, col in enumerate(row):
