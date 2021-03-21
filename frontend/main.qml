@@ -54,7 +54,8 @@ ApplicationWindow {
     Rectangle {
         color: "black"
         opacity: 0.3
-        visible: pauseMenu.visible || gameOverDialog.visible
+        visible: pauseMenu.visible || optionsWindow.visible ||
+                 gameOverDialog.visible
         anchors.fill: parent
     }
 
@@ -74,6 +75,24 @@ ApplicationWindow {
         newGameButton.onPressed: {
             visible = false
             tetrion.restart()
+            inputHandler.focus = true
+        }
+        optionsButton.onPressed: {
+            visible = false
+            optionsWindow.visible = true
+        }
+    }
+
+    OptionsWindow {
+        id: optionsWindow
+        width: root.width / 2
+        height: root.height / 1.8
+        visible: false
+        anchors.centerIn: parent
+
+        doneButton.onPressed: {
+            visible = false
+            pauseMenu.visible = true
             inputHandler.focus = true
         }
     }
