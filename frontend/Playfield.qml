@@ -31,6 +31,7 @@ Frame {
                 implicitWidth: 20
                 implicitHeight: 20
                 color: model.cellColor
+                border.color: model.cellBorderColor
             }
         }
     }

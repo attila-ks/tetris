@@ -8,6 +8,8 @@ from tetrion import Tetrion
 
 
 if __name__ == "__main__":
+    sys.argv += ['--style', 'fusion']
+
     app = QGuiApplication(sys.argv)
 
     tetrion = Tetrion()

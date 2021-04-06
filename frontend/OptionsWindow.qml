@@ -9,6 +9,7 @@ Rectangle {
     }
 
     property alias doneButton: doneButton
+    property alias showGhostTetrominoCheckbox: showGhostTetrominoCheckbox
 
     Text {
         id: label
@@ -56,6 +57,14 @@ Rectangle {
             text: "ROTATE RIGHT   ↑"
             color: "white"
         }
+
+        CheckBox {
+            id: showGhostTetrominoCheckbox
+            // The text should be 'SHOW GHOST TETROMINO', but it's too long.
+            text: "SHOW GHOST PIECE"
+            palette.windowText: "white"
+            leftPadding: 0
+        }
     }
 
     RoundButton {
@@ -68,6 +77,6 @@ Rectangle {
         palette.buttonText: "white"
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: optionsColumn.bottom
-        anchors.topMargin: 40
+        anchors.topMargin: 15
     }
 }

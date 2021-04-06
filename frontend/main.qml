@@ -86,10 +86,13 @@ ApplicationWindow {
     OptionsWindow {
         id: optionsWindow
         width: root.width / 2
-        height: root.height / 1.8
+        height: root.height / 1.7
         visible: false
         anchors.centerIn: parent
 
+        showGhostTetrominoCheckbox.onCheckedChanged: {
+            tetrion.show_ghost_tetromino(showGhostTetrominoCheckbox.checked)
+        }
         doneButton.onPressed: {
             visible = false
             pauseMenu.visible = true

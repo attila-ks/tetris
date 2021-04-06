@@ -79,6 +79,10 @@ class Tetrion(QObject):
             if key == Qt.Key_Down:
                 self._timer.setInterval(1000)
 
+    @Slot(bool)
+    def show_ghost_tetromino(self, show):
+        self._playfield.show_ghost_tetromino(show)
+
     def _spawn_tetromino(self):
         TETR = self._select_tetromino()
         SUCCESS = self._playfield.add_tetromino(TETR)
