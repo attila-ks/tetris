@@ -2,9 +2,11 @@
 
 from PySide2.QtCore import Property, QObject, QTimer, Signal, Slot
 from PySide2.QtGui import Qt
+from color import Color
 from tetromino import Tetromino
 from playfield import Playfield
 from random import choice
+from copy import copy
 
 
 class Tetrion(QObject):
@@ -13,6 +15,7 @@ class Tetrion(QObject):
         self._playfield = Playfield(21, 10)
         self._playfield.tetromino_landed.connect(self._spawn_tetromino)
         self._bag = []
+        self._next_tetromino = None
         self._timer = QTimer()
         self._timer.setInterval(1000)
         self._timer.timeout.connect(self._playfield.move_tetromino_down)
@@ -31,6 +34,7 @@ class Tetrion(QObject):
     def restart(self):
         self._playfield.clear()
         self._bag.clear()
+        self._next_tetromino = None
         self._paused = False
         self._game_over = False
         self.start()
@@ -83,6 +87,21 @@ class Tetrion(QObject):
     def show_ghost_tetromino(self, show):
         self._playfield.show_ghost_tetromino(show)
 
+    @Slot(result=list)
+    def next_tetromino(self):
+        TETR_MATRIX = self._next_tetromino.matrix()
+        color_sequence = []
+
+        for row in TETR_MATRIX:
+            for col in row:
+                if col != 0:
+                    color_sequence.append(
+                        self._next_tetromino.color().html_code)
+                else:
+                    color_sequence.append(Color(col).html_code)
+
+        return color_sequence
+
     def _spawn_tetromino(self):
         TETR = self._select_tetromino()
         SUCCESS = self._playfield.add_tetromino(TETR)
@@ -95,8 +114,17 @@ class Tetrion(QObject):
         if len(self._bag) == 0:
             self._fill_bag()
 
-        TETR = choice(self._bag)
-        self._bag.remove(TETR)
+        if (self._next_tetromino is None):
+            self._next_tetromino = choice(self._bag)
+
+        TETR = copy(self._next_tetromino)
+        self._bag.remove(self._next_tetromino)
+        # Is there a way to check the self._bag only once in this method?
+        if len(self._bag) == 0:
+            self._fill_bag()
+        self._next_tetromino = choice(self._bag)
+        self.next_tetromino_changed.emit(
+            self._next_tetromino.rows(), self._next_tetromino.columns())
         return TETR
 
     def _fill_bag(self):
@@ -105,3 +133,4 @@ class Tetrion(QObject):
     playfield = Property(QObject, playfield, constant=True)
 
     game_over = Signal()
+    next_tetromino_changed = Signal([int, int], arguments=['rows', 'columns'])

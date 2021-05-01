@@ -3,10 +3,10 @@ import QtQuick.Controls 2.12
 
 ApplicationWindow {
     id: root
-    width: 400
+    width: 450
     height: 560
-    minimumWidth: 400
-    maximumWidth: 400
+    minimumWidth: 450
+    maximumWidth: 450
     minimumHeight: 560
     maximumHeight: 560
     title: "Tetris"
@@ -22,7 +22,14 @@ ApplicationWindow {
     Component.onCompleted: tetrion.start()
 
     Playfield {
+        id: playfield
         anchors.centerIn: parent
+    }
+
+    NextTetrominoPanel {
+        anchors.left: playfield.right
+        anchors.leftMargin: 10
+        y: playfield.y
     }
 
     Item {
