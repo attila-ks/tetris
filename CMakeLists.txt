@@ -9,6 +9,10 @@ find_package(Qt6 6.2 COMPONENTS Quick REQUIRED)
 
 qt_add_executable(apptetris
     backend/src/main.cpp
+    backend/headers/tetrion.h
+    backend/src/tetrion.cpp
+    backend/headers/playfield.h
+    backend/src/playfield.cpp
 )
 
 qt_add_qml_module(apptetris
@@ -18,6 +22,7 @@ qt_add_qml_module(apptetris
         frontend/main.qml
         frontend/MainMenu.qml
         frontend/TextButton.qml
+        frontend/Playfield.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf

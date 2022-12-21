@@ -1,11 +1,16 @@
+#include "../headers/tetrion.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 int main(int argc, char* argv[])
 {
   QGuiApplication app(argc, argv);
 
+  Tetrion tetrion;
+
   QQmlApplicationEngine engine;
+  engine.rootContext()->setContextProperty("tetrion", &tetrion);
   const QUrl url(u"qrc:/tetris/frontend/main.qml"_qs);
 
   QObject::connect(

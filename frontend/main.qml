@@ -19,6 +19,18 @@ Window {
         clip: true
     }
 
+    // Do components use resources when their `visible` attribute is set to false?
+
     MainMenu {
+        onNewGameButtonClicked: {
+            visible = false
+            playfield.visible = true
+        }
+    }
+
+    Playfield {
+        id: playfield
+        visible: false
+        anchors.centerIn: parent
     }
 }
