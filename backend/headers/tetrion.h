@@ -2,7 +2,9 @@
 #define TETRION_H
 
 #include "playfield.h"
+#include "tetromino.h"
 #include <QObject>
+#include <vector>
 
 class Tetrion : public QObject
 {
@@ -15,8 +17,16 @@ class Tetrion : public QObject
 
     const Playfield* getPlayfield() const;
 
+    Q_INVOKABLE void startGame();
+
+  private:
+    void spawnTetromino();
+    Tetromino selectTetromino();
+    void fillBag();
+
   private:
     Playfield m_playfield;
+    std::vector<Tetromino> m_bag;
 };
 
 #endif

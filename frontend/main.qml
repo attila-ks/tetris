@@ -25,6 +25,7 @@ Window {
         onNewGameButtonClicked: {
             visible = false
             playfield.visible = true
+            tetrion.startGame()
         }
     }
 

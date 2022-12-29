@@ -13,6 +13,12 @@ qt_add_executable(apptetris
     backend/src/tetrion.cpp
     backend/headers/playfield.h
     backend/src/playfield.cpp
+    backend/headers/tetromino.h
+    backend/src/tetromino.cpp
+    backend/headers/block.h
+    backend/src/block.cpp
+    backend/headers/position.h
+    backend/src/position.cpp
 )
 
 qt_add_qml_module(apptetris
