@@ -16,6 +16,13 @@ Position::Position(const int row, const int column) :
 }
 
 
+void Position::setRow(const int row)
+{
+  assert(row >= 0);
+  m_row = row;
+}
+
+
 int Position::getRow() const
 {
   return m_row;

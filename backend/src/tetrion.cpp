@@ -6,11 +6,18 @@ using namespace std;
 void initRandomTetrominoGenerator();
 
 
-Tetrion::Tetrion() :
+Tetrion::Tetrion(QObject* parent) :
+  QObject {parent},
   m_playfield {22, 10, QColor {0x0e001f}},
-  m_bag {}
+  m_bag {},
+  m_currentTetromino {},
+  m_tetrominoDropTimer {}
 {
   initRandomTetrominoGenerator();
+
+  m_tetrominoDropTimer.setInterval(1000);
+  connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
+          &Tetrion::dropTetromino);
 }
 
 
@@ -23,13 +30,14 @@ const Playfield* Tetrion::getPlayfield() const
 void Tetrion::startGame()
 {
   spawnTetromino();
+  m_tetrominoDropTimer.start();
 }
 
 
 void Tetrion::spawnTetromino()
 {
-  const Tetromino tetromino = selectTetromino();
-  tetromino.drawOn(m_playfield);
+  m_currentTetromino = selectTetromino();
+  m_currentTetromino.drawOn(m_playfield);
 }
 
 
@@ -58,6 +66,12 @@ void Tetrion::fillBag()
       Tetromino {Tetromino::Type::T, QColor {0xaa00ff}, Position {0, 3}},
       Tetromino {Tetromino::Type::Z, QColor {0xd50000}, Position {0, 3}},
   };
+}
+
+
+void Tetrion::dropTetromino()
+{
+  m_currentTetromino.moveDown(m_playfield);
 }
 
 

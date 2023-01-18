@@ -4,6 +4,7 @@
 #include "playfield.h"
 #include "tetromino.h"
 #include <QObject>
+#include <QTimer>
 #include <vector>
 
 class Tetrion : public QObject
@@ -13,7 +14,7 @@ class Tetrion : public QObject
     Q_PROPERTY(const Playfield* playfield READ getPlayfield CONSTANT)
 
   public:
-    Tetrion();
+    Tetrion(QObject* parent = nullptr);
 
     const Playfield* getPlayfield() const;
 
@@ -24,9 +25,14 @@ class Tetrion : public QObject
     Tetromino selectTetromino();
     void fillBag();
 
+  private slots:
+    void dropTetromino();
+
   private:
     Playfield m_playfield;
     std::vector<Tetromino> m_bag;
+    Tetromino m_currentTetromino;
+    QTimer m_tetrominoDropTimer;
 };
 
 #endif

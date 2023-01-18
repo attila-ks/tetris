@@ -13,7 +13,8 @@ class Playfield : public QAbstractTableModel
 
   public:
     Playfield(const size_t rows, const size_t columns,
-              const QColor& backgroundColor);
+              const QColor& backgroundColor,
+              QAbstractTableModel* parent = nullptr);
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -21,6 +22,14 @@ class Playfield : public QAbstractTableModel
                   int role = Qt::DisplayRole) const override;
 
     void addBlocks(const std::vector<Block>& blocks);
+
+    bool removeBlockAt(const Position& position);
+
+    bool hasBlockAt(const Position& position) const;
+
+    /// @pre hasBlockAt(const Position& position) must be called for the
+    /// @p position before calling this method!
+    const Block& getBlockAt(const Position& position) const;
 
   private:
     struct Cell

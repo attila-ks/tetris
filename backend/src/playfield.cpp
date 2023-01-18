@@ -6,7 +6,9 @@ QColor Playfield::Cell::m_color;
 
 
 Playfield::Playfield(const size_t rows, const size_t columns,
-                     const QColor& backgroundColor) :
+                     const QColor& backgroundColor,
+                     QAbstractTableModel* parent) :
+  QAbstractTableModel {parent},
   m_rows {rows},
   m_columns {columns},
   m_data {rows, vector<Cell> {columns, Cell {}}}
@@ -52,4 +54,35 @@ void Playfield::addBlocks(const vector<Block>& blocks)
     auto index = createIndex(row, column);
     emit dataChanged(index, index);
   }
+}
+
+
+bool Playfield::removeBlockAt(const Position& position)
+{
+  if (hasBlockAt(position))
+  {
+    const int row = position.getRow();
+    const int column = position.getColumn();
+    m_data[row][column].m_block.reset();
+    auto index = createIndex(row, column);
+    emit dataChanged(index, index);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+bool Playfield::hasBlockAt(const Position& position) const
+{
+  const Cell& cell = m_data[position.getRow()][position.getColumn()];
+  return cell.m_block.has_value();
+}
+
+
+const Block& Playfield::getBlockAt(const Position& position) const
+{
+  return m_data[position.getRow()][position.getColumn()].m_block.value();
 }
