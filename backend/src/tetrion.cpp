@@ -47,7 +47,12 @@ void Tetrion::startGame()
 
 void Tetrion::spawnTetromino()
 {
+  delete m_currentTetromino;
   m_currentTetromino = selectTetromino();
+
+  connect(m_currentTetromino, &Tetromino::landed, this,
+          &Tetrion::spawnTetromino);
+
   m_currentTetromino->drawOn(m_playfield);
 }
 

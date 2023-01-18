@@ -3,9 +3,12 @@
 
 #include "block.h"
 #include "playfield.h"
+#include <QObject>
 
-class Tetromino
+class Tetromino : public QObject
 {
+    Q_OBJECT
+
   public:
     enum class Type {I, J, L, O, S, T, Z};
 
@@ -15,6 +18,9 @@ class Tetromino
     void drawOn(Playfield& playfield) const;
 
     void moveDown(Playfield& playfield);
+
+  signals:
+    void landed();
 
   private:
     void initBlocks(const QColor& color);

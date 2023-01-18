@@ -84,6 +84,7 @@ void Tetromino::moveDown(Playfield& playfield)
   {
     m_blocks = m_previousStateOfBlocks;
     markAsLanded(playfield);
+    emit landed();
   }
 }
 
