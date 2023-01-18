@@ -83,6 +83,7 @@ void Tetromino::moveDown(Playfield& playfield)
   else
   {
     m_blocks = m_previousStateOfBlocks;
+    markAsLanded(playfield);
   }
 }
 
@@ -98,15 +99,20 @@ void Tetromino::initBlocks(const QColor& color)
 
 bool Tetromino::isLegalMove(const Playfield& playfield) const
 {
+  const int playfieldRowCount = playfield.rowCount();
+
   for (const Block& block : m_blocks)
   {
     const Position position = block.getPosition();
 
-    if (playfield.hasBlockAt(position))
+    if (position.getRow() == playfieldRowCount)
     {
-      const Block& block = playfield.getBlockAt(position);
+      return false;
+    }
+    else if (playfield.hasBlockAt(position))
+    {
+      const Block& block = playfield.getConstBlockAt(position);
       if (block.getType() == Block::Type::Landed)
-          [[unlikely]] // Does this attribute make sense here?
       {
         return false;
       }
@@ -123,5 +129,17 @@ void Tetromino::removeFrom(Playfield& playfield)
   {
     const Position position = block.getPosition();
     playfield.removeBlockAt(position);
+  }
+}
+
+
+void Tetromino::markAsLanded(Playfield& playfield)
+{
+  // This tetromino is going to be destroyed, so only the blocks of playfield
+  // are updated.
+  for (Block& block : m_blocks)
+  {
+    const Position position = block.getPosition();
+    playfield.getBlockAt(position).setType(Block::Type::Landed);
   }
 }

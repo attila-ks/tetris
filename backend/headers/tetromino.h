@@ -23,6 +23,8 @@ class Tetromino
 
     void removeFrom(Playfield& playfield);
 
+    void markAsLanded(Playfield& playfield);
+
   private:
     Type m_type;
     Position m_position;

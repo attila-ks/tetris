@@ -15,23 +15,24 @@ class Tetrion : public QObject
 
   public:
     Tetrion(QObject* parent = nullptr);
+    ~Tetrion();
 
     const Playfield* getPlayfield() const;
 
     Q_INVOKABLE void startGame();
 
-  private:
-    void spawnTetromino();
-    Tetromino selectTetromino();
-    void fillBag();
-
   private slots:
+    void spawnTetromino();
     void dropTetromino();
 
   private:
+    Tetromino* selectTetromino();
+    void fillBag();
+
+  private:
     Playfield m_playfield;
-    std::vector<Tetromino> m_bag;
-    Tetromino m_currentTetromino;
+    std::vector<Tetromino*> m_bag;
+    Tetromino* m_currentTetromino;
     QTimer m_tetrominoDropTimer;
 };
 

@@ -29,7 +29,11 @@ class Playfield : public QAbstractTableModel
 
     /// @pre hasBlockAt(const Position& position) must be called for the
     /// @p position before calling this method!
-    const Block& getBlockAt(const Position& position) const;
+    Block& getBlockAt(const Position& position);
+
+    /// @pre hasBlockAt(const Position& position) must be called for the
+    /// @p position before calling this method!
+    const Block& getConstBlockAt(const Position& position) const;
 
   private:
     struct Cell

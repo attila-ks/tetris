@@ -82,7 +82,13 @@ bool Playfield::hasBlockAt(const Position& position) const
 }
 
 
-const Block& Playfield::getBlockAt(const Position& position) const
+Block& Playfield::getBlockAt(const Position& position)
+{
+  return m_data[position.getRow()][position.getColumn()].m_block.value();
+}
+
+
+const Block& Playfield::getConstBlockAt(const Position& position) const
 {
   return m_data[position.getRow()][position.getColumn()].m_block.value();
 }

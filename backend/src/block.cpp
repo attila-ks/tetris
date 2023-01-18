@@ -8,6 +8,12 @@ Block::Block(const QColor& color, const Position& position) :
 }
 
 
+void Block::setType(const Type type)
+{
+  m_type = type;
+}
+
+
 Block::Type Block::getType() const
 {
   return m_type;

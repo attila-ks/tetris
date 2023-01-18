@@ -11,6 +11,7 @@ class Block
 
     Block(const QColor& color, const Position& position);
 
+    void setType(const Type type);
     Type getType() const;
 
     QColor getColor() const;
