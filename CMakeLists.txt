@@ -11,8 +11,9 @@ qt_add_executable(apptetris
     backend/src/main.cpp
     backend/headers/tetrion.h
     backend/src/tetrion.cpp
-    backend/headers/playfield.h
-    backend/src/playfield.cpp
+    backend/headers/gameboard.h
+    backend/headers/tetrisboard.h
+    backend/src/tetrisboard.cpp
     backend/headers/tetromino.h
     backend/src/tetromino.cpp
     backend/headers/block.h
@@ -28,7 +29,7 @@ qt_add_qml_module(apptetris
         frontend/main.qml
         frontend/MainMenu.qml
         frontend/TextButton.qml
-        frontend/Playfield.qml
+        frontend/TetrisBoard.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf

@@ -8,7 +8,7 @@ void initRandomTetrominoGenerator();
 
 Tetrion::Tetrion(QObject* parent) :
   QObject {parent},
-  m_playfield {22, 10, QColor {0x0e001f}},
+  m_tetrisBoard {22, 10, QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {}
@@ -32,9 +32,9 @@ Tetrion::~Tetrion()
 }
 
 
-const Playfield* Tetrion::getPlayfield() const
+const TetrisBoard* Tetrion::getTetrisBoard() const
 {
-  return &m_playfield;
+  return &m_tetrisBoard;
 }
 
 
@@ -53,13 +53,13 @@ void Tetrion::spawnTetromino()
   connect(m_currentTetromino, &Tetromino::landed, this,
           &Tetrion::spawnTetromino);
 
-  m_currentTetromino->drawOn(m_playfield);
+  m_currentTetromino->drawOn(m_tetrisBoard);
 }
 
 
 void Tetrion::dropTetromino()
 {
-  m_currentTetromino->moveDown(m_playfield);
+  m_currentTetromino->moveDown(m_tetrisBoard);
 }
 
 

@@ -24,13 +24,13 @@ Window {
     MainMenu {
         onNewGameButtonClicked: {
             visible = false
-            playfield.visible = true
+            tetrisBoard.visible = true
             tetrion.startGame()
         }
     }
 
-    Playfield {
-        id: playfield
+    TetrisBoard {
+        id: tetrisBoard
         visible: false
         anchors.centerIn: parent
     }

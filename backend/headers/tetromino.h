@@ -2,7 +2,7 @@
 #define TETROMINO_H
 
 #include "block.h"
-#include "playfield.h"
+#include "tetrisboard.h"
 #include <QObject>
 
 class Tetromino : public QObject
@@ -15,9 +15,9 @@ class Tetromino : public QObject
     Tetromino();
     Tetromino(const Type type, const QColor& color, const Position& position);
 
-    void drawOn(Playfield& playfield) const;
+    void drawOn(TetrisBoard& tetrisBoard) const;
 
-    void moveDown(Playfield& playfield);
+    void moveDown(TetrisBoard& tetrisBoard);
 
   signals:
     void landed();
@@ -25,11 +25,11 @@ class Tetromino : public QObject
   private:
     void initBlocks(const QColor& color);
 
-    bool isLegalMove(const Playfield& playfield) const;
+    bool isLegalMove(const TetrisBoard& tetrisBoard) const;
 
-    void removeFrom(Playfield& playfield);
+    void removeFrom(TetrisBoard& tetrisBoard);
 
-    void markAsLanded(Playfield& playfield);
+    void markAsLanded(TetrisBoard& tetrisBoard);
 
   private:
     Type m_type;

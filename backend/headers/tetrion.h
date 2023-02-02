@@ -1,7 +1,7 @@
 #ifndef TETRION_H
 #define TETRION_H
 
-#include "playfield.h"
+#include "tetrisboard.h"
 #include "tetromino.h"
 #include <QObject>
 #include <QTimer>
@@ -10,14 +10,14 @@
 class Tetrion : public QObject
 {
     Q_OBJECT
-    // Can the compiler use RVO for `getPlayfield`?
-    Q_PROPERTY(const Playfield* playfield READ getPlayfield CONSTANT)
+    // Can the compiler use RVO for `getTetrisBoard`?
+    Q_PROPERTY(const TetrisBoard* tetrisBoard READ getTetrisBoard CONSTANT)
 
   public:
     Tetrion(QObject* parent = nullptr);
     ~Tetrion();
 
-    const Playfield* getPlayfield() const;
+    const TetrisBoard* getTetrisBoard() const;
 
     Q_INVOKABLE void startGame();
 
@@ -30,7 +30,7 @@ class Tetrion : public QObject
     void fillBag();
 
   private:
-    Playfield m_playfield;
+    TetrisBoard m_tetrisBoard;
     std::vector<Tetromino*> m_bag;
     Tetromino* m_currentTetromino;
     QTimer m_tetrominoDropTimer;

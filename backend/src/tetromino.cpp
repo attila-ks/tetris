@@ -58,13 +58,16 @@ Tetromino::Tetromino(const Type type, const QColor& color,
 }
 
 
-void Tetromino::drawOn(Playfield& playfield) const
+void Tetromino::drawOn(TetrisBoard& tetrisBoard) const
 {
-  playfield.addBlocks(m_blocks);
+  for (const Block& block : m_blocks)
+  {
+    tetrisBoard.addBlock(block, block.getPosition());
+  }
 }
 
 
-void Tetromino::moveDown(Playfield& playfield)
+void Tetromino::moveDown(TetrisBoard& tetrisBoard)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -75,15 +78,15 @@ void Tetromino::moveDown(Playfield& playfield)
     block.setPosition(position);
   }
 
-  if (isLegalMove(playfield))
+  if (isLegalMove(tetrisBoard))
   {
-    removeFrom(playfield);
-    drawOn(playfield);
+    removeFrom(tetrisBoard);
+    drawOn(tetrisBoard);
   }
   else
   {
     m_blocks = m_previousStateOfBlocks;
-    markAsLanded(playfield);
+    markAsLanded(tetrisBoard);
     emit landed();
   }
 }
@@ -98,21 +101,21 @@ void Tetromino::initBlocks(const QColor& color)
 }
 
 
-bool Tetromino::isLegalMove(const Playfield& playfield) const
+bool Tetromino::isLegalMove(const TetrisBoard& tetrisBoard) const
 {
-  const int playfieldRowCount = playfield.rowCount();
+  const int tetrisBoardRowCount = tetrisBoard.rowCount();
 
   for (const Block& block : m_blocks)
   {
     const Position position = block.getPosition();
 
-    if (position.getRow() == playfieldRowCount)
+    if (position.getRow() == tetrisBoardRowCount)
     {
       return false;
     }
-    else if (playfield.hasBlockAt(position))
+    else if (tetrisBoard.hasBlockAt(position))
     {
-      const Block& block = playfield.getConstBlockAt(position);
+      const Block& block = tetrisBoard.getBlock(position);
       if (block.getType() == Block::Type::Landed)
       {
         return false;
@@ -124,23 +127,23 @@ bool Tetromino::isLegalMove(const Playfield& playfield) const
 }
 
 
-void Tetromino::removeFrom(Playfield& playfield)
+void Tetromino::removeFrom(TetrisBoard& tetrisBoard)
 {
   for (const Block& block : m_previousStateOfBlocks)
   {
     const Position position = block.getPosition();
-    playfield.removeBlockAt(position);
+    tetrisBoard.removeBlock(position);
   }
 }
 
 
-void Tetromino::markAsLanded(Playfield& playfield)
+void Tetromino::markAsLanded(TetrisBoard& tetrisBoard)
 {
-  // This tetromino is going to be destroyed, so only the blocks of playfield
+  // This tetromino is going to be destroyed, so only the blocks of tetrisBoard
   // are updated.
   for (Block& block : m_blocks)
   {
     const Position position = block.getPosition();
-    playfield.getBlockAt(position).setType(Block::Type::Landed);
+    tetrisBoard.getBlock(position).setType(Block::Type::Landed);
   }
 }
