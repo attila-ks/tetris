@@ -7,6 +7,7 @@
 class Block
 {
   public:
+    /// @invariant row and column of @p position must be >= 0.
     Block(const QColor& color, const Position& position);
 
     void landed(const bool value);
@@ -14,6 +15,7 @@ class Block
 
     QColor getColor() const;
 
+    /// @invariant row and column of @p position must be >= 0.
     void setPosition(const Position& position);
     Position getPosition() const;
 

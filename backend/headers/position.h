@@ -5,12 +5,8 @@ class Position
 {
   public:
     Position();
-
-    /// @param row must be greater than or equal to 0.
-    /// @param column must be greater than or equal to 0.
     Position(const int row, const int column);
 
-    /// @param row must be greater than or equal to 0.
     void setRow(const int row);
     int getRow() const;
 

@@ -1,5 +1,4 @@
 #include "../headers/position.h"
-#include <cassert>
 
 Position::Position() :
   m_row {},
@@ -12,13 +11,11 @@ Position::Position(const int row, const int column) :
   m_row {row},
   m_column {column}
 {
-  assert(row >= 0 && column >= 0);
 }
 
 
 void Position::setRow(const int row)
 {
-  assert(row >= 0);
   m_row = row;
 }
 
