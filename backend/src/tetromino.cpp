@@ -116,7 +116,7 @@ bool Tetromino::isLegalMove(const TetrisBoard& tetrisBoard) const
     else if (tetrisBoard.hasBlockAt(position))
     {
       const Block& block = tetrisBoard.getBlock(position);
-      if (block.getType() == Block::Type::Landed)
+      if (block.isLanded())
       {
         return false;
       }
@@ -144,6 +144,6 @@ void Tetromino::markAsLanded(TetrisBoard& tetrisBoard)
   for (Block& block : m_blocks)
   {
     const Position position = block.getPosition();
-    tetrisBoard.getBlock(position).setType(Block::Type::Landed);
+    tetrisBoard.getBlock(position).landed(true);
   }
 }

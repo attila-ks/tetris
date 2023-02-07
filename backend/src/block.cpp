@@ -1,22 +1,22 @@
 #include "../headers/block.h"
 
 Block::Block(const QColor& color, const Position& position) :
-  m_type {Type::NotLanded},
   m_color {color},
-  m_position {position}
+  m_position {position},
+  m_isLanded {false}
 {
 }
 
 
-void Block::setType(const Type type)
+void Block::landed(const bool value)
 {
-  m_type = type;
+  m_isLanded = value;
 }
 
 
-Block::Type Block::getType() const
+bool Block::isLanded() const
 {
-  return m_type;
+  return m_isLanded;
 }
 
 

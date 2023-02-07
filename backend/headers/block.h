@@ -7,12 +7,10 @@
 class Block
 {
   public:
-    enum class Type {Landed, NotLanded};
-
     Block(const QColor& color, const Position& position);
 
-    void setType(const Type type);
-    Type getType() const;
+    void landed(const bool value);
+    bool isLanded() const;
 
     QColor getColor() const;
 
@@ -20,9 +18,9 @@ class Block
     Position getPosition() const;
 
   private:
-    Type m_type;
     QColor m_color;
     Position m_position;
+    bool m_isLanded;
 };
 
 #endif
