@@ -13,7 +13,7 @@ class Tetromino : public QObject
     enum class Type {I, J, L, O, S, T, Z};
 
     Tetromino();
-    Tetromino(const Type type, const QColor& color, const Position& position);
+    Tetromino(const Type type, const QColor& color, const Index& index);
 
     void drawOn(TetrisBoard& tetrisBoard) const;
 
@@ -33,7 +33,7 @@ class Tetromino : public QObject
 
   private:
     Type m_type;
-    Position m_position;
+    Index m_index;
     std::vector<Block> m_blocks;
     std::vector<Block> m_previousStateOfBlocks;
 };

@@ -3,44 +3,44 @@
 
 using namespace std;
 
-static const map<Tetromino::Type, vector<vector<Position>>> rotations {
+static const map<Tetromino::Type, vector<vector<Index>>> rotations {
     {Tetromino::Type::I,
-     {{Position {1, 0}, Position {1, 1}, Position {1, 2}, Position {1, 3}},
-      {Position {0, 2}, Position {1, 2}, Position {2, 2}, Position {3, 2}},
-      {Position {2, 0}, Position {2, 1}, Position {2, 2}, Position {2, 3}},
-      {Position {0, 1}, Position {1, 1}, Position {2, 1}, Position {3, 1}}}},
+     {{Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {1, 3}},
+      {Index {0, 2}, Index {1, 2}, Index {2, 2}, Index {3, 2}},
+      {Index {2, 0}, Index {2, 1}, Index {2, 2}, Index {2, 3}},
+      {Index {0, 1}, Index {1, 1}, Index {2, 1}, Index {3, 1}}}},
     {Tetromino::Type::J,
-     {{Position {0, 0}, Position {1, 0}, Position {1, 1}, Position {1, 2}},
-      {Position {0, 1}, Position {0, 2}, Position {1, 1}, Position {2, 1}},
-      {Position {1, 0}, Position {1, 1}, Position {1, 2}, Position {3, 2}},
-      {Position {0, 1}, Position {1, 1}, Position {2, 0}, Position {2, 1}}}},
+     {{Index {0, 0}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
+      {Index {0, 1}, Index {0, 2}, Index {1, 1}, Index {2, 1}},
+      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {3, 2}},
+      {Index {0, 1}, Index {1, 1}, Index {2, 0}, Index {2, 1}}}},
     {Tetromino::Type::L,
-     {{Position {0, 0}, Position {1, 0}, Position {1, 1}, Position {1, 2}},
-      {Position {0, 1}, Position {0, 2}, Position {1, 1}, Position {2, 1}},
-      {Position {1, 0}, Position {1, 1}, Position {1, 2}, Position {3, 2}},
-      {Position {0, 1}, Position {1, 1}, Position {2, 0}, Position {2, 1}}}},
+     {{Index {0, 0}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
+      {Index {0, 1}, Index {0, 2}, Index {1, 1}, Index {2, 1}},
+      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {3, 2}},
+      {Index {0, 1}, Index {1, 1}, Index {2, 0}, Index {2, 1}}}},
     {Tetromino::Type::O,
-     {{Position {0, 0}, Position {0, 1}, Position {1, 0}, Position {1, 1}}}},
+     {{Index {0, 0}, Index {0, 1}, Index {1, 0}, Index {1, 1}}}},
     {Tetromino::Type::S,
-     {{Position {0, 1}, Position {0, 2}, Position {1, 0}, Position {1, 1}},
-      {Position {0, 1}, Position {1, 1}, Position {1, 2}, Position {2, 2}},
-      {Position {1, 1}, Position {1, 2}, Position {2, 0}, Position {2, 1}},
-      {Position {0, 0}, Position {1, 0}, Position {1, 1}, Position {2, 1}}}},
+     {{Index {0, 1}, Index {0, 2}, Index {1, 0}, Index {1, 1}},
+      {Index {0, 1}, Index {1, 1}, Index {1, 2}, Index {2, 2}},
+      {Index {1, 1}, Index {1, 2}, Index {2, 0}, Index {2, 1}},
+      {Index {0, 0}, Index {1, 0}, Index {1, 1}, Index {2, 1}}}},
     {Tetromino::Type::T,
-     {{Position {0, 1}, Position {1, 0}, Position {1, 1}, Position {1, 2}},
-      {Position {0, 1}, Position {1, 1}, Position {1, 2}, Position {2, 1}},
-      {Position {1, 0}, Position {1, 1}, Position {1, 2}, Position {2, 1}},
-      {Position {0, 1}, Position {1, 0}, Position {1, 1}, Position {2, 1}}}},
+     {{Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
+      {Index {0, 1}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
+      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
+      {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 1}}}},
     {Tetromino::Type::Z,
-     {{Position {0, 0}, Position {0, 1}, Position {1, 1}, Position {1, 2}},
-      {Position {0, 2}, Position {1, 1}, Position {1, 2}, Position {2, 1}},
-      {Position {1, 0}, Position {1, 1}, Position {2, 1}, Position {2, 2}},
-      {Position {0, 1}, Position {1, 0}, Position {1, 1}, Position {2, 0}}}}};
+     {{Index {0, 0}, Index {0, 1}, Index {1, 1}, Index {1, 2}},
+      {Index {0, 2}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
+      {Index {1, 0}, Index {1, 1}, Index {2, 1}, Index {2, 2}},
+      {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 0}}}}};
 
 
 Tetromino::Tetromino() :
   m_type {},
-  m_position {},
+  m_index {},
   m_blocks {},
   m_previousStateOfBlocks {}
 {
@@ -48,9 +48,9 @@ Tetromino::Tetromino() :
 
 
 Tetromino::Tetromino(const Type type, const QColor& color,
-                     const Position& position) :
+                     const Index& index) :
   m_type {type},
-  m_position {position},
+  m_index {index},
   m_blocks {},
   m_previousStateOfBlocks {}
 {
@@ -62,7 +62,7 @@ void Tetromino::drawOn(TetrisBoard& tetrisBoard) const
 {
   for (const Block& block : m_blocks)
   {
-    tetrisBoard.addBlock(block, block.getPosition());
+    tetrisBoard.addBlock(block, block.getIndex());
   }
 }
 
@@ -73,9 +73,9 @@ void Tetromino::moveDown(TetrisBoard& tetrisBoard)
 
   for (Block& block : m_blocks)
   {
-    Position position = block.getPosition();
-    position.setRow(position.getRow() + 1);
-    block.setPosition(position);
+    Index index = block.getIndex();
+    index.setRow(index.getRow() + 1);
+    block.setIndex(index);
   }
 
   if (isLegalMove(tetrisBoard))
@@ -94,9 +94,9 @@ void Tetromino::moveDown(TetrisBoard& tetrisBoard)
 
 void Tetromino::initBlocks(const QColor& color)
 {
-  for (const Position& blockPosition : rotations.at(m_type)[0])
+  for (const Index& blockIndex : rotations.at(m_type)[0])
   {
-    m_blocks.push_back(Block {color, blockPosition + m_position});
+    m_blocks.push_back(Block {color, blockIndex + m_index});
   }
 }
 
@@ -107,15 +107,15 @@ bool Tetromino::isLegalMove(const TetrisBoard& tetrisBoard) const
 
   for (const Block& block : m_blocks)
   {
-    const Position position = block.getPosition();
+    const Index index = block.getIndex();
 
-    if (position.getRow() == tetrisBoardRowCount)
+    if (index.getRow() == tetrisBoardRowCount)
     {
       return false;
     }
-    else if (tetrisBoard.hasBlockAt(position))
+    else if (tetrisBoard.hasBlockAt(index))
     {
-      const Block& block = tetrisBoard.getBlock(position);
+      const Block& block = tetrisBoard.getBlock(index);
       if (block.isLanded())
       {
         return false;
@@ -131,8 +131,8 @@ void Tetromino::removeFrom(TetrisBoard& tetrisBoard)
 {
   for (const Block& block : m_previousStateOfBlocks)
   {
-    const Position position = block.getPosition();
-    tetrisBoard.removeBlock(position);
+    const Index index = block.getIndex();
+    tetrisBoard.removeBlock(index);
   }
 }
 
@@ -143,7 +143,7 @@ void Tetromino::markAsLanded(TetrisBoard& tetrisBoard)
   // are updated.
   for (Block& block : m_blocks)
   {
-    const Position position = block.getPosition();
-    tetrisBoard.getBlock(position).landed(true);
+    const Index index = block.getIndex();
+    tetrisBoard.getBlock(index).landed(true);
   }
 }

@@ -1,12 +1,12 @@
 #include "../headers/block.h"
 #include <cassert>
 
-Block::Block(const QColor& color, const Position& position) :
+Block::Block(const QColor& color, const Index& index) :
   m_color {color},
-  m_position {position},
+  m_index {index},
   m_isLanded {false}
 {
-  assert(position.getRow() >= 0 && position.getColumn() >= 0);
+  assert(index.getRow() >= 0 && index.getColumn() >= 0);
 }
 
 
@@ -28,14 +28,14 @@ QColor Block::getColor() const
 }
 
 
-void Block::setPosition(const Position& position)
+void Block::setIndex(const Index& index)
 {
-  assert(position.getRow() >= 0 && position.getColumn() >= 0);
-  m_position = position;
+  assert(index.getRow() >= 0 && index.getColumn() >= 0);
+  m_index = index;
 }
 
 
-Position Block::getPosition() const
+Index Block::getIndex() const
 {
-  return m_position;
+  return m_index;
 }

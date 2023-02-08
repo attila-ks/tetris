@@ -80,13 +80,13 @@ Tetromino* Tetrion::selectTetromino()
 void Tetrion::fillBag()
 {
   m_bag = {
-      new Tetromino {Tetromino::Type::I, QColor {0x00b8d4}, Position {0, 3}},
-      new Tetromino {Tetromino::Type::J, QColor {0x304ffe}, Position {0, 3}},
-      new Tetromino {Tetromino::Type::L, QColor {0xff6d00}, Position {0, 3}},
-      new Tetromino {Tetromino::Type::O, QColor {0xffd600}, Position {0, 4}},
-      new Tetromino {Tetromino::Type::S, QColor {0x00c853}, Position {0, 3}},
-      new Tetromino {Tetromino::Type::T, QColor {0xaa00ff}, Position {0, 3}},
-      new Tetromino {Tetromino::Type::Z, QColor {0xd50000}, Position {0, 3}},
+      new Tetromino {Tetromino::Type::I, QColor {0x00b8d4}, Index {0, 3}},
+      new Tetromino {Tetromino::Type::J, QColor {0x304ffe}, Index {0, 3}},
+      new Tetromino {Tetromino::Type::L, QColor {0xff6d00}, Index {0, 3}},
+      new Tetromino {Tetromino::Type::O, QColor {0xffd600}, Index {0, 4}},
+      new Tetromino {Tetromino::Type::S, QColor {0x00c853}, Index {0, 3}},
+      new Tetromino {Tetromino::Type::T, QColor {0xaa00ff}, Index {0, 3}},
+      new Tetromino {Tetromino::Type::Z, QColor {0xd50000}, Index {0, 3}},
   };
 }
 

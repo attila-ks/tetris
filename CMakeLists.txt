@@ -18,8 +18,8 @@ qt_add_executable(apptetris
     backend/src/tetromino.cpp
     backend/headers/block.h
     backend/src/block.cpp
-    backend/headers/position.h
-    backend/src/position.cpp
+    backend/headers/index.h
+    backend/src/index.cpp
 )
 
 qt_add_qml_module(apptetris

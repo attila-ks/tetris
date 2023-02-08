@@ -1,7 +1,7 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
-#include "position.h"
+#include "index.h"
 #include <optional>
 #include <vector>
 
@@ -15,19 +15,19 @@ class Gameboard
     int getRows() const;
     int getColumns() const;
 
-    void addItem(const T& item, const Position& position);
+    void addItem(const T& item, const Index& index);
 
     /// @return true if the operation was successful, or false if there is no
-    /// item at the specified @p position.
-    bool removeItem(const Position& position);
+    /// item at the specified @p index.
+    bool removeItem(const Index& index);
 
-    bool hasItemAt(const Position& position) const;
+    bool hasItemAt(const Index& index) const;
 
-    /// @pre make sure there is an item at the given @p position.
-    T& getItem(const Position& position);
+    /// @pre make sure there is an item at the given @p index.
+    T& getItem(const Index& index);
 
-    /// @pre make sure there is an item at the given @p position.
-    const T& getItem(const Position& position) const;
+    /// @pre make sure there is an item at the given @p index.
+    const T& getItem(const Index& index) const;
 
   private:
     int m_rows;
@@ -63,21 +63,21 @@ int Gameboard<T>::getColumns() const
 
 
 template <typename T>
-void Gameboard<T>::addItem(const T& item, const Position& position)
+void Gameboard<T>::addItem(const T& item, const Index& index)
 {
-  const int row = position.getRow();
-  const int column = position.getColumn();
+  const int row = index.getRow();
+  const int column = index.getColumn();
   m_data[row * column + column] = item;
 }
 
 
 template <typename T>
-bool Gameboard<T>::removeItem(const Position& position)
+bool Gameboard<T>::removeItem(const Index& index)
 {
-  if (hasItemAt(position))
+  if (hasItemAt(index))
   {
-    const int row = position.getRow();
-    const int column = position.getColumn();
+    const int row = index.getRow();
+    const int column = index.getColumn();
     m_data[row * column + column].reset();
     return true;
   }
@@ -89,28 +89,28 @@ bool Gameboard<T>::removeItem(const Position& position)
 
 
 template <typename T>
-bool Gameboard<T>::hasItemAt(const Position& position) const
+bool Gameboard<T>::hasItemAt(const Index& index) const
 {
-  const int row = position.getRow();
-  const int column = position.getColumn();
+  const int row = index.getRow();
+  const int column = index.getColumn();
   return m_data[row * column + column].has_value();
 }
 
 
 template <typename T>
-T& Gameboard<T>::getItem(const Position& position)
+T& Gameboard<T>::getItem(const Index& index)
 {
-  const int row = position.getRow();
-  const int column = position.getColumn();
+  const int row = index.getRow();
+  const int column = index.getColumn();
   return m_data[row * column + column].value();
 }
 
 
 template <typename T>
-const T& Gameboard<T>::getItem(const Position& position) const
+const T& Gameboard<T>::getItem(const Index& index) const
 {
-  const int row = position.getRow();
-  const int column = position.getColumn();
+  const int row = index.getRow();
+  const int column = index.getColumn();
   return m_data[row * column + column].value();
 }
 

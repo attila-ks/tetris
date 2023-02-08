@@ -24,13 +24,13 @@ int TetrisBoard::columnCount(const QModelIndex& parent) const
 }
 
 
-QVariant TetrisBoard::data(const QModelIndex& index, int role) const
+QVariant TetrisBoard::data(const QModelIndex& modelIndex, int role) const
 {
-  const Position position = {index.row(), index.column()};
+  const Index index = {modelIndex.row(), modelIndex.column()};
 
-  if (m_gameboard.hasItemAt(position))
+  if (m_gameboard.hasItemAt(index))
   {
-    const Block& block = m_gameboard.getItem(position);
+    const Block& block = m_gameboard.getItem(index);
     return block.getColor();
   }
   else
@@ -40,35 +40,35 @@ QVariant TetrisBoard::data(const QModelIndex& index, int role) const
 }
 
 
-void TetrisBoard::addBlock(const Block& block, const Position& position)
+void TetrisBoard::addBlock(const Block& block, const Index& index)
 {
-  m_gameboard.addItem(block, position);
-  auto index = createIndex(position.getRow(), position.getColumn());
-  emit dataChanged(index, index);
+  m_gameboard.addItem(block, index);
+  QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+  emit dataChanged(modelIndex, modelIndex);
 }
 
 
-void TetrisBoard::removeBlock(const Position& position)
+void TetrisBoard::removeBlock(const Index& index)
 {
-  m_gameboard.removeItem(position);
-  auto index = createIndex(position.getRow(), position.getColumn());
-  emit dataChanged(index, index);
+  m_gameboard.removeItem(index);
+  QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+  emit dataChanged(modelIndex, modelIndex);
 }
 
 
-bool TetrisBoard::hasBlockAt(const Position& position) const
+bool TetrisBoard::hasBlockAt(const Index& index) const
 {
-  return m_gameboard.hasItemAt(position);
+  return m_gameboard.hasItemAt(index);
 }
 
 
-Block& TetrisBoard::getBlock(const Position& position)
+Block& TetrisBoard::getBlock(const Index& index)
 {
-  return m_gameboard.getItem(position);
+  return m_gameboard.getItem(index);
 }
 
 
-const Block& TetrisBoard::getBlock(const Position& position) const
+const Block& TetrisBoard::getBlock(const Index& index) const
 {
-  return m_gameboard.getItem(position);
+  return m_gameboard.getItem(index);
 }

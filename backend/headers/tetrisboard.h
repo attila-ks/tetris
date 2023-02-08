@@ -20,14 +20,14 @@ class TetrisBoard : public QAbstractTableModel
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex& index,
+    QVariant data(const QModelIndex& modelIndex,
                   int role = Qt::DisplayRole) const override;
 
-    void addBlock(const Block& block, const Position& position);
-    void removeBlock(const Position& position);
-    bool hasBlockAt(const Position& position) const;
-    Block& getBlock(const Position& position);
-    const Block& getBlock(const Position& position) const;
+    void addBlock(const Block& block, const Index& index);
+    void removeBlock(const Index& index);
+    bool hasBlockAt(const Index& index) const;
+    Block& getBlock(const Index& index);
+    const Block& getBlock(const Index& index) const;
 
   private:
     Gameboard<Block> m_gameboard;
