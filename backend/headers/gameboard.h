@@ -42,7 +42,7 @@ template <typename T>
 Gameboard<T>::Gameboard(const int rows, const int columns) :
   m_rows {rows},
   m_columns {columns},
-  m_data {rows * columns, std::nullopt}
+  m_data(rows * columns, std::nullopt)
 {
   assert(rows >= 0 && columns >= 0);
 }
@@ -67,7 +67,7 @@ void Gameboard<T>::addItem(const T& item, const Index& index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  m_data[row * column + column] = item;
+  m_data[row * m_columns + column] = item;
 }
 
 
@@ -78,7 +78,7 @@ bool Gameboard<T>::removeItem(const Index& index)
   {
     const int row = index.getRow();
     const int column = index.getColumn();
-    m_data[row * column + column].reset();
+    m_data[row * m_columns + column].reset();
     return true;
   }
   else
@@ -93,7 +93,7 @@ bool Gameboard<T>::hasItemAt(const Index& index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  return m_data[row * column + column].has_value();
+  return m_data[row * m_columns + column].has_value();
 }
 
 
@@ -102,7 +102,7 @@ T& Gameboard<T>::getItem(const Index& index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  return m_data[row * column + column].value();
+  return m_data[row * m_columns + column].value();
 }
 
 
@@ -111,7 +111,7 @@ const T& Gameboard<T>::getItem(const Index& index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  return m_data[row * column + column].value();
+  return m_data[row * m_columns + column].value();
 }
 
 #endif
