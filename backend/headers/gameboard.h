@@ -15,18 +15,28 @@ class Gameboard
     int getRows() const;
     int getColumns() const;
 
+    /// @invariant row and column of @p index must be >= 0 and <= number of rows
+    /// and columns of this Gameboard.
     void addItem(const T& item, const Index& index);
 
+    /// @invariant row and column of @p index must be >= 0 and <= number of rows
+    /// and columns of this Gameboard.
     /// @return true if the operation was successful, or false if there is no
     /// item at the specified @p index.
     bool removeItem(const Index& index);
 
+    /// @invariant row and column of @p index must be >= 0 and <= number of rows
+    /// and columns of this Gameboard.
     bool hasItemAt(const Index& index) const;
 
     /// @pre make sure there is an item at the given @p index.
+    /// @invariant row and column of @p index must be >= 0 and <= number of rows
+    /// and columns of this Gameboard.
     T& getItem(const Index& index);
 
     /// @pre make sure there is an item at the given @p index.
+    /// @invariant row and column of @p index must be >= 0 and <= number of rows
+    /// and columns of this Gameboard.
     const T& getItem(const Index& index) const;
 
   private:
@@ -67,6 +77,7 @@ void Gameboard<T>::addItem(const T& item, const Index& index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
+  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
   m_data[row * m_columns + column] = item;
 }
 
@@ -93,6 +104,7 @@ bool Gameboard<T>::hasItemAt(const Index& index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
+  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
   return m_data[row * m_columns + column].has_value();
 }
 
@@ -102,6 +114,7 @@ T& Gameboard<T>::getItem(const Index& index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
+  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
   return m_data[row * m_columns + column].value();
 }
 
@@ -111,6 +124,7 @@ const T& Gameboard<T>::getItem(const Index& index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
+  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
   return m_data[row * m_columns + column].value();
 }
 
