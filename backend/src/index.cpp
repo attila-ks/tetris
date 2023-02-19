@@ -36,3 +36,9 @@ Index Index::operator+(const Index& rhs) const
 {
   return Index(m_row + rhs.m_row, m_column + rhs.m_column);
 }
+
+
+bool operator==(const Index& lhs, const Index& rhs)
+{
+  return lhs.m_row == rhs.m_row && lhs.m_column == rhs.m_column;
+}

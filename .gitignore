@@ -38,6 +38,8 @@ Thumbs.db
 .clang-format
 CMakeLists.txt.user
 .xdp-.*
+build/
+.cache/
 
 # qtcreator generated files
 *.pro.user*
