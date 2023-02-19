@@ -69,17 +69,17 @@ void Tetrion::fillBag()
 {
   m_bag = {
       make_shared<Tetromino>(Tetromino::Type::I, QColor {0x00b8d4},
-                             Index {0, 3}),
+                             Index {1, 3}),
       make_shared<Tetromino>(Tetromino::Type::J, QColor {0x304ffe},
                              Index {0, 3}),
       make_shared<Tetromino>(Tetromino::Type::L, QColor {0xff6d00},
-                             Index {0, 3}),
+                             Index {0, 5}),
       make_shared<Tetromino>(Tetromino::Type::O, QColor {0xffd600},
                              Index {0, 4}),
       make_shared<Tetromino>(Tetromino::Type::S, QColor {0x00c853},
-                             Index {0, 3}),
+                             Index {0, 4}),
       make_shared<Tetromino>(Tetromino::Type::T, QColor {0xaa00ff},
-                             Index {0, 3}),
+                             Index {0, 4}),
       make_shared<Tetromino>(Tetromino::Type::Z, QColor {0xd50000},
                              Index {0, 3})
   };
