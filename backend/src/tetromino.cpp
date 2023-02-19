@@ -62,7 +62,7 @@ void Tetromino::drawOn(TetrisBoard& tetrisBoard) const
 {
   for (const Block& block : m_blocks)
   {
-    tetrisBoard.addBlock(block, block.getIndex());
+    tetrisBoard.addBlock(block);
   }
 }
 
