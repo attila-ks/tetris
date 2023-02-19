@@ -5,6 +5,7 @@
 #include "tetromino.h"
 #include <QObject>
 #include <QTimer>
+#include <memory>
 #include <vector>
 
 class Tetrion : public QObject
@@ -15,7 +16,6 @@ class Tetrion : public QObject
 
   public:
     Tetrion(QObject* parent = nullptr);
-    ~Tetrion();
 
     const TetrisBoard* getTetrisBoard() const;
 
@@ -26,13 +26,13 @@ class Tetrion : public QObject
     void dropTetromino();
 
   private:
-    Tetromino* selectTetromino();
+    std::shared_ptr<Tetromino> selectTetromino();
     void fillBag();
 
   private:
     TetrisBoard m_tetrisBoard;
-    std::vector<Tetromino*> m_bag;
-    Tetromino* m_currentTetromino;
+    std::vector<std::shared_ptr<Tetromino>> m_bag;
+    std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
 };
 
