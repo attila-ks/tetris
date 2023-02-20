@@ -15,7 +15,7 @@ class Tetrion : public QObject
     Q_PROPERTY(const TetrisBoard* tetrisBoard READ getTetrisBoard CONSTANT)
 
   public:
-    Tetrion(QObject* parent = nullptr);
+    explicit Tetrion(QObject* parent = nullptr);
 
     const TetrisBoard* getTetrisBoard() const;
 
