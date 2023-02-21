@@ -24,11 +24,11 @@ add_executable(
     ../backend/src/index.cpp
     ../backend/src/block.cpp
     backend/src/blocktest.cpp
-    #../backend/headers/tetrisboard.h
-    #../backend/src/tetrisboard.cpp
-    #../backend/headers/tetromino.h
-    #../backend/src/tetromino.cpp
-    #backend/src/tetrominotest.cpp
+    ../backend/headers/tetrisboard.h
+    ../backend/src/tetrisboard.cpp
+    ../backend/headers/tetromino.h
+    ../backend/src/tetromino.cpp
+    backend/src/tetrominotest.cpp
     backend/src/gameboardtest.cpp
 )
 
