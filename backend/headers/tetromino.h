@@ -12,7 +12,7 @@ class Tetromino : public QObject
   public:
     enum class Type {I, J, L, O, S, T, Z};
 
-    Tetromino();
+    Tetromino() = default;
     Tetromino(const Type type, const QColor& color, const Index& begin);
 
     void drawOn(TetrisBoard& tetrisBoard) const;

@@ -38,15 +38,6 @@ static const map<Tetromino::Type, vector<vector<Index>>> rotations {
       {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 0}}}}};
 
 
-Tetromino::Tetromino() :
-  m_type {},
-  m_begin {},
-  m_blocks {},
-  m_previousStateOfBlocks {}
-{
-}
-
-
 Tetromino::Tetromino(const Type type, const QColor& color,
                      const Index& begin) :
   m_type {type},
