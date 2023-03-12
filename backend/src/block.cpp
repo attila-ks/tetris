@@ -1,9 +1,9 @@
 #include "../headers/block.h"
 #include <cassert>
 
-Block::Block(const QColor& color, const Index& index) :
-  m_color {color},
-  m_index {index},
+Block::Block(const QColor color, const Index index) :
+  m_color {std::move(color)},
+  m_index {std::move(index)},
   m_isLanded {false}
 {
   assert(index.getRow() >= 0 && index.getColumn() >= 0);
@@ -22,16 +22,16 @@ bool Block::isLanded() const
 }
 
 
-QColor Block::getColor() const
+const QColor& Block::getColor() const
 {
   return m_color;
 }
 
 
-void Block::setIndex(const Index& index)
+void Block::setIndex(const Index index)
 {
   assert(index.getRow() >= 0 && index.getColumn() >= 0);
-  m_index = index;
+  m_index = std::move(index);
 }
 
 
