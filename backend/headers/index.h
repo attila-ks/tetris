@@ -4,7 +4,7 @@
 class Index
 {
   public:
-    Index();
+    Index() = default;
     Index(const int row, const int column);
 
     void setRow(const int row);

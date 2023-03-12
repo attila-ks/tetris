@@ -1,12 +1,5 @@
 #include "../headers/index.h"
 
-Index::Index() :
-  m_row {},
-  m_column {}
-{
-}
-
-
 Index::Index(const int row, const int column) :
   m_row {row},
   m_column {column}
