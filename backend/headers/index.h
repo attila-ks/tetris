@@ -12,7 +12,7 @@ class Index
 
     int getColumn() const;
 
-    Index operator+(const Index& rhs) const;
+    friend Index operator+(const Index& lhs, const Index& rhs);
     friend bool operator==(const Index& lhs, const Index& rhs);
 
   private:

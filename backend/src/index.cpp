@@ -25,9 +25,10 @@ int Index::getColumn() const
 }
 
 
-Index Index::operator+(const Index& rhs) const
+Index operator+(const Index& lhs, const Index& rhs)
 {
-  return Index(m_row + rhs.m_row, m_column + rhs.m_column);
+  const Index index {lhs.m_row + rhs.m_row, lhs.m_column + rhs.m_column};
+  return index;
 }
 
 
