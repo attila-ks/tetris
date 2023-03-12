@@ -42,7 +42,7 @@ QVariant TetrisBoard::data(const QModelIndex& modelIndex, int role) const
 
 void TetrisBoard::addBlock(const Block& block)
 {
-  const Index& index = block.getIndex();
+  const Index index = block.getIndex();
   m_gameboard.addItem(block, index);
   QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
   emit dataChanged(modelIndex, modelIndex);
