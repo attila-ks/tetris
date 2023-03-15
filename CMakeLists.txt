@@ -24,6 +24,9 @@ qt_add_executable(a.out
     backend/src/index.cpp
     backend/headers/Key.h
     backend/headers/Settings.h
+    backend/headers/KeyEvent.h
+    backend/headers/KeyboardEventHandler.h
+    backend/src/KeyboardEventHandler.cpp
 )
 
 qt_add_qml_module(a.out

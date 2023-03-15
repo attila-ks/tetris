@@ -7,6 +7,8 @@ void initRandomTetrominoGenerator();
 // TODO: Consider to turn the next functions into methods of a class!
 bool doSavedSettingsExist(const Settings& settings);
 void useFallbackSettings(Settings& settings);
+void setUpKeyboardEventHandler(KeyboardEventHandler& keyboardEventHandler,
+                               const Settings& settings, Tetrion& tetrion);
 
 Tetrion::Tetrion(QObject* parent) :
   QObject {parent},
@@ -14,7 +16,8 @@ Tetrion::Tetrion(QObject* parent) :
   m_bag {},
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {},
-  m_settings {"./settings"}
+  m_settings {"./settings"},
+  m_keyboardEventHandler {}
 {
   initRandomTetrominoGenerator();
 
@@ -22,6 +25,8 @@ Tetrion::Tetrion(QObject* parent) :
   {
     useFallbackSettings(m_settings);
   }
+
+  setUpKeyboardEventHandler(m_keyboardEventHandler, m_settings, *this);
 
   m_tetrominoDropTimer.setInterval(1000);
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
@@ -39,6 +44,20 @@ void Tetrion::startGame()
 {
   spawnTetromino();
   m_tetrominoDropTimer.start();
+}
+
+
+void Tetrion::processInput(const Key key, const KeyEvent::Type type)
+{
+  // TODO: Turn these string literals into class constants!
+  // TODO: Consider to call `Settings::getvalue` method only when the settings
+  // have changed!
+  optional<Key> opt;
+  if (opt = m_settings.getValue<Key>("keyboard/move-down");
+      opt.has_value() && opt.value() == key)
+  {
+    m_currentTetromino->moveDown(m_tetrisBoard);
+  }
 }
 
 
@@ -124,3 +143,19 @@ void useFallbackSettings(Settings& settings)
   settings.endGroup();
 }
 
+
+void setUpKeyboardEventHandler(KeyboardEventHandler& keyboardEventHandler,
+                               const Settings& settings, Tetrion& tetrion)
+{
+  constexpr array<string_view, 1> keys {"keyboard/move-down"};
+
+  for (string_view key : keys)
+  {
+    const optional<Key> opt = settings.getValue<Key>(key);
+    keyboardEventHandler.addKey(opt.value(), KeyEvent::Type::KeyPress);
+  }
+
+  keyboardEventHandler.addCallback(
+      [&tetrion](const Key key, const KeyEvent::Type type) -> void
+      { return tetrion.processInput(key, type); });
+}

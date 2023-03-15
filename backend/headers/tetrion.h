@@ -1,7 +1,7 @@
 #ifndef TETRION_H
 #define TETRION_H
 
-#include "Key.h"
+#include "KeyboardEventHandler.h"
 #include "Settings.h"
 #include "tetrisboard.h"
 #include "tetromino.h"
@@ -21,6 +21,8 @@ class Tetrion : public QObject
 
     Q_INVOKABLE void startGame();
 
+    void processInput(const Key key, const KeyEvent::Type type);
+
   private slots:
     void spawnTetromino();
     void dropTetromino();
@@ -35,6 +37,7 @@ class Tetrion : public QObject
     std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
     Settings m_settings;
+    KeyboardEventHandler m_keyboardEventHandler;
 };
 
 #endif

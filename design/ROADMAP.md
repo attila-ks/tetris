@@ -10,7 +10,7 @@
 
 - [x] Create a random tetromino
 - [x] Automatically drop the tetromino
-- [ ] Manually increase the speed of dropping the tetromino
+- [x] Manually increase the speed of dropping the tetromino
 - [ ] Hard drop the tetromino
 - [ ] Move the tetromino left and right
 - [ ] Rotate the tetromino left and right
