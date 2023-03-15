@@ -22,6 +22,8 @@ qt_add_executable(a.out
     backend/src/block.cpp
     backend/headers/index.h
     backend/src/index.cpp
+    backend/headers/Key.h
+    backend/headers/Settings.h
 )
 
 qt_add_qml_module(a.out

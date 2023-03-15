@@ -4,16 +4,24 @@ using namespace std;
 
 // Helper functions:
 void initRandomTetrominoGenerator();
-
+// TODO: Consider to turn the next functions into methods of a class!
+bool doSavedSettingsExist(const Settings& settings);
+void useFallbackSettings(Settings& settings);
 
 Tetrion::Tetrion(QObject* parent) :
   QObject {parent},
   m_tetrisBoard {22, 10, QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
-  m_tetrominoDropTimer {}
+  m_tetrominoDropTimer {},
+  m_settings {"./settings"}
 {
   initRandomTetrominoGenerator();
+
+  if (!doSavedSettingsExist(m_settings))
+  {
+    useFallbackSettings(m_settings);
+  }
 
   m_tetrominoDropTimer.setInterval(1000);
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
@@ -90,3 +98,29 @@ void initRandomTetrominoGenerator()
 {
   srand(time(nullptr));
 }
+
+
+bool doSavedSettingsExist(const Settings& settings)
+{
+  constexpr array<string_view, 1> keys {"keyboard/move-down"};
+
+  for (string_view key : keys)
+  {
+    // TODO: Check if the `key` has `enum Key` value!
+    if (!settings.contains(key))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+void useFallbackSettings(Settings& settings)
+{
+  settings.beginGroup("keyboard");
+  settings.setValue("move-down", Key_S);
+  settings.endGroup();
+}
+

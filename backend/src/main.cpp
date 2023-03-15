@@ -7,6 +7,7 @@ int main(int argc, char* argv[])
 {
   QGuiApplication app(argc, argv);
 
+  qRegisterMetaType<Key>("Key");
   Tetrion tetrion;
 
   QQmlApplicationEngine engine;

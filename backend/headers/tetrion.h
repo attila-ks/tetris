@@ -1,12 +1,12 @@
 #ifndef TETRION_H
 #define TETRION_H
 
+#include "Key.h"
+#include "Settings.h"
 #include "tetrisboard.h"
 #include "tetromino.h"
 #include <QObject>
 #include <QTimer>
-#include <memory>
-#include <vector>
 
 class Tetrion : public QObject
 {
@@ -34,6 +34,7 @@ class Tetrion : public QObject
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
+    Settings m_settings;
 };
 
 #endif
