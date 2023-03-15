@@ -11,7 +11,6 @@
 class Tetrion : public QObject
 {
     Q_OBJECT
-    // Can the compiler use RVO for `getTetrisBoard`?
     Q_PROPERTY(const TetrisBoard* tetrisBoard READ getTetrisBoard CONSTANT)
 
   public:
