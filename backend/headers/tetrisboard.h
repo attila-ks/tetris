@@ -31,7 +31,7 @@ class TetrisBoard : public QAbstractTableModel
 
   private:
     Gameboard<Block> m_gameboard;
-    QColor m_backgroundColor;
+    const QColor m_backgroundColor;
 };
 
 #endif
