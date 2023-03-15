@@ -71,6 +71,7 @@ void Tetromino::moveDown(TetrisBoard& tetrisBoard)
 
   if (isLegalMove(tetrisBoard))
   {
+    m_begin.setRow(m_begin.getRow() + 1);
     removeFrom(tetrisBoard);
     drawOn(tetrisBoard);
   }
