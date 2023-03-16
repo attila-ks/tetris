@@ -98,6 +98,26 @@ void Tetromino::moveLeft(TetrisBoard &tetrisBoard)
 }
 
 
+void Tetromino::moveRight(TetrisBoard &tetrisBoard)
+{
+  m_previousStateOfBlocks = m_blocks;
+
+  for (Block &block : m_blocks) {
+    Index index = block.getIndex();
+    index.setColumn(index.getColumn() + 1);
+    block.setIndex(index);
+  }
+
+  if (isLegalMove(tetrisBoard)) {
+    m_begin.setColumn(m_begin.getColumn() + 1);
+    removeFrom(tetrisBoard);
+    drawOn(tetrisBoard);
+  } else {
+    m_blocks = m_previousStateOfBlocks;
+  }
+}
+
+
 void Tetromino::initBlocks(const QColor &color)
 {
   for (const Index &blockIndex : rotations.at(m_type)[0]) {
