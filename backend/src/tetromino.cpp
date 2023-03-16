@@ -78,6 +78,26 @@ void Tetromino::moveDown(TetrisBoard &tetrisBoard)
 }
 
 
+void Tetromino::moveLeft(TetrisBoard &tetrisBoard)
+{
+  m_previousStateOfBlocks = m_blocks;
+
+  for (Block &block : m_blocks) {
+    Index index = block.getIndex();
+    index.setColumn(index.getColumn() - 1);
+    block.setIndex(index);
+  }
+
+  if (isLegalMove(tetrisBoard)) {
+    m_begin.setColumn(m_begin.getColumn() - 1);
+    removeFrom(tetrisBoard);
+    drawOn(tetrisBoard);
+  } else {
+    m_blocks = m_previousStateOfBlocks;
+  }
+}
+
+
 void Tetromino::initBlocks(const QColor &color)
 {
   for (const Index &blockIndex : rotations.at(m_type)[0]) {
@@ -89,11 +109,14 @@ void Tetromino::initBlocks(const QColor &color)
 bool Tetromino::isLegalMove(const TetrisBoard &tetrisBoard) const
 {
   const int tetrisBoardRowCount = tetrisBoard.rowCount();
+  const int tetrisBoardColumnCount = tetrisBoard.columnCount();
 
   for (const Block &block : m_blocks) {
     const Index index = block.getIndex();
+    const int row = index.getRow();
+    const int column = index.getColumn();
 
-    if (index.getRow() == tetrisBoardRowCount) {
+    if (row == tetrisBoardRowCount || column < 0 || column == tetrisBoardColumnCount) {
       return false;
     } else if (tetrisBoard.hasBlockAt(index)) {
       const Block &block = tetrisBoard.getBlock(index);

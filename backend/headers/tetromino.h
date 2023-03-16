@@ -18,6 +18,7 @@ class Tetromino : public QObject
     void drawOn(TetrisBoard &tetrisBoard) const;
 
     void moveDown(TetrisBoard &tetrisBoard);
+    void moveLeft(TetrisBoard &tetrisBoard);
 
   signals:
     void landed();

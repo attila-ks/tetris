@@ -9,7 +9,8 @@ class Index
 
     void setRow(const int row);
     int getRow() const;
-
+    
+    void setColumn(const int column);
     int getColumn() const;
 
     friend Index operator+(const Index &lhs, const Index &rhs);

@@ -19,6 +19,12 @@ int Index::getRow() const
 }
 
 
+void Index::setColumn(const int column)
+{
+  m_column = column;
+}
+
+
 int Index::getColumn() const
 {
   return m_column;

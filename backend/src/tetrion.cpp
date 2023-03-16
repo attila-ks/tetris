@@ -55,6 +55,9 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   if (opt = m_settings.getValue<Key>("keyboard/move-down");
       opt.has_value() && opt.value() == key) {
     m_currentTetromino->moveDown(m_tetrisBoard);
+  } else if (opt = m_settings.getValue<Key>("keyboard/move-left");
+             opt.has_value() && opt.value() == key) {
+    m_currentTetromino->moveLeft(m_tetrisBoard);
   }
 }
 
@@ -110,7 +113,7 @@ void initRandomTetrominoGenerator()
 
 bool doSavedSettingsExist(const Settings &settings)
 {
-  constexpr array<string_view, 1> keys {"keyboard/move-down"};
+  constexpr array<string_view, 2> keys {"keyboard/move-down", "keyboard/move-left"};
 
   for (string_view key : keys) {
     // TODO: Check if the `key` has `enum Key` value!
@@ -127,6 +130,7 @@ void useFallbackSettings(Settings &settings)
 {
   settings.beginGroup("keyboard");
   settings.setValue("move-down", Key_S);
+  settings.setValue("move-left", Key_A);
   settings.endGroup();
 }
 
@@ -134,7 +138,7 @@ void useFallbackSettings(Settings &settings)
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                const Settings &settings, Tetrion &tetrion)
 {
-  constexpr array<string_view, 1> keys {"keyboard/move-down"};
+  constexpr array<string_view, 2> keys {"keyboard/move-down", "keyboard/move-left"};
 
   for (string_view key : keys) {
     const optional<Key> opt = settings.getValue<Key>(key);
