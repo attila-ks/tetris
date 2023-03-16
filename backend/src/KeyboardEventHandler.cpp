@@ -3,7 +3,7 @@
 
 using namespace std;
 
-KeyboardEventHandler::KeyboardEventHandler(QObject* parent) :
+KeyboardEventHandler::KeyboardEventHandler(QObject *parent) :
   QObject {parent},
   m_filteredKeys {},
   m_callbacks {}
@@ -25,33 +25,26 @@ void KeyboardEventHandler::addCallback(
 }
 
 
-bool KeyboardEventHandler::eventFilter(QObject* obj, QEvent* event)
+bool KeyboardEventHandler::eventFilter(QObject *obj, QEvent *event)
 {
   if (const QEvent::Type eventType = event->type();
-      eventType == QEvent::KeyPress)
-  {
-    const QKeyEvent* const keyEvent = static_cast<QKeyEvent*>(event);
+      eventType == QEvent::KeyPress) {
+    const QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
     // Is it okay to use `std::static_cast` here?
     const Key key = static_cast<Key>(keyEvent->key());
     map<Key, KeyEvent::Type>::const_iterator itr = m_filteredKeys.find(key);
 
     // FIXME: Check the `KeyEvent::Type` too!
-    if (itr != m_filteredKeys.cend())
-    {
-      for (auto& callback : m_callbacks)
-      {
+    if (itr != m_filteredKeys.cend()) {
+      for (auto &callback : m_callbacks) {
         callback(itr->first, itr->second);
       }
-    }
-    else
-    {
+    } else {
       return QObject::eventFilter(obj, event);
     }
 
     return true;
-  }
-  else
-  {
+  } else {
     return QObject::eventFilter(obj, event);
   }
 

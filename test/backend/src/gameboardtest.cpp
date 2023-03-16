@@ -16,10 +16,8 @@ TEST(GameboardTest, ConstructorWithValidParams)
   EXPECT_EQ(gameboard.getRows(), rows);
   EXPECT_EQ(gameboard.getColumns(), columns);
 
-  for (int row = 0; row < rows; ++row)
-  {
-    for (int column = 0; column < columns; ++column)
-    {
+  for (int row = 0; row < rows; ++row) {
+    for (int column = 0; column < columns; ++column) {
       EXPECT_FALSE(gameboard.hasItemAt({row, column}));
     }
   }
@@ -38,20 +36,16 @@ TEST(GameBoardTest, addItem)
 
   const int expectedItem = 5;
   const vector<Index> expectedIndexes {{0, 4}, {0, 5}, {1, 3}, {1, 4}};
-  for (const Index& index : expectedIndexes)
-  {
+  for (const Index &index : expectedIndexes) {
     gameboard.addItem(expectedItem, index);
   }
 
   int foundIndexCounter = 0;
-  for (int row = 0; row < rows; ++row)
-  {
-    for (int column = 0; column < columns; ++column)
-    {
+  for (int row = 0; row < rows; ++row) {
+    for (int column = 0; column < columns; ++column) {
       const Index actualIndex {row, column};
-      if (gameboard.hasItemAt(actualIndex))
-      {
-        const int& actualItem = gameboard.getItem(actualIndex);
+      if (gameboard.hasItemAt(actualIndex)) {
+        const int &actualItem = gameboard.getItem(actualIndex);
         EXPECT_EQ(actualItem, expectedItem);
         EXPECT_EQ(actualIndex, expectedIndexes[foundIndexCounter++]);
       }
@@ -76,20 +70,16 @@ TEST(GameBoardTest, removeItem)
 
   const int item = 5;
   const vector<Index> indexes {{0, 0}, {0, 9}, {21, 0}, {21, 9}};
-  for (const Index& index : indexes)
-  {
+  for (const Index &index : indexes) {
     gameboard.addItem(item, index);
   }
 
-  for (const Index& index : indexes)
-  {
+  for (const Index &index : indexes) {
     EXPECT_TRUE(gameboard.removeItem(index));
   }
 
-  for (int row = 0; row < rows; ++row)
-  {
-    for (int column = 0; column < columns; ++column)
-    {
+  for (int row = 0; row < rows; ++row) {
+    for (int column = 0; column < columns; ++column) {
       EXPECT_FALSE(gameboard.hasItemAt({row, column}));
     }
   }

@@ -9,7 +9,7 @@ class KeyboardEventHandler : public QObject
     Q_OBJECT
 
   public:
-    explicit KeyboardEventHandler(QObject* parent = nullptr);
+    explicit KeyboardEventHandler(QObject *parent = nullptr);
 
     void addKey(const Key key, const KeyEvent::Type type);
 
@@ -18,7 +18,7 @@ class KeyboardEventHandler : public QObject
         std::function<void(const Key key, const KeyEvent::Type type)> callback);
 
   protected:
-    bool eventFilter(QObject* obj, QEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
   private:
     // FIXME: Cannot store the same `Key` with different `KeyEvent::Type`!

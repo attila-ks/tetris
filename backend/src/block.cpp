@@ -22,7 +22,7 @@ bool Block::isLanded() const
 }
 
 
-const QColor& Block::getColor() const
+const QColor &Block::getColor() const
 {
   return m_color;
 }

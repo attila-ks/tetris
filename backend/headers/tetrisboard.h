@@ -13,21 +13,21 @@ class TetrisBoard : public QAbstractTableModel
   public:
     /// @invariant @p rows and @p columns must be >= 0.
     TetrisBoard(const int rows, const int columns,
-                const QColor& backgroundColor,
-                QAbstractTableModel* parent = nullptr);
+                const QColor &backgroundColor,
+                QAbstractTableModel *parent = nullptr);
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex& modelIndex,
+    QVariant data(const QModelIndex &modelIndex,
                   int role = Qt::DisplayRole) const override;
 
-    void addBlock(const Block& block);
-    void removeBlock(const Index& index);
-    bool hasBlockAt(const Index& index) const;
-    Block& getBlock(const Index& index);
-    const Block& getBlock(const Index& index) const;
+    void addBlock(const Block &block);
+    void removeBlock(const Index &index);
+    bool hasBlockAt(const Index &index) const;
+    Block &getBlock(const Index &index);
+    const Block &getBlock(const Index &index) const;
 
   private:
     Gameboard<Block> m_gameboard;

@@ -12,8 +12,8 @@ class Index
 
     int getColumn() const;
 
-    friend Index operator+(const Index& lhs, const Index& rhs);
-    friend bool operator==(const Index& lhs, const Index& rhs);
+    friend Index operator+(const Index &lhs, const Index &rhs);
+    friend bool operator==(const Index &lhs, const Index &rhs);
 
   private:
     int m_row;

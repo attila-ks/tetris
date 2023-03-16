@@ -25,14 +25,14 @@ int Index::getColumn() const
 }
 
 
-Index operator+(const Index& lhs, const Index& rhs)
+Index operator+(const Index &lhs, const Index &rhs)
 {
   const Index index {lhs.m_row + rhs.m_row, lhs.m_column + rhs.m_column};
   return index;
 }
 
 
-bool operator==(const Index& lhs, const Index& rhs)
+bool operator==(const Index &lhs, const Index &rhs)
 {
   return lhs.m_row == rhs.m_row && lhs.m_column == rhs.m_column;
 }

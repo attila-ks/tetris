@@ -4,8 +4,7 @@
 #include <QMetaType>
 #include <qnamespace.h>
 
-enum Key
-{
+enum Key {
   Key_Space = Qt::Key_Space,
   Key_0 = Qt::Key_0,
   Key_1 = Qt::Key_1,

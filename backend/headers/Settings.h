@@ -13,7 +13,7 @@ class Settings
     void endGroup();
 
     template <typename T>
-    void setValue(std::string_view key, const T& value);
+    void setValue(std::string_view key, const T &value);
 
     template <typename T>
     std::optional<T> getValue(std::string_view key) const;
@@ -46,7 +46,7 @@ inline void Settings::endGroup()
 
 
 template <typename T>
-void Settings::setValue(std::string_view key, const T& value)
+void Settings::setValue(std::string_view key, const T &value)
 {
   m_qsettings.setValue(key, QVariant::fromValue(value));
 }
@@ -56,8 +56,7 @@ template <typename T>
 std::optional<T> Settings::getValue(std::string_view key) const
 {
   QVariant variant = m_qsettings.value(key);
-  if (variant.isNull())
-  {
+  if (variant.isNull()) {
     return std::nullopt;
   }
 

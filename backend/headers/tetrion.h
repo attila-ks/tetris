@@ -11,12 +11,12 @@
 class Tetrion : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(const TetrisBoard* tetrisBoard READ getTetrisBoard CONSTANT)
+    Q_PROPERTY(const TetrisBoard *tetrisBoard READ getTetrisBoard CONSTANT)
 
   public:
-    explicit Tetrion(QObject* parent = nullptr);
+    explicit Tetrion(QObject *parent = nullptr);
 
-    const TetrisBoard* getTetrisBoard() const;
+    const TetrisBoard *getTetrisBoard() const;
 
     Q_INVOKABLE void startGame();
 

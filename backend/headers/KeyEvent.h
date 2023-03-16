@@ -6,10 +6,7 @@
 // Is it okay to use namespace instead of class?
 namespace KeyEvent
 {
-  enum Type
-  {
-    KeyPress = QEvent::Type::KeyPress
-  };
+  enum Type { KeyPress = QEvent::Type::KeyPress };
 };
 
 #endif

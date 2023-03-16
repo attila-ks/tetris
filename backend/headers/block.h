@@ -13,7 +13,7 @@ class Block
     void landed(const bool value);
     bool isLanded() const;
 
-    const QColor& getColor() const;
+    const QColor &getColor() const;
 
     /// @invariant row and column of @p index must be >= 0.
     void setIndex(const Index index);
