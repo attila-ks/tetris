@@ -12,7 +12,7 @@
 - [x] Automatically drop the tetromino
 - [x] Manually increase the speed of dropping the tetromino
 - [ ] Hard drop the tetromino
-- [ ] Move the tetromino left and right
+- [x] Move the tetromino left and right
 - [ ] Rotate the tetromino left and right
 - [ ] Clear the filled rows (with or without visual effect)
 - [ ] Increase the speed of dropping the tetromino when a new level is reached
