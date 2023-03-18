@@ -34,4 +34,21 @@ Window {
         visible: false
         anchors.centerIn: parent
     }
+
+    GameOverMenu {
+        id: gameOverMenu
+        visible: false
+
+        onQuitButtonClicked: {
+            Qt.quit()
+        }
+    }
+
+    Connections {
+        target: tetrion
+        function onGameOver() {
+            tetrisBoard.visible = false
+            gameOverMenu.visible = true
+        }
+    }
 }

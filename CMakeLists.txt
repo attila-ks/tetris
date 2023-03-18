@@ -37,6 +37,7 @@ qt_add_qml_module(a.out
         frontend/MainMenu.qml
         frontend/TextButton.qml
         frontend/TetrisBoard.qml
+        frontend/GameOverMenu.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf

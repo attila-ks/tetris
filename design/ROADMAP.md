@@ -38,6 +38,7 @@
 - [ ] Exit the game (current state is saved)
 - [ ] Save the game state automatically on exit
 - [ ] Load the game state manually
-- [ ] Display a window at the game over, where the user can choose from the following:
+- [x] Display a window at the game over, where the user can choose from the following:
   - [ ] Load the previously saved state
   - [ ] Start a new game
+  - [x] Exit the game

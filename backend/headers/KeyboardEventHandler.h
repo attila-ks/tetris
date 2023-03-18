@@ -17,6 +17,8 @@ class KeyboardEventHandler : public QObject
     void addCallback(
         std::function<void(const Key key, const KeyEvent::Type type)> callback);
 
+    void pause(const bool value);
+
   protected:
     bool eventFilter(QObject *obj, QEvent *event);
 
@@ -24,6 +26,7 @@ class KeyboardEventHandler : public QObject
     // FIXME: Cannot store the same `Key` with different `KeyEvent::Type`!
     std::map<Key const, KeyEvent::Type> m_filteredKeys;
     std::vector<std::function<void(Key, KeyEvent::Type)>> m_callbacks;
+    bool m_pauseEventHandle;
 };
 
 #endif

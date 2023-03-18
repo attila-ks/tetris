@@ -22,9 +22,14 @@ class Tetrion : public QObject
 
     void processInput(const Key key, const KeyEvent::Type type);
 
+  signals:
+    void gameOver();
+
   private slots:
     void spawnTetromino();
     void dropTetromino();
+
+    void checkGameOver();
 
   private:
     std::shared_ptr<Tetromino> selectTetromino();

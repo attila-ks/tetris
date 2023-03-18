@@ -6,7 +6,8 @@ using namespace std;
 KeyboardEventHandler::KeyboardEventHandler(QObject *parent) :
   QObject {parent},
   m_filteredKeys {},
-  m_callbacks {}
+  m_callbacks {},
+  m_pauseEventHandle {false}
 {
   QGuiApplication::instance()->installEventFilter(this);
 }
@@ -25,8 +26,17 @@ void KeyboardEventHandler::addCallback(
 }
 
 
+void KeyboardEventHandler::pause(const bool value)
+{
+  m_pauseEventHandle = value;
+}
+
+
 bool KeyboardEventHandler::eventFilter(QObject *obj, QEvent *event)
 {
+  if (m_pauseEventHandle) {
+    return QObject::eventFilter(obj, event);
+  }
   if (const QEvent::Type eventType = event->type();
       eventType == QEvent::KeyPress) {
     const QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
