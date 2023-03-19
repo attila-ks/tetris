@@ -20,6 +20,7 @@ class Tetromino : public QObject
     void moveDown(TetrisBoard &tetrisBoard);
     void moveLeft(TetrisBoard &tetrisBoard);
     void moveRight(TetrisBoard &tetrisBoard);
+    void rotateLeft(TetrisBoard &tetrisBoard);
 
   signals:
     void landed();
@@ -38,6 +39,7 @@ class Tetromino : public QObject
     Index m_begin;
     std::vector<Block> m_blocks;
     std::vector<Block> m_previousStateOfBlocks;
+    int m_rotationIndex;
 };
 
 #endif
