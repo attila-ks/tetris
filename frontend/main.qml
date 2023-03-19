@@ -27,6 +27,10 @@ Window {
             tetrisBoard.visible = true
             tetrion.startGame()
         }
+
+        onQuitButtonClicked: {
+            Qt.quit()
+        }
     }
 
     TetrisBoard {

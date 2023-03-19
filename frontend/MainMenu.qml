@@ -5,6 +5,7 @@ Item {
     height: 560
 
     signal newGameButtonClicked
+    signal quitButtonClicked
 
     // TODO: Investigate whether using multiple FontLoaders affects performance,
     // and if so, how to load just one and use it everywhere it needed? Because
@@ -68,5 +69,9 @@ Item {
         font.letterSpacing: 8
         anchors.horizontalCenter: parent.horizontalCenter
         y: settingsButton.y + 48
+
+        onClicked: {
+            parent.quitButtonClicked()
+        }
     }
 }
