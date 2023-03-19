@@ -64,6 +64,9 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   } else if (opt = m_settings.getValue<Key>("keyboard/rotate-left");
              opt.has_value() && opt.value() == key) {
     m_currentTetromino->rotateLeft(m_tetrisBoard);
+  } else if (opt = m_settings.getValue<Key>("keyboard/rotate-right");
+             opt.has_value() && opt.value() == key) {
+    m_currentTetromino->rotateRight(m_tetrisBoard);
   }
 }
 
@@ -135,10 +138,11 @@ void initRandomTetrominoGenerator()
 
 bool doSavedSettingsExist(const Settings &settings)
 {
-  constexpr array<string_view, 4> keys {"keyboard/move-down",
+  constexpr array<string_view, 5> keys {"keyboard/move-down",
                                         "keyboard/move-left",
                                         "keyboard/move-right",
-                                        "keyboard/rotate-left"};
+                                        "keyboard/rotate-left",
+                                        "keyboard/rotate-right"};
 
   for (string_view key : keys) {
     // TODO: Check if the `key` has `enum Key` value!
@@ -158,6 +162,7 @@ void useFallbackSettings(Settings &settings)
   settings.setValue("move-left", Key_A);
   settings.setValue("move-right", Key_D);
   settings.setValue("rotate-left", Key_Q);
+  settings.setValue("rotate-right", Key_E);
   settings.endGroup();
 }
 
@@ -165,10 +170,11 @@ void useFallbackSettings(Settings &settings)
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                const Settings &settings, Tetrion &tetrion)
 {
-  constexpr array<string_view, 4> keys {"keyboard/move-down",
+  constexpr array<string_view, 5> keys {"keyboard/move-down",
                                         "keyboard/move-left",
                                         "keyboard/move-right",
-                                        "keyboard/rotate-left"};
+                                        "keyboard/rotate-left",
+                                        "keyboard/rotate-right"};
 
   for (string_view key : keys) {
     const optional<Key> opt = settings.getValue<Key>(key);

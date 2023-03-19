@@ -143,6 +143,31 @@ void Tetromino::rotateLeft(TetrisBoard &tetrisBoard)
 }
 
 
+// FIXME: Rotation methods have duplicate code!
+void Tetromino::rotateRight(TetrisBoard &tetrisBoard)
+{
+  m_previousStateOfBlocks = m_blocks;
+
+  const int prevRotationIndex = m_rotationIndex--;
+  if (m_rotationIndex < 0) {
+    m_rotationIndex = rotations.at(m_type).size() - 1;
+  }
+
+  const vector<Index> &rotation = rotations.at(m_type)[m_rotationIndex];
+  for (int i = 0; i < rotation.size(); ++i) {
+    m_blocks[i].setIndex(m_begin + rotation[i]);
+  }
+
+  if (isLegalMove(tetrisBoard)) {
+    removeFrom(tetrisBoard);
+    drawOn(tetrisBoard);
+  } else {
+    m_blocks = m_previousStateOfBlocks;
+    m_rotationIndex = prevRotationIndex;
+  }
+}
+
+
 void Tetromino::initBlocks(const QColor &color)
 {
   for (const Index &blockIndex : rotations.at(m_type)[m_rotationIndex]) {
