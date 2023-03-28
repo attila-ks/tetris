@@ -168,6 +168,36 @@ void Tetromino::rotateRight(TetrisBoard &tetrisBoard)
 }
 
 
+void Tetromino::hardDrop(TetrisBoard &tetrisBoard)
+{
+  const int top = m_begin.getRow();
+  const int bottom = tetrisBoard.rowCount();
+
+  m_previousStateOfBlocks = m_blocks;
+
+  for (int i = 1; i < bottom; ++i) {
+
+    const vector<Block> lastLegalStateOfBlocks = m_blocks;
+
+    for (Block &block : m_blocks) {
+      Index index = block.getIndex();
+      index.setRow(index.getRow() + 1);
+      block.setIndex(index);
+    }
+
+    if (!isLegalMove(tetrisBoard)) {
+      m_blocks = lastLegalStateOfBlocks;
+      m_begin.setRow(m_begin.getRow() + i);
+      removeFrom(tetrisBoard);
+      drawOn(tetrisBoard);
+      markAsLanded(tetrisBoard);
+      emit landed();
+      break;
+    }
+  }
+}
+
+
 void Tetromino::initBlocks(const QColor &color)
 {
   for (const Index &blockIndex : rotations.at(m_type)[m_rotationIndex]) {
@@ -186,7 +216,8 @@ bool Tetromino::isLegalMove(const TetrisBoard &tetrisBoard) const
     const int row = index.getRow();
     const int column = index.getColumn();
 
-    if (row == tetrisBoardRowCount || column < 0 || column == tetrisBoardColumnCount) {
+    if (row >= tetrisBoardRowCount || column < 0 ||
+        column >= tetrisBoardColumnCount) {
       return false;
     } else if (tetrisBoard.hasBlockAt(index)) {
       const Block &block = tetrisBoard.getBlock(index);

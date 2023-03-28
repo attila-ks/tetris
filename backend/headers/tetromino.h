@@ -22,6 +22,7 @@ class Tetromino : public QObject
     void moveRight(TetrisBoard &tetrisBoard);
     void rotateLeft(TetrisBoard &tetrisBoard);
     void rotateRight(TetrisBoard &tetrisBoard);
+    void hardDrop(TetrisBoard &tetrisBoard);
 
   signals:
     void landed();

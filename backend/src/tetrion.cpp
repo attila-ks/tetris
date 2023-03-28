@@ -67,6 +67,9 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   } else if (opt = m_settings.getValue<Key>("keyboard/rotate-right");
              opt.has_value() && opt.value() == key) {
     m_currentTetromino->rotateRight(m_tetrisBoard);
+  } else if (opt = m_settings.getValue<Key>("keyboard/hard-drop");
+             opt.has_value() && opt.value() == key) {
+    m_currentTetromino->hardDrop(m_tetrisBoard);
   }
 }
 
@@ -138,11 +141,12 @@ void initRandomTetrominoGenerator()
 
 bool doSavedSettingsExist(const Settings &settings)
 {
-  constexpr array<string_view, 5> keys {"keyboard/move-down",
+  constexpr array<string_view, 6> keys {"keyboard/move-down",
                                         "keyboard/move-left",
                                         "keyboard/move-right",
                                         "keyboard/rotate-left",
-                                        "keyboard/rotate-right"};
+                                        "keyboard/rotate-right",
+                                        "keyboard/hard-drop"};
 
   for (string_view key : keys) {
     // TODO: Check if the `key` has `enum Key` value!
@@ -163,6 +167,7 @@ void useFallbackSettings(Settings &settings)
   settings.setValue("move-right", Key_D);
   settings.setValue("rotate-left", Key_Q);
   settings.setValue("rotate-right", Key_E);
+  settings.setValue("hard-drop", Key_Space);
   settings.endGroup();
 }
 
@@ -170,11 +175,12 @@ void useFallbackSettings(Settings &settings)
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                const Settings &settings, Tetrion &tetrion)
 {
-  constexpr array<string_view, 5> keys {"keyboard/move-down",
+  constexpr array<string_view, 6> keys {"keyboard/move-down",
                                         "keyboard/move-left",
                                         "keyboard/move-right",
                                         "keyboard/rotate-left",
-                                        "keyboard/rotate-right"};
+                                        "keyboard/rotate-right",
+                                        "keyboard/hard-drop"};
 
   for (string_view key : keys) {
     const optional<Key> opt = settings.getValue<Key>(key);
