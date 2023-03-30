@@ -78,6 +78,8 @@ void Tetrion::spawnTetromino()
 {
   m_currentTetromino = selectTetromino();
 
+  connect(m_currentTetromino.get(), &Tetromino::landed, &m_tetrisBoard,
+          &TetrisBoard::clearFilledRows);
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
           &Tetrion::checkGameOver);
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
@@ -97,7 +99,7 @@ void Tetrion::checkGameOver()
 {
   const int tetrisBoardColumnCount = m_tetrisBoard.columnCount();
   for (int i = 0; i < tetrisBoardColumnCount; ++i) {
-    if (m_tetrisBoard.hasBlockAt({1, i})) {
+    if (m_tetrisBoard.hasLandedBlockAt({1, i})) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
       emit gameOver();

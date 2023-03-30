@@ -19,11 +19,11 @@ class Gameboard
     /// and columns of this Gameboard.
     void addItem(const T &item, const Index &index);
 
+    /// @pre make sure there is an item at the given @p index.
     /// @invariant row and column of @p index must be >= 0 and <= number of rows
     /// and columns of this Gameboard.
-    /// @return true if the operation was successful, or false if there is no
-    /// item at the specified @p index.
-    bool removeItem(const Index &index);
+    /// @return the removed item at the specified @p index.
+    T removeItem(const Index &index);
 
     /// @invariant row and column of @p index must be >= 0 and <= number of rows
     /// and columns of this Gameboard.
@@ -83,16 +83,15 @@ void Gameboard<T>::addItem(const T &item, const Index &index)
 
 
 template <typename T>
-bool Gameboard<T>::removeItem(const Index &index)
+T Gameboard<T>::removeItem(const Index &index)
 {
-  if (hasItemAt(index)) {
-    const int row = index.getRow();
-    const int column = index.getColumn();
-    m_data[row * m_columns + column].reset();
-    return true;
-  } else {
-    return false;
-  }
+  assert(hasItemAt(index));
+
+  const int row = index.getRow();
+  const int column = index.getColumn();
+  const T &item = m_data[row * m_columns + column].value();
+  m_data[row * m_columns + column] = std::nullopt;
+  return item;
 }
 
 

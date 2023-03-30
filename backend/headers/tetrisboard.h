@@ -24,12 +24,18 @@ class TetrisBoard : public QAbstractTableModel
                   int role = Qt::DisplayRole) const override;
 
     void addBlock(const Block &block);
-    void removeBlock(const Index &index);
-    bool hasBlockAt(const Index &index) const;
+    Block removeBlock(const Index &index);
+    bool hasLandedBlockAt(const Index &index) const;
     Block &getBlock(const Index &index);
     const Block &getBlock(const Index &index) const;
 
+  public slots:
+    void clearFilledRows();
+
   private:
+    void clearFilledRow(const int row);
+    void moveBlocksDown(const int clearedRow);
+
     Gameboard<Block> m_gameboard;
     const QColor m_backgroundColor;
 };

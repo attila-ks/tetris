@@ -219,11 +219,8 @@ bool Tetromino::isLegalMove(const TetrisBoard &tetrisBoard) const
     if (row >= tetrisBoardRowCount || column < 0 ||
         column >= tetrisBoardColumnCount) {
       return false;
-    } else if (tetrisBoard.hasBlockAt(index)) {
-      const Block &block = tetrisBoard.getBlock(index);
-      if (block.isLanded()) {
-        return false;
-      }
+    } else if (tetrisBoard.hasLandedBlockAt(index)) {
+      return false;
     }
   }
 
