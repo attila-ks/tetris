@@ -78,11 +78,12 @@ const Block &TetrisBoard::getBlock(const Index &index) const
 }
 
 
-void TetrisBoard::clearFilledRows()
+int TetrisBoard::clearFilledRows()
 {
   const int top = 0;
   const int bottom = rowCount() - 1;
   const int columns = columnCount();
+  int clearedRowCounter = 0;
 
   for (int row = bottom; row >= top;) {
     int filledColumnCounter = 0;
@@ -100,10 +101,13 @@ void TetrisBoard::clearFilledRows()
     } else if (filledColumnCounter == columns) {
       clearFilledRow(row);
       moveBlocksDown(row);
+      ++clearedRowCounter;
     } else {
       --row;
     }
   }
+
+  return clearedRowCounter;
 }
 
 

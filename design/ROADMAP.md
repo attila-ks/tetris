@@ -15,10 +15,10 @@
 - [x] Move the tetromino left and right
 - [x] Rotate the tetromino left and right
 - [x] Clear the filled rows (with or without visual effect)
-- [ ] Increase the speed of dropping the tetromino when a new level is reached
+- [x] Increase the speed of dropping the tetromino when a new level is reached
 - [ ] Display the ghost tetromino
 - [ ] Display the next tetromino
-- [ ] Display the current level
+- [x] Display the current level
 - [ ] Display the score
 - [ ] Display the high score
 

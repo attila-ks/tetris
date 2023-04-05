@@ -29,8 +29,8 @@ class TetrisBoard : public QAbstractTableModel
     Block &getBlock(const Index &index);
     const Block &getBlock(const Index &index) const;
 
-  public slots:
-    void clearFilledRows();
+    /// @return the number of cleared rows, if any.
+    int clearFilledRows();
 
   private:
     void clearFilledRow(const int row);

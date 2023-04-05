@@ -25,6 +25,7 @@ Window {
         onNewGameButtonClicked: {
             visible = false
             tetrisBoard.visible = true
+            level.visible = true
             tetrion.startGame()
         }
 
@@ -37,6 +38,14 @@ Window {
         id: tetrisBoard
         visible: false
         anchors.centerIn: parent
+    }
+
+    Level {
+        id: level
+        visible: false
+        anchors.right: tetrisBoard.left
+        anchors.rightMargin: 17
+        anchors.bottom: tetrisBoard.bottom
     }
 
     GameOverMenu {
@@ -52,6 +61,7 @@ Window {
         target: tetrion
         function onGameOver() {
             tetrisBoard.visible = false
+            level.visible = false
             gameOverMenu.visible = true
         }
     }

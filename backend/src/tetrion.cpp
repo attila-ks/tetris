@@ -17,7 +17,9 @@ Tetrion::Tetrion(QObject *parent) :
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {},
   m_settings {"./settings"},
-  m_keyboardEventHandler {}
+  m_keyboardEventHandler {},
+  m_level {1},
+  m_levelProgress {0.0f}
 {
   initRandomTetrominoGenerator();
 
@@ -27,7 +29,7 @@ Tetrion::Tetrion(QObject *parent) :
 
   setUpKeyboardEventHandler(m_keyboardEventHandler, m_settings, *this);
 
-  m_tetrominoDropTimer.setInterval(1000);
+  setSpeed();
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
           &Tetrion::dropTetromino);
 }
@@ -36,6 +38,18 @@ Tetrion::Tetrion(QObject *parent) :
 const TetrisBoard *Tetrion::getTetrisBoard() const
 {
   return &m_tetrisBoard;
+}
+
+
+int Tetrion::getLevel() const
+{
+  return m_level;
+}
+
+
+float Tetrion::getLevelProgress() const
+{
+  return m_levelProgress;
 }
 
 
@@ -74,16 +88,33 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
 }
 
 
+void Tetrion::handleTetrominoLanding()
+{
+  const int clearedRows = m_tetrisBoard.clearFilledRows();
+
+  checkGameOver();
+
+  m_levelProgress += clearedRows * 0.1f;
+
+  if (m_levelProgress >= 1.0f) {
+    increaseLevel();
+    setSpeed();
+    m_levelProgress = m_levelProgress - 1.0f;
+    emit levelProgressed();
+  } else if (clearedRows > 0) {
+    emit levelProgressed();
+  }
+
+  spawnTetromino();
+}
+
+
 void Tetrion::spawnTetromino()
 {
   m_currentTetromino = selectTetromino();
 
-  connect(m_currentTetromino.get(), &Tetromino::landed, &m_tetrisBoard,
-          &TetrisBoard::clearFilledRows);
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
-          &Tetrion::checkGameOver);
-  connect(m_currentTetromino.get(), &Tetromino::landed, this,
-          &Tetrion::spawnTetromino);
+          &Tetrion::handleTetrominoLanding);
 
   m_currentTetromino->drawOn(m_tetrisBoard);
 }
@@ -124,14 +155,69 @@ shared_ptr<Tetromino> Tetrion::selectTetromino()
 
 void Tetrion::fillBag()
 {
-  m_bag = {
-    make_shared<Tetromino>(Tetromino::Type::I, QColor {0x00b8d4}, Index {1, 3}),
-    make_shared<Tetromino>(Tetromino::Type::J, QColor {0x304ffe}, Index {0, 3}),
-    make_shared<Tetromino>(Tetromino::Type::L, QColor {0xff6d00}, Index {0, 3}),
-    make_shared<Tetromino>(Tetromino::Type::O, QColor {0xffd600}, Index {0, 4}),
-    make_shared<Tetromino>(Tetromino::Type::S, QColor {0x00c853}, Index {0, 3}),
-    make_shared<Tetromino>(Tetromino::Type::T, QColor {0xaa00ff}, Index {0, 3}),
-    make_shared<Tetromino>(Tetromino::Type::Z, QColor {0xd50000}, Index {0, 3})};
+  m_bag = {make_shared<Tetromino>(Tetromino::Type::I, QColor {0x00b8d4},
+                                  Index {1, 3}),
+           make_shared<Tetromino>(Tetromino::Type::J, QColor {0x304ffe},
+                                  Index {0, 3}),
+           make_shared<Tetromino>(Tetromino::Type::L, QColor {0xff6d00},
+                                  Index {0, 3}),
+           make_shared<Tetromino>(Tetromino::Type::O, QColor {0xffd600},
+                                  Index {0, 4}),
+           make_shared<Tetromino>(Tetromino::Type::S, QColor {0x00c853},
+                                  Index {0, 3}),
+           make_shared<Tetromino>(Tetromino::Type::T, QColor {0xaa00ff},
+                                  Index {0, 3}),
+           make_shared<Tetromino>(Tetromino::Type::Z, QColor {0xd50000},
+                                  Index {0, 3})};
+}
+
+
+void Tetrion::increaseLevel()
+{
+  ++m_level;
+  emit levelIncreased();
+}
+
+
+void Tetrion::setSpeed()
+{
+  int frames;
+
+  switch (m_level) {
+    case 1:
+      frames = 48;
+      break;
+    case 2:
+      frames = 43;
+      break;
+    case 3:
+      frames = 38;
+      break;
+    case 4:
+      frames = 33;
+      break;
+    case 5:
+      frames = 28;
+      break;
+    case 6:
+      frames = 23;
+      break;
+    case 7:
+      frames = 18;
+      break;
+    case 8:
+      frames = 13;
+      break;
+    case 9:
+      frames = 8;
+      break;
+    default:
+      frames = 6;
+  }
+
+  const int millisecond = 1000;
+  const double speed = frames / 60.0 * millisecond;
+  m_tetrominoDropTimer.setInterval(speed);
 }
 
 
@@ -143,12 +229,9 @@ void initRandomTetrominoGenerator()
 
 bool doSavedSettingsExist(const Settings &settings)
 {
-  constexpr array<string_view, 6> keys {"keyboard/move-down",
-                                        "keyboard/move-left",
-                                        "keyboard/move-right",
-                                        "keyboard/rotate-left",
-                                        "keyboard/rotate-right",
-                                        "keyboard/hard-drop"};
+  constexpr array<string_view, 6> keys {
+      "keyboard/move-down",   "keyboard/move-left",    "keyboard/move-right",
+      "keyboard/rotate-left", "keyboard/rotate-right", "keyboard/hard-drop"};
 
   for (string_view key : keys) {
     // TODO: Check if the `key` has `enum Key` value!
@@ -177,12 +260,9 @@ void useFallbackSettings(Settings &settings)
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                const Settings &settings, Tetrion &tetrion)
 {
-  constexpr array<string_view, 6> keys {"keyboard/move-down",
-                                        "keyboard/move-left",
-                                        "keyboard/move-right",
-                                        "keyboard/rotate-left",
-                                        "keyboard/rotate-right",
-                                        "keyboard/hard-drop"};
+  constexpr array<string_view, 6> keys {
+      "keyboard/move-down",   "keyboard/move-left",    "keyboard/move-right",
+      "keyboard/rotate-left", "keyboard/rotate-right", "keyboard/hard-drop"};
 
   for (string_view key : keys) {
     const optional<Key> opt = settings.getValue<Key>(key);

@@ -17,6 +17,8 @@ class Tetrion : public QObject
     explicit Tetrion(QObject *parent = nullptr);
 
     const TetrisBoard *getTetrisBoard() const;
+    Q_INVOKABLE int getLevel() const;
+    Q_INVOKABLE float getLevelProgress() const;
 
     Q_INVOKABLE void startGame();
 
@@ -24,24 +26,32 @@ class Tetrion : public QObject
 
   signals:
     void gameOver();
+    void levelIncreased();
+    void levelProgressed();
 
   private slots:
+    void handleTetrominoLanding();
+
+  private:
     void spawnTetromino();
     void dropTetromino();
 
     void checkGameOver();
 
-  private:
     std::shared_ptr<Tetromino> selectTetromino();
     void fillBag();
 
-  private:
+    void increaseLevel();
+    void setSpeed();
+
     TetrisBoard m_tetrisBoard;
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
     Settings m_settings;
     KeyboardEventHandler m_keyboardEventHandler;
+    int m_level;
+    float m_levelProgress;
 };
 
 #endif
