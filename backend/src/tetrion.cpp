@@ -12,7 +12,7 @@ void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
 
 Tetrion::Tetrion(QObject *parent) :
   QObject {parent},
-  m_tetrisBoard {22, 10, QColor {0x0e001f}},
+  m_playfield {22, 10, QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {},
@@ -35,9 +35,9 @@ Tetrion::Tetrion(QObject *parent) :
 }
 
 
-const TetrisBoard *Tetrion::getTetrisBoard() const
+const Playfield *Tetrion::getPlayfield() const
 {
-  return &m_tetrisBoard;
+  return &m_playfield;
 }
 
 
@@ -68,29 +68,29 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   optional<Key> opt;
   if (opt = m_settings.getValue<Key>("keyboard/move-down");
       opt.has_value() && opt.value() == key) {
-    m_currentTetromino->moveDown(m_tetrisBoard);
+    m_currentTetromino->moveDown(m_playfield);
   } else if (opt = m_settings.getValue<Key>("keyboard/move-left");
              opt.has_value() && opt.value() == key) {
-    m_currentTetromino->moveLeft(m_tetrisBoard);
+    m_currentTetromino->moveLeft(m_playfield);
   } else if (opt = m_settings.getValue<Key>("keyboard/move-right");
              opt.has_value() && opt.value() == key) {
-    m_currentTetromino->moveRight(m_tetrisBoard);
+    m_currentTetromino->moveRight(m_playfield);
   } else if (opt = m_settings.getValue<Key>("keyboard/rotate-left");
              opt.has_value() && opt.value() == key) {
-    m_currentTetromino->rotateLeft(m_tetrisBoard);
+    m_currentTetromino->rotateLeft(m_playfield);
   } else if (opt = m_settings.getValue<Key>("keyboard/rotate-right");
              opt.has_value() && opt.value() == key) {
-    m_currentTetromino->rotateRight(m_tetrisBoard);
+    m_currentTetromino->rotateRight(m_playfield);
   } else if (opt = m_settings.getValue<Key>("keyboard/hard-drop");
              opt.has_value() && opt.value() == key) {
-    m_currentTetromino->hardDrop(m_tetrisBoard);
+    m_currentTetromino->hardDrop(m_playfield);
   }
 }
 
 
 void Tetrion::handleTetrominoLanding()
 {
-  const int clearedRows = m_tetrisBoard.clearFilledRows();
+  const int clearedRows = m_playfield.clearFilledRows();
 
   checkGameOver();
 
@@ -116,21 +116,21 @@ void Tetrion::spawnTetromino()
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
           &Tetrion::handleTetrominoLanding);
 
-  m_currentTetromino->drawOn(m_tetrisBoard);
+  m_currentTetromino->drawOn(m_playfield);
 }
 
 
 void Tetrion::dropTetromino()
 {
-  m_currentTetromino->moveDown(m_tetrisBoard);
+  m_currentTetromino->moveDown(m_playfield);
 }
 
 
 void Tetrion::checkGameOver()
 {
-  const int tetrisBoardColumnCount = m_tetrisBoard.columnCount();
-  for (int i = 0; i < tetrisBoardColumnCount; ++i) {
-    if (m_tetrisBoard.hasLandedBlockAt({1, i})) {
+  const int playfieldColumnCount = m_playfield.columnCount();
+  for (int i = 0; i < playfieldColumnCount; ++i) {
+    if (m_playfield.hasLandedBlockAt({1, i})) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
       emit gameOver();

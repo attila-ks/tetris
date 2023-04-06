@@ -14,8 +14,8 @@ qt_add_executable(a.out
     backend/headers/tetrion.h
     backend/src/tetrion.cpp
     backend/headers/gameboard.h
-    backend/headers/tetrisboard.h
-    backend/src/tetrisboard.cpp
+    backend/headers/Playfield.h
+    backend/src/Playfield.cpp
     backend/headers/tetromino.h
     backend/src/tetromino.cpp
     backend/headers/block.h
@@ -36,7 +36,7 @@ qt_add_qml_module(a.out
         frontend/main.qml
         frontend/MainMenu.qml
         frontend/TextButton.qml
-        frontend/TetrisBoard.qml
+        frontend/Playfield.qml
         frontend/GameOverMenu.qml
         frontend/Level.qml
         frontend/Line.qml

@@ -24,8 +24,8 @@ add_executable(
     ../backend/src/index.cpp
     ../backend/src/block.cpp
     backend/src/blocktest.cpp
-    ../backend/headers/tetrisboard.h
-    ../backend/src/tetrisboard.cpp
+    ../backend/headers/playfield.h
+    ../backend/src/playfield.cpp
     ../backend/headers/tetromino.h
     ../backend/src/tetromino.cpp
     backend/src/tetrominotest.cpp

@@ -49,15 +49,15 @@ Tetromino::Tetromino(const Type type, const QColor &color, const Index &begin) :
 }
 
 
-void Tetromino::drawOn(TetrisBoard &tetrisBoard) const
+void Tetromino::drawOn(Playfield &playfield) const
 {
   for (const Block &block : m_blocks) {
-    tetrisBoard.addBlock(block);
+    playfield.addBlock(block);
   }
 }
 
 
-void Tetromino::moveDown(TetrisBoard &tetrisBoard)
+void Tetromino::moveDown(Playfield &playfield)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -67,19 +67,19 @@ void Tetromino::moveDown(TetrisBoard &tetrisBoard)
     block.setIndex(index);
   }
 
-  if (isLegalMove(tetrisBoard)) {
+  if (isLegalMove(playfield)) {
     m_begin.setRow(m_begin.getRow() + 1);
-    removeFrom(tetrisBoard);
-    drawOn(tetrisBoard);
+    removeFrom(playfield);
+    drawOn(playfield);
   } else {
     m_blocks = m_previousStateOfBlocks;
-    markAsLanded(tetrisBoard);
+    markAsLanded(playfield);
     emit landed();
   }
 }
 
 
-void Tetromino::moveLeft(TetrisBoard &tetrisBoard)
+void Tetromino::moveLeft(Playfield &playfield)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -89,17 +89,17 @@ void Tetromino::moveLeft(TetrisBoard &tetrisBoard)
     block.setIndex(index);
   }
 
-  if (isLegalMove(tetrisBoard)) {
+  if (isLegalMove(playfield)) {
     m_begin.setColumn(m_begin.getColumn() - 1);
-    removeFrom(tetrisBoard);
-    drawOn(tetrisBoard);
+    removeFrom(playfield);
+    drawOn(playfield);
   } else {
     m_blocks = m_previousStateOfBlocks;
   }
 }
 
 
-void Tetromino::moveRight(TetrisBoard &tetrisBoard)
+void Tetromino::moveRight(Playfield &playfield)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -109,17 +109,17 @@ void Tetromino::moveRight(TetrisBoard &tetrisBoard)
     block.setIndex(index);
   }
 
-  if (isLegalMove(tetrisBoard)) {
+  if (isLegalMove(playfield)) {
     m_begin.setColumn(m_begin.getColumn() + 1);
-    removeFrom(tetrisBoard);
-    drawOn(tetrisBoard);
+    removeFrom(playfield);
+    drawOn(playfield);
   } else {
     m_blocks = m_previousStateOfBlocks;
   }
 }
 
 
-void Tetromino::rotateLeft(TetrisBoard &tetrisBoard)
+void Tetromino::rotateLeft(Playfield &playfield)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -133,9 +133,9 @@ void Tetromino::rotateLeft(TetrisBoard &tetrisBoard)
     m_blocks[i].setIndex(m_begin + rotation[i]);
   }
 
-  if (isLegalMove(tetrisBoard)) {
-    removeFrom(tetrisBoard);
-    drawOn(tetrisBoard);
+  if (isLegalMove(playfield)) {
+    removeFrom(playfield);
+    drawOn(playfield);
   } else {
     m_blocks = m_previousStateOfBlocks;
     m_rotationIndex = prevRotationIndex;
@@ -144,7 +144,7 @@ void Tetromino::rotateLeft(TetrisBoard &tetrisBoard)
 
 
 // FIXME: Rotation methods have duplicate code!
-void Tetromino::rotateRight(TetrisBoard &tetrisBoard)
+void Tetromino::rotateRight(Playfield &playfield)
 {
   m_previousStateOfBlocks = m_blocks;
 
@@ -158,9 +158,9 @@ void Tetromino::rotateRight(TetrisBoard &tetrisBoard)
     m_blocks[i].setIndex(m_begin + rotation[i]);
   }
 
-  if (isLegalMove(tetrisBoard)) {
-    removeFrom(tetrisBoard);
-    drawOn(tetrisBoard);
+  if (isLegalMove(playfield)) {
+    removeFrom(playfield);
+    drawOn(playfield);
   } else {
     m_blocks = m_previousStateOfBlocks;
     m_rotationIndex = prevRotationIndex;
@@ -168,10 +168,10 @@ void Tetromino::rotateRight(TetrisBoard &tetrisBoard)
 }
 
 
-void Tetromino::hardDrop(TetrisBoard &tetrisBoard)
+void Tetromino::hardDrop(Playfield &playfield)
 {
   const int top = m_begin.getRow();
-  const int bottom = tetrisBoard.rowCount();
+  const int bottom = playfield.rowCount();
 
   m_previousStateOfBlocks = m_blocks;
 
@@ -185,12 +185,12 @@ void Tetromino::hardDrop(TetrisBoard &tetrisBoard)
       block.setIndex(index);
     }
 
-    if (!isLegalMove(tetrisBoard)) {
+    if (!isLegalMove(playfield)) {
       m_blocks = lastLegalStateOfBlocks;
       m_begin.setRow(m_begin.getRow() + i);
-      removeFrom(tetrisBoard);
-      drawOn(tetrisBoard);
-      markAsLanded(tetrisBoard);
+      removeFrom(playfield);
+      drawOn(playfield);
+      markAsLanded(playfield);
       emit landed();
       break;
     }
@@ -206,20 +206,20 @@ void Tetromino::initBlocks(const QColor &color)
 }
 
 
-bool Tetromino::isLegalMove(const TetrisBoard &tetrisBoard) const
+bool Tetromino::isLegalMove(const Playfield &playfield) const
 {
-  const int tetrisBoardRowCount = tetrisBoard.rowCount();
-  const int tetrisBoardColumnCount = tetrisBoard.columnCount();
+  const int playfieldRowCount = playfield.rowCount();
+  const int playfieldColumnCount = playfield.columnCount();
 
   for (const Block &block : m_blocks) {
     const Index index = block.getIndex();
     const int row = index.getRow();
     const int column = index.getColumn();
 
-    if (row >= tetrisBoardRowCount || column < 0 ||
-        column >= tetrisBoardColumnCount) {
+    if (row >= playfieldRowCount || column < 0 ||
+        column >= playfieldColumnCount) {
       return false;
-    } else if (tetrisBoard.hasLandedBlockAt(index)) {
+    } else if (playfield.hasLandedBlockAt(index)) {
       return false;
     }
   }
@@ -228,21 +228,21 @@ bool Tetromino::isLegalMove(const TetrisBoard &tetrisBoard) const
 }
 
 
-void Tetromino::removeFrom(TetrisBoard &tetrisBoard)
+void Tetromino::removeFrom(Playfield &playfield)
 {
   for (const Block &block : m_previousStateOfBlocks) {
     const Index index = block.getIndex();
-    tetrisBoard.removeBlock(index);
+    playfield.removeBlock(index);
   }
 }
 
 
-void Tetromino::markAsLanded(TetrisBoard &tetrisBoard)
+void Tetromino::markAsLanded(Playfield &playfield)
 {
-  // This tetromino is going to be destroyed, so only the blocks of tetrisBoard
+  // This tetromino is going to be destroyed, so only the blocks of playfield
   // are updated.
   for (Block &block : m_blocks) {
     const Index index = block.getIndex();
-    tetrisBoard.getBlock(index).landed(true);
+    playfield.getBlock(index).landed(true);
   }
 }

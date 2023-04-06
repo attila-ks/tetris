@@ -1,20 +1,19 @@
-#ifndef TETRIS_BOARD_H
-#define TETRIS_BOARD_H
+#ifndef PLAYFIELD_H
+#define PLAYFIELD_H
 
 #include "block.h"
 #include "gameboard.h"
 #include <QAbstractTableModel>
 #include <QColor>
 
-class TetrisBoard : public QAbstractTableModel
+class Playfield : public QAbstractTableModel
 {
     Q_OBJECT
 
   public:
     /// @invariant @p rows and @p columns must be >= 0.
-    TetrisBoard(const int rows, const int columns,
-                const QColor &backgroundColor,
-                QAbstractTableModel *parent = nullptr);
+    Playfield(const int rows, const int columns, const QColor &backgroundColor,
+              QAbstractTableModel *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 

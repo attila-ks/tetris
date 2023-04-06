@@ -35,7 +35,7 @@ Frame {
             columnSpacing: 0.5
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: background.bottom
-            model: tetrion.tetrisBoard
+            model: tetrion.playfield
             delegate: Rectangle {
                 id: cell
                 implicitWidth: 20

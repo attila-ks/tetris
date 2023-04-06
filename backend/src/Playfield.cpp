@@ -1,10 +1,10 @@
-#include "../headers/tetrisboard.h"
+#include "../headers/Playfield.h"
 
 using namespace std;
 
-TetrisBoard::TetrisBoard(const int rows, const int columns,
-                         const QColor &backgroundColor,
-                         QAbstractTableModel *parent) :
+Playfield::Playfield(const int rows, const int columns,
+                     const QColor &backgroundColor,
+                     QAbstractTableModel *parent) :
   QAbstractTableModel {parent},
   m_gameboard {rows, columns},
   m_backgroundColor {backgroundColor}
@@ -12,19 +12,19 @@ TetrisBoard::TetrisBoard(const int rows, const int columns,
 }
 
 
-int TetrisBoard::rowCount(const QModelIndex &parent) const
+int Playfield::rowCount(const QModelIndex &parent) const
 {
   return m_gameboard.getRows();
 }
 
 
-int TetrisBoard::columnCount(const QModelIndex &parent) const
+int Playfield::columnCount(const QModelIndex &parent) const
 {
   return m_gameboard.getColumns();
 }
 
 
-QVariant TetrisBoard::data(const QModelIndex &modelIndex, int role) const
+QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 {
   const Index index = {modelIndex.row(), modelIndex.column()};
 
@@ -37,7 +37,7 @@ QVariant TetrisBoard::data(const QModelIndex &modelIndex, int role) const
 }
 
 
-void TetrisBoard::addBlock(const Block &block)
+void Playfield::addBlock(const Block &block)
 {
   const Index index = block.getIndex();
   m_gameboard.addItem(block, index);
@@ -46,7 +46,7 @@ void TetrisBoard::addBlock(const Block &block)
 }
 
 
-Block TetrisBoard::removeBlock(const Index &index)
+Block Playfield::removeBlock(const Index &index)
 {
   const Block block = m_gameboard.removeItem(index);
   QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
@@ -55,7 +55,7 @@ Block TetrisBoard::removeBlock(const Index &index)
 }
 
 
-bool TetrisBoard::hasLandedBlockAt(const Index &index) const
+bool Playfield::hasLandedBlockAt(const Index &index) const
 {
   if (!m_gameboard.hasItemAt(index)) {
     return false;
@@ -66,19 +66,19 @@ bool TetrisBoard::hasLandedBlockAt(const Index &index) const
 }
 
 
-Block &TetrisBoard::getBlock(const Index &index)
+Block &Playfield::getBlock(const Index &index)
 {
   return m_gameboard.getItem(index);
 }
 
 
-const Block &TetrisBoard::getBlock(const Index &index) const
+const Block &Playfield::getBlock(const Index &index) const
 {
   return m_gameboard.getItem(index);
 }
 
 
-int TetrisBoard::clearFilledRows()
+int Playfield::clearFilledRows()
 {
   const int top = 0;
   const int bottom = rowCount() - 1;
@@ -111,7 +111,7 @@ int TetrisBoard::clearFilledRows()
 }
 
 
-void TetrisBoard::clearFilledRow(const int row)
+void Playfield::clearFilledRow(const int row)
 {
   const int columns = columnCount();
   for (int column = 0; column < columns; ++column) {
@@ -123,7 +123,7 @@ void TetrisBoard::clearFilledRow(const int row)
 }
 
 
-void TetrisBoard::moveBlocksDown(const int clearedRow)
+void Playfield::moveBlocksDown(const int clearedRow)
 {
   const int columns = columnCount();
 

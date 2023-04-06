@@ -2,8 +2,8 @@
 #define TETRION_H
 
 #include "KeyboardEventHandler.h"
+#include "Playfield.h"
 #include "Settings.h"
-#include "tetrisboard.h"
 #include "tetromino.h"
 #include <QObject>
 #include <QTimer>
@@ -11,12 +11,12 @@
 class Tetrion : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(const TetrisBoard *tetrisBoard READ getTetrisBoard CONSTANT)
+    Q_PROPERTY(const Playfield *playfield READ getPlayfield CONSTANT)
 
   public:
     explicit Tetrion(QObject *parent = nullptr);
 
-    const TetrisBoard *getTetrisBoard() const;
+    const Playfield *getPlayfield() const;
     Q_INVOKABLE int getLevel() const;
     Q_INVOKABLE float getLevelProgress() const;
 
@@ -44,7 +44,7 @@ class Tetrion : public QObject
     void increaseLevel();
     void setSpeed();
 
-    TetrisBoard m_tetrisBoard;
+    Playfield m_playfield;
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
