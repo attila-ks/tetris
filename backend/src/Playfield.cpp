@@ -85,25 +85,22 @@ int Playfield::clearFilledRows()
   const int columns = columnCount();
   int clearedRowCounter = 0;
 
-  for (int row = bottom; row >= top;) {
-    int filledColumnCounter = 0;
+  for (int row = bottom; row >= top; --row) {
+    int blockCounter = 0;
 
     for (int column = 0; column < columns; ++column) {
       if (!hasLandedBlockAt({row, column})) {
         break;
       }
 
-      ++filledColumnCounter;
+      ++blockCounter;
     }
 
-    if (filledColumnCounter == 0) {
-      break;
-    } else if (filledColumnCounter == columns) {
+    if (blockCounter == columns) {
       clearFilledRow(row);
-      moveBlocksDown(row);
       ++clearedRowCounter;
-    } else {
-      --row;
+    } else if (clearedRowCounter > 0) {
+      moveRowDown(row, clearedRowCounter);
     }
   }
 
@@ -123,26 +120,17 @@ void Playfield::clearFilledRow(const int row)
 }
 
 
-void Playfield::moveBlocksDown(const int clearedRow)
+void Playfield::moveRowDown(const int row, const int offset)
 {
   const int columns = columnCount();
 
-  for (int row = clearedRow; row >= 0; --row) {
-    int filledColumnCounter = 0;
-
-    for (int column = 0; column < columns; ++column) {
-      Index index {row - 1, column};
-      if (hasLandedBlockAt(index)) {
-        Block block = removeBlock(index);
-        index.setRow(index.getRow() + 1);
-        block.setIndex(index);
-        addBlock(block);
-        ++filledColumnCounter;
-      }
-    }
-
-    if (filledColumnCounter == 0) {
-      break;
+  for (int column = 0; column < columns; ++column) {
+    Index index {row, column};
+    if (hasLandedBlockAt(index)) {
+      Block block = removeBlock(index);
+      index.setRow(index.getRow() + offset);
+      block.setIndex(index);
+      addBlock(block);
     }
   }
 }
