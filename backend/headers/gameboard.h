@@ -11,6 +11,7 @@ class Gameboard
   public:
     /// @invariant @p rows and @p columns must be >= 0.
     Gameboard(const int rows, const int columns);
+    virtual ~Gameboard() = default;
 
     int getRows() const;
     int getColumns() const;
