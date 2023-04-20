@@ -3,11 +3,11 @@
 using namespace std;
 
 Playfield::Playfield(const int rows, const int columns,
-                     const QColor &backgroundColor,
+                     const QColor &emptyCellColor,
                      QAbstractTableModel *parent) :
   QAbstractTableModel {parent},
   m_gameboard {rows, columns},
-  m_backgroundColor {backgroundColor}
+  m_emptyCellColor {emptyCellColor}
 {
 }
 
@@ -32,7 +32,7 @@ QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
     const Block &block = m_gameboard.getItem(index);
     return block.getColor();
   } else {
-    return QVariant {m_backgroundColor};
+    return QVariant {m_emptyCellColor};
   }
 }
 

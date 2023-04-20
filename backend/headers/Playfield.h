@@ -12,7 +12,7 @@ class Playfield : public QAbstractTableModel
 
   public:
     /// @invariant @p rows and @p columns must be >= 0.
-    Playfield(const int rows, const int columns, const QColor &backgroundColor,
+    Playfield(const int rows, const int columns, const QColor &emptyCellColor,
               QAbstractTableModel *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -36,7 +36,7 @@ class Playfield : public QAbstractTableModel
     void moveRowDown(const int row, const int offset);
 
     Gameboard<Block> m_gameboard;
-    const QColor m_backgroundColor;
+    const QColor m_emptyCellColor;
 };
 
 #endif
