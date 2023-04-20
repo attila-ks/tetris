@@ -5,6 +5,7 @@ Block::Block(const QColor color, const Index index) :
   m_index {std::move(index)},
   m_isLanded {false}
 {
+  // TODO: Consider to add assertion for `index` param.
 }
 
 
