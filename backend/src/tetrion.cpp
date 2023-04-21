@@ -12,7 +12,7 @@ void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
 
 Tetrion::Tetrion(QObject *parent) :
   QObject {parent},
-  m_playfield {22, 10, QColor {0x0e001f}},
+  m_playfield {QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {},

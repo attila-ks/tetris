@@ -2,11 +2,10 @@
 
 using namespace std;
 
-Playfield::Playfield(const int rows, const int columns,
-                     const QColor &emptyCellColor,
+Playfield::Playfield(const QColor &emptyCellColor,
                      QAbstractTableModel *parent) :
   QAbstractTableModel {parent},
-  m_gameboard {rows, columns},
+  m_gameboard {},
   m_emptyCellColor {emptyCellColor}
 {
 }

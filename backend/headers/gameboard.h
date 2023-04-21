@@ -2,19 +2,17 @@
 #define GAMEBOARD_H
 
 #include "index.h"
+#include <array>
 #include <optional>
-#include <vector>
 
-template <typename T>
+template <typename T, int ROWS, int COLUMNS>
 class Gameboard
 {
   public:
-    /// @invariant @p rows and @p columns must be >= 0.
-    Gameboard(const int rows, const int columns);
     virtual ~Gameboard() = default;
 
-    int getRows() const;
-    int getColumns() const;
+    constexpr int getRows() const;
+    constexpr int getColumns() const;
 
     /// @invariant row and column of @p index must be >= 0 and <= number of rows
     /// and columns of this Gameboard.
@@ -41,88 +39,76 @@ class Gameboard
     const T &getItem(const Index &index) const;
 
   private:
-    int m_rows;
-    int m_columns;
-    std::vector<std::optional<T>> m_data;
+    std::array<std::optional<T>, ROWS * COLUMNS> m_data;
 };
 
 
 #include <cassert>
 
-template <typename T>
-Gameboard<T>::Gameboard(const int rows, const int columns) :
-  m_rows {rows},
-  m_columns {columns},
-  m_data(rows * columns, std::nullopt)
+template <typename T, int ROWS, int COLUMNS>
+constexpr int Gameboard<T, ROWS, COLUMNS>::getRows() const
 {
-  assert(rows >= 0 && columns >= 0);
+  return ROWS;
 }
 
 
-template <typename T>
-int Gameboard<T>::getRows() const
+template <typename T, int ROWS, int COLUMNS>
+constexpr int Gameboard<T, ROWS, COLUMNS>::getColumns() const
 {
-  return m_rows;
+  return COLUMNS;
 }
 
 
-template <typename T>
-int Gameboard<T>::getColumns() const
-{
-  return m_columns;
-}
-
-
-template <typename T>
-void Gameboard<T>::addItem(const T &item, const Index &index)
+template <typename T, int ROWS, int COLUMNS>
+void Gameboard<T, ROWS, COLUMNS>::addItem(const T &item, const Index &index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
-  m_data[row * m_columns + column] = item;
+  assert(row >= 0 && row < ROWS && column >= 0 && column < COLUMNS);
+  m_data[row * COLUMNS + column] = item;
 }
 
 
-template <typename T>
-T Gameboard<T>::removeItem(const Index &index)
+template <typename T, int ROWS, int COLUMNS>
+T Gameboard<T, ROWS, COLUMNS>::removeItem(const Index &index)
 {
   assert(hasItemAt(index));
 
   const int row = index.getRow();
   const int column = index.getColumn();
-  const T &item = m_data[row * m_columns + column].value();
-  m_data[row * m_columns + column] = std::nullopt;
+  const T &item = m_data[row * COLUMNS + column].value();
+  m_data[row * COLUMNS + column] = std::nullopt;
   return item;
 }
 
 
-template <typename T>
-bool Gameboard<T>::hasItemAt(const Index &index) const
+template <typename T, int ROWS, int COLUMNS>
+bool Gameboard<T, ROWS, COLUMNS>::hasItemAt(const Index &index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
-  return m_data[row * m_columns + column].has_value();
+  assert(row >= 0 && row < ROWS && column >= 0 && column < COLUMNS);
+  return m_data[row * COLUMNS + column].has_value();
 }
 
 
-template <typename T>
-T &Gameboard<T>::getItem(const Index &index)
+template <typename T, int ROWS, int COLUMNS>
+T &Gameboard<T, ROWS, COLUMNS>::getItem(const Index &index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
-  return m_data[row * m_columns + column].value();
+  assert(row >= 0 && row < ROWS && column >= 0 && column < COLUMNS);
+  return m_data[row * COLUMNS + column].value();
 }
 
 
-template <typename T>
-const T &Gameboard<T>::getItem(const Index &index) const
+template <typename T, int ROWS, int COLUMNS>
+const T &Gameboard<T, ROWS, COLUMNS>::getItem(const Index &index) const
 {
   const int row = index.getRow();
   const int column = index.getColumn();
-  assert(row >= 0 && row < m_rows && column >= 0 && column < m_columns);
-  return m_data[row * m_columns + column].value();
+  assert(row >= 0 && row < ROWS && column >= 0 && column < COLUMNS);
+  return m_data[row * COLUMNS + column].value();
 }
 
 #endif
