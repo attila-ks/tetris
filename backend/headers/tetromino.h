@@ -1,9 +1,10 @@
 #ifndef TETROMINO_H
 #define TETROMINO_H
 
-#include "Playfield.h"
 #include "block.h"
 #include <QObject>
+
+class Playfield;
 
 class Tetromino : public QObject
 {

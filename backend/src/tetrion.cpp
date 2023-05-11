@@ -1,4 +1,5 @@
 #include "../headers/tetrion.h"
+#include "../headers/tetromino.h"
 
 using namespace std;
 

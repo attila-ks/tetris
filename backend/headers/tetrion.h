@@ -3,9 +3,10 @@
 
 #include "KeyboardEventHandler.h"
 #include "Playfield.h"
-#include "tetromino.h"
 #include <QObject>
 #include <QTimer>
+
+class Tetromino;
 
 class Tetrion : public QObject
 {
