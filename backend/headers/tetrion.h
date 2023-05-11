@@ -3,7 +3,6 @@
 
 #include "KeyboardEventHandler.h"
 #include "Playfield.h"
-#include "Settings.h"
 #include "tetromino.h"
 #include <QObject>
 #include <QTimer>
@@ -48,7 +47,6 @@ class Tetrion : public QObject
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
     QTimer m_tetrominoDropTimer;
-    Settings m_settings;
     KeyboardEventHandler m_keyboardEventHandler;
     int m_level;
     float m_levelProgress;

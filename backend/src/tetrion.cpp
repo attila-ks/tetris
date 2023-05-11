@@ -4,11 +4,8 @@ using namespace std;
 
 // Helper functions:
 void initRandomTetrominoGenerator();
-// TODO: Consider to turn the next functions into methods of a class!
-bool doSavedSettingsExist(const Settings &settings);
-void useFallbackSettings(Settings &settings);
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
-                               const Settings &settings, Tetrion &tetrion);
+                               Tetrion &tetrion);
 
 Tetrion::Tetrion(QObject *parent) :
   QObject {parent},
@@ -16,18 +13,13 @@ Tetrion::Tetrion(QObject *parent) :
   m_bag {},
   m_currentTetromino {nullptr},
   m_tetrominoDropTimer {},
-  m_settings {"./settings"},
   m_keyboardEventHandler {},
   m_level {1},
   m_levelProgress {0.0f}
 {
   initRandomTetrominoGenerator();
 
-  if (!doSavedSettingsExist(m_settings)) {
-    useFallbackSettings(m_settings);
-  }
-
-  setUpKeyboardEventHandler(m_keyboardEventHandler, m_settings, *this);
+  setUpKeyboardEventHandler(m_keyboardEventHandler, *this);
 
   setSpeed();
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
@@ -62,27 +54,19 @@ void Tetrion::startGame()
 
 void Tetrion::processInput(const Key key, const KeyEvent::Type type)
 {
-  // TODO: Turn these string literals into class constants!
-  // TODO: Consider to call `Settings::getvalue` method only when the settings
-  // have changed!
-  optional<Key> opt;
-  if (opt = m_settings.getValue<Key>("keyboard/move-down");
-      opt.has_value() && opt.value() == key) {
+  // FIXME: Movement keys are duplicated: here and in the
+  // setUpKeyboardEventHandler method!
+  if (key == Key_S) {
     m_currentTetromino->moveDown(m_playfield);
-  } else if (opt = m_settings.getValue<Key>("keyboard/move-left");
-             opt.has_value() && opt.value() == key) {
+  } else if (key == Key_A) {
     m_currentTetromino->moveLeft(m_playfield);
-  } else if (opt = m_settings.getValue<Key>("keyboard/move-right");
-             opt.has_value() && opt.value() == key) {
+  } else if (key == Key_D) {
     m_currentTetromino->moveRight(m_playfield);
-  } else if (opt = m_settings.getValue<Key>("keyboard/rotate-left");
-             opt.has_value() && opt.value() == key) {
+  } else if (key == Key_Q) {
     m_currentTetromino->rotateLeft(m_playfield);
-  } else if (opt = m_settings.getValue<Key>("keyboard/rotate-right");
-             opt.has_value() && opt.value() == key) {
+  } else if (key == Key_E) {
     m_currentTetromino->rotateRight(m_playfield);
-  } else if (opt = m_settings.getValue<Key>("keyboard/hard-drop");
-             opt.has_value() && opt.value() == key) {
+  } else if (key == Key_Space) {
     m_currentTetromino->hardDrop(m_playfield);
   }
 }
@@ -227,46 +211,13 @@ void initRandomTetrominoGenerator()
 }
 
 
-bool doSavedSettingsExist(const Settings &settings)
-{
-  constexpr array<string_view, 6> keys {
-      "keyboard/move-down",   "keyboard/move-left",    "keyboard/move-right",
-      "keyboard/rotate-left", "keyboard/rotate-right", "keyboard/hard-drop"};
-
-  for (string_view key : keys) {
-    // TODO: Check if the `key` has `enum Key` value!
-    if (!settings.contains(key)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-
-void useFallbackSettings(Settings &settings)
-{
-  settings.beginGroup("keyboard");
-  settings.setValue("move-down", Key_S);
-  settings.setValue("move-left", Key_A);
-  settings.setValue("move-right", Key_D);
-  settings.setValue("rotate-left", Key_Q);
-  settings.setValue("rotate-right", Key_E);
-  settings.setValue("hard-drop", Key_Space);
-  settings.endGroup();
-}
-
-
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
-                               const Settings &settings, Tetrion &tetrion)
+                               Tetrion &tetrion)
 {
-  constexpr array<string_view, 6> keys {
-      "keyboard/move-down",   "keyboard/move-left",    "keyboard/move-right",
-      "keyboard/rotate-left", "keyboard/rotate-right", "keyboard/hard-drop"};
-
-  for (string_view key : keys) {
-    const optional<Key> opt = settings.getValue<Key>(key);
-    keyboardEventHandler.addKey(opt.value(), KeyEvent::Type::KeyPress);
+  constexpr array<Key, 6> tetrominoMovementKeys = {Key_S, Key_A, Key_D,
+                                                   Key_Q, Key_E, Key_Space};
+  for (const Key &key : tetrominoMovementKeys) {
+    keyboardEventHandler.addKey(key, KeyEvent::Type::KeyPress);
   }
 
   keyboardEventHandler.addCallback(

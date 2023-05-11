@@ -23,7 +23,6 @@ qt_add_executable(a.out
     backend/headers/index.h
     backend/src/index.cpp
     backend/headers/Key.h
-    backend/headers/Settings.h
     backend/headers/KeyEvent.h
     backend/headers/KeyboardEventHandler.h
     backend/src/KeyboardEventHandler.cpp
