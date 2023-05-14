@@ -5,7 +5,7 @@
 
 class Playfield;
 
-class GhostTetromino : Tetromino
+class GhostTetromino : private Tetromino
 {
   public:
     GhostTetromino(const Tetromino &tetrominoToFollow, const QColor &fillColor);
@@ -19,17 +19,6 @@ class GhostTetromino : Tetromino
     void removeFrom(Playfield &playfield);
 
     void copyFollowedTetrominoBlockPositions();
-
-    using Tetromino::getType;
-    using Tetromino::getBegin;
-    using Tetromino::getBlocks;
-    using Tetromino::getBorderColor;
-    using Tetromino::getRotationIndex;
-    using Tetromino::moveDown;
-    using Tetromino::moveLeft;
-    using Tetromino::moveRight;
-    using Tetromino::rotateLeft;
-    using Tetromino::rotateRight;
 
     const Tetromino &m_followedTetromino;
 };
