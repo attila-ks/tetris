@@ -14,7 +14,14 @@ class Tetromino : public QObject
     enum class Type { I, J, L, O, S, T, Z };
 
     Tetromino() = default;
-    Tetromino(const Type type, const QColor &color, const Index &begin);
+    Tetromino(const Type type, const QColor &fillColor,
+              const QColor &borderColor, const Index &begin);
+
+    Type getType() const;
+    const Index &getBegin() const;
+    const std::vector<Block> &getBlocks() const;
+    const QColor &getBorderColor() const;
+    int getRotationIndex() const;
 
     void drawOn(Playfield &playfield) const;
 
@@ -28,16 +35,22 @@ class Tetromino : public QObject
   signals:
     void landed();
 
-  private:
-    void initBlocks(const QColor &color);
+  protected:
+    Tetromino(const Type type, const Block::Type blockType,
+              const QColor &fillColor, const QColor &borderColor,
+              const Index &begin);
 
     bool isLegalMove(const Playfield &playfield) const;
 
     void removeFrom(Playfield &playfield);
 
+  private:
+    void initBlocks(const Block::Type type, const QColor &fillColor,
+                    const QColor &borderColor);
+
     void markAsLanded(Playfield &playfield);
 
-  private:
+  protected:
     Type m_type;
     Index m_begin;
     std::vector<Block> m_blocks;

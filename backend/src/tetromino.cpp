@@ -39,14 +39,40 @@ static const map<Tetromino::Type, vector<vector<Index>>> rotations {
       {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 0}}}}};
 
 
-Tetromino::Tetromino(const Type type, const QColor &color, const Index &begin) :
-  m_type {type},
-  m_begin {begin},
-  m_blocks {},
-  m_previousStateOfBlocks {},
-  m_rotationIndex {0}
+Tetromino::Tetromino(const Type type, const QColor &fillColor,
+                     const QColor &borderColor, const Index &begin) :
+  Tetromino(type, Block::Type::Falling, fillColor, borderColor, begin)
 {
-  initBlocks(color);
+}
+
+
+Tetromino::Type Tetromino::getType() const
+{
+  return m_type;
+}
+
+
+const Index &Tetromino::getBegin() const
+{
+  return m_begin;
+}
+
+
+const vector<Block> &Tetromino::getBlocks() const
+{
+  return m_blocks;
+}
+
+
+const QColor &Tetromino::getBorderColor() const
+{
+  return m_blocks[0].getBorderColor();
+}
+
+
+int Tetromino::getRotationIndex() const
+{
+  return m_rotationIndex;
 }
 
 
@@ -63,9 +89,8 @@ void Tetromino::moveDown(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    Index index = block.getIndex();
-    index.setRow(index.getRow() + 1);
-    block.setIndex(index);
+    const Index &index = block.getIndex();
+    block.setIndex(Index {index.getRow() + 1, index.getColumn()});
   }
 
   if (isLegalMove(playfield)) {
@@ -85,9 +110,8 @@ void Tetromino::moveLeft(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    Index index = block.getIndex();
-    index.setColumn(index.getColumn() - 1);
-    block.setIndex(index);
+    const Index &index = block.getIndex();
+    block.setIndex(Index {index.getRow(), index.getColumn() - 1});
   }
 
   if (isLegalMove(playfield)) {
@@ -105,9 +129,8 @@ void Tetromino::moveRight(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    Index index = block.getIndex();
-    index.setColumn(index.getColumn() + 1);
-    block.setIndex(index);
+    const Index &index = block.getIndex();
+    block.setIndex(Index {index.getRow(), index.getColumn() + 1});
   }
 
   if (isLegalMove(playfield)) {
@@ -181,9 +204,8 @@ void Tetromino::hardDrop(Playfield &playfield)
     const vector<Block> lastLegalStateOfBlocks = m_blocks;
 
     for (Block &block : m_blocks) {
-      Index index = block.getIndex();
-      index.setRow(index.getRow() + 1);
-      block.setIndex(index);
+      const Index &index = block.getIndex();
+      block.setIndex(Index {index.getRow() + 1, index.getColumn()});
     }
 
     if (!isLegalMove(playfield)) {
@@ -199,11 +221,16 @@ void Tetromino::hardDrop(Playfield &playfield)
 }
 
 
-void Tetromino::initBlocks(const QColor &color)
+Tetromino::Tetromino(const Type type, const Block::Type blockType,
+                     const QColor &fillColor, const QColor &borderColor,
+                     const Index &begin) :
+  m_type {type},
+  m_begin {begin},
+  m_blocks {},
+  m_previousStateOfBlocks {},
+  m_rotationIndex {0}
 {
-  for (const Index &blockIndex : rotations.at(m_type)[m_rotationIndex]) {
-    m_blocks.push_back(Block {color, blockIndex + m_begin});
-  }
+  initBlocks(blockType, fillColor, borderColor);
 }
 
 
@@ -213,14 +240,15 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
   const int playfieldColumnCount = playfield.columnCount();
 
   for (const Block &block : m_blocks) {
-    const Index index = block.getIndex();
+    const Index &index = block.getIndex();
     const int row = index.getRow();
     const int column = index.getColumn();
 
     if (row >= playfieldRowCount || column < 0 ||
         column >= playfieldColumnCount) {
       return false;
-    } else if (playfield.hasLandedBlockAt(index)) {
+    } else if (playfield.hasBlockAt(index) &&
+               playfield.getBlock(index).getType() == Block::Type::Landed) {
       return false;
     }
   }
@@ -232,8 +260,18 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
 void Tetromino::removeFrom(Playfield &playfield)
 {
   for (const Block &block : m_previousStateOfBlocks) {
-    const Index index = block.getIndex();
+    const Index &index = block.getIndex();
     playfield.removeBlock(index);
+  }
+}
+
+
+void Tetromino::initBlocks(const Block::Type type, const QColor &fillColor,
+                           const QColor &borderColor)
+{
+  for (const Index &blockIndex : rotations.at(m_type)[m_rotationIndex]) {
+    m_blocks.push_back(
+        Block {type, fillColor, borderColor, blockIndex + m_begin});
   }
 }
 
@@ -243,7 +281,7 @@ void Tetromino::markAsLanded(Playfield &playfield)
   // This tetromino is going to be destroyed, so only the blocks of playfield
   // are updated.
   for (Block &block : m_blocks) {
-    const Index index = block.getIndex();
-    playfield.getBlock(index).landed(true);
+    const Index &index = block.getIndex();
+    playfield.getBlock(index).setType(Block::Type::Landed);
   }
 }

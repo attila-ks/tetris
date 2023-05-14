@@ -1,12 +1,11 @@
 #ifndef TETRION_H
 #define TETRION_H
 
+#include "GhostTetromino.h"
 #include "KeyboardEventHandler.h"
 #include "Playfield.h"
 #include <QObject>
 #include <QTimer>
-
-class Tetromino;
 
 class Tetrion : public QObject
 {
@@ -47,6 +46,7 @@ class Tetrion : public QObject
     Playfield m_playfield;
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
+    std::optional<GhostTetromino> m_ghostTetromino;
     QTimer m_tetrominoDropTimer;
     KeyboardEventHandler m_keyboardEventHandler;
     int m_level;

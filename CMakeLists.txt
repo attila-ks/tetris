@@ -18,6 +18,8 @@ qt_add_executable(a.out
     backend/src/Playfield.cpp
     backend/headers/tetromino.h
     backend/src/tetromino.cpp
+    backend/headers/GhostTetromino.h
+    backend/src/GhostTetromino.cpp
     backend/headers/block.h
     backend/src/block.cpp
     backend/headers/index.h

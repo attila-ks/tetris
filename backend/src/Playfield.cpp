@@ -23,15 +23,24 @@ int Playfield::columnCount(const QModelIndex &parent) const
 }
 
 
+QHash<int, QByteArray> Playfield::roleNames() const
+{
+  QHash<int, QByteArray> roles;
+  roles[FillColor] = "fillColor";
+  roles[BorderColor] = "borderColor";
+  return roles;
+}
+
+
 QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 {
   const Index index = {modelIndex.row(), modelIndex.column()};
 
-  if (m_gameboard.hasItemAt(index)) {
+  if (hasBlockAt(index)) {
     const Block &block = m_gameboard.getItem(index);
-    return block.getColor();
+    return role == FillColor ? block.getFillColor() : block.getBorderColor();
   } else {
-    return QVariant {m_emptyCellColor};
+    return m_emptyCellColor;
   }
 }
 
@@ -54,14 +63,9 @@ Block Playfield::removeBlock(const Index &index)
 }
 
 
-bool Playfield::hasLandedBlockAt(const Index &index) const
+bool Playfield::hasBlockAt(const Index &index) const
 {
-  if (!m_gameboard.hasItemAt(index)) {
-    return false;
-  }
-
-  const Block &block = m_gameboard.getItem(index);
-  return block.isLanded();
+  return m_gameboard.hasItemAt(index);
 }
 
 
@@ -88,7 +92,10 @@ int Playfield::clearFilledRows()
     int blockCounter = 0;
 
     for (int column = 0; column < columns; ++column) {
-      if (!hasLandedBlockAt({row, column})) {
+      const Index index {row, column};
+      const bool result = hasBlockAt(index);
+      if (!result ||
+          (result && getBlock(index).getType() != Block::Type::Landed)) {
         break;
       }
 
@@ -125,7 +132,7 @@ void Playfield::moveRowDown(const int row, const int offset)
 
   for (int column = 0; column < columns; ++column) {
     Index index {row, column};
-    if (hasLandedBlockAt(index)) {
+    if (hasBlockAt(index) && getBlock(index).getType() == Block::Type::Landed) {
       Block block = removeBlock(index);
       index.setRow(index.getRow() + offset);
       block.setIndex(index);

@@ -40,7 +40,8 @@ Frame {
                 id: cell
                 implicitWidth: 20
                 implicitHeight: 20
-                color: model.display
+                color: model.fillColor
+                border.color: model.borderColor
                 opacity: 0.9
             }
         }

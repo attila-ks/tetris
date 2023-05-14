@@ -1,29 +1,43 @@
 #include "../headers/block.h"
 
-Block::Block(const QColor color, const Index index) :
-  m_color {std::move(color)},
-  m_index {std::move(index)},
-  m_isLanded {false}
+Block::Block(const Type type, const QColor fillColor, const QColor borderColor,
+             const Index index) :
+  m_type {type},
+  m_fillColor {std::move(fillColor)},
+  m_borderColor {std::move(borderColor)},
+  m_index {std::move(index)}
 {
   // TODO: Consider to add assertion for `index` param.
 }
 
 
-void Block::landed(const bool value)
+void Block::setType(const Type type)
 {
-  m_isLanded = value;
+  m_type = type;
 }
 
 
-bool Block::isLanded() const
+Block::Type Block::getType() const
 {
-  return m_isLanded;
+  return m_type;
 }
 
 
-const QColor &Block::getColor() const
+void Block::setFillColor(const QColor fillColor)
 {
-  return m_color;
+  m_fillColor = std::move(fillColor);
+}
+
+
+const QColor &Block::getFillColor() const
+{
+  return m_fillColor;
+}
+
+
+const QColor &Block::getBorderColor() const
+{
+  return m_borderColor;
 }
 
 
@@ -33,7 +47,7 @@ void Block::setIndex(const Index index)
 }
 
 
-Index Block::getIndex() const
+const Index &Block::getIndex() const
 {
   return m_index;
 }

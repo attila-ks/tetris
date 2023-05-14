@@ -18,12 +18,16 @@ class Playfield : public QAbstractTableModel
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+    enum ColorRoles { FillColor = Qt::UserRole + 1, BorderColor };
+
+    QHash<int, QByteArray> roleNames() const override;
+
     QVariant data(const QModelIndex &modelIndex,
                   int role = Qt::DisplayRole) const override;
 
     void addBlock(const Block &block);
     Block removeBlock(const Index &index);
-    bool hasLandedBlockAt(const Index &index) const;
+    bool hasBlockAt(const Index &index) const;
     Block &getBlock(const Index &index);
     const Block &getBlock(const Index &index) const;
 

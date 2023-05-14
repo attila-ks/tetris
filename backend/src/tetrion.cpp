@@ -1,5 +1,4 @@
 #include "../headers/tetrion.h"
-#include "../headers/tetromino.h"
 
 using namespace std;
 
@@ -13,6 +12,7 @@ Tetrion::Tetrion(QObject *parent) :
   m_playfield {QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
+  m_ghostTetromino {nullopt},
   m_tetrominoDropTimer {},
   m_keyboardEventHandler {},
   m_level {1},
@@ -57,18 +57,30 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
 {
   // FIXME: Movement keys are duplicated: here and in the
   // setUpKeyboardEventHandler method!
+  bool isTetrominoRotatedOrMovedHorizontally = false;
+
   if (key == Key_S) {
     m_currentTetromino->moveDown(m_playfield);
   } else if (key == Key_A) {
     m_currentTetromino->moveLeft(m_playfield);
+    isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_D) {
     m_currentTetromino->moveRight(m_playfield);
+    isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Q) {
     m_currentTetromino->rotateLeft(m_playfield);
+    isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_E) {
     m_currentTetromino->rotateRight(m_playfield);
+    isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Space) {
     m_currentTetromino->hardDrop(m_playfield);
+  }
+
+  // FIXME: This is true even if the `m_currentTetromino` could not move, in
+  // which case the `m_ghostTetromino` `move` method is called unnecessarily.
+  if (isTetrominoRotatedOrMovedHorizontally && m_ghostTetromino.has_value()) {
+    m_ghostTetromino->move(m_playfield);
   }
 }
 
@@ -102,6 +114,9 @@ void Tetrion::spawnTetromino()
           &Tetrion::handleTetrominoLanding);
 
   m_currentTetromino->drawOn(m_playfield);
+
+  m_ghostTetromino.emplace(*(m_currentTetromino.get()), QColor {0x0e001f});
+  m_ghostTetromino->drawOn(m_playfield);
 }
 
 
@@ -115,7 +130,9 @@ void Tetrion::checkGameOver()
 {
   const int playfieldColumnCount = m_playfield.columnCount();
   for (int i = 0; i < playfieldColumnCount; ++i) {
-    if (m_playfield.hasLandedBlockAt({1, i})) {
+    const Index index {1, i};
+    if (m_playfield.hasBlockAt(index) &&
+        m_playfield.getBlock(index).getType() == Block::Type::Landed) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
       emit gameOver();
@@ -141,19 +158,19 @@ shared_ptr<Tetromino> Tetrion::selectTetromino()
 void Tetrion::fillBag()
 {
   m_bag = {make_shared<Tetromino>(Tetromino::Type::I, QColor {0x00b8d4},
-                                  Index {1, 3}),
+                                  QColor {0x00b8d4}, Index {1, 3}),
            make_shared<Tetromino>(Tetromino::Type::J, QColor {0x304ffe},
-                                  Index {0, 3}),
+                                  QColor {0x304ffe}, Index {0, 3}),
            make_shared<Tetromino>(Tetromino::Type::L, QColor {0xff6d00},
-                                  Index {0, 3}),
+                                  QColor {0xff6d00}, Index {0, 3}),
            make_shared<Tetromino>(Tetromino::Type::O, QColor {0xffd600},
-                                  Index {0, 4}),
+                                  QColor {0xffd600}, Index {0, 4}),
            make_shared<Tetromino>(Tetromino::Type::S, QColor {0x00c853},
-                                  Index {0, 3}),
+                                  QColor {0x00c853}, Index {0, 3}),
            make_shared<Tetromino>(Tetromino::Type::T, QColor {0xaa00ff},
-                                  Index {0, 3}),
+                                  QColor {0xaa00ff}, Index {0, 3}),
            make_shared<Tetromino>(Tetromino::Type::Z, QColor {0xd50000},
-                                  Index {0, 3})};
+                                  QColor {0xd50000}, Index {0, 3})};
 }
 
 

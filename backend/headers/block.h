@@ -7,20 +7,27 @@
 class Block
 {
   public:
-    Block(const QColor color, const Index index);
+    enum class Type { Falling, Landed, Ghost };
 
-    void landed(const bool value);
-    bool isLanded() const;
+    Block(const Type type, const QColor fillColor, const QColor borderColor,
+          const Index index);
 
-    const QColor &getColor() const;
+    void setType(const Type type);
+    Type getType() const;
+
+    void setFillColor(const QColor fillColor);
+    const QColor &getFillColor() const;
+
+    const QColor &getBorderColor() const;
 
     void setIndex(const Index index);
-    Index getIndex() const;
+    const Index &getIndex() const;
 
   private:
-    QColor m_color;
+    Type m_type;
+    QColor m_fillColor;
+    QColor m_borderColor;
     Index m_index;
-    bool m_isLanded;
 };
 
 #endif
