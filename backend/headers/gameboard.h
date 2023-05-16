@@ -3,9 +3,10 @@
 
 #include "index.h"
 #include <array>
+#include <concepts>
 #include <optional>
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 class Gameboard
 {
   public:
@@ -16,7 +17,7 @@ class Gameboard
 
     /// @invariant row and column of @p index must be >= 0 and <= number of rows
     /// and columns of this Gameboard.
-    void addItem(const T &item, const Index &index);
+    void addItem(const T item, const Index &index);
 
     /// @pre make sure there is an item at the given @p index.
     /// @invariant row and column of @p index must be >= 0 and <= number of rows
@@ -45,31 +46,31 @@ class Gameboard
 
 #include <cassert>
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 constexpr int Gameboard<T, ROWS, COLUMNS>::getRows() const
 {
   return ROWS;
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 constexpr int Gameboard<T, ROWS, COLUMNS>::getColumns() const
 {
   return COLUMNS;
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
-void Gameboard<T, ROWS, COLUMNS>::addItem(const T &item, const Index &index)
+template <std::movable T, int ROWS, int COLUMNS>
+void Gameboard<T, ROWS, COLUMNS>::addItem(const T item, const Index &index)
 {
   const int row = index.getRow();
   const int column = index.getColumn();
   assert(row >= 0 && row < ROWS && column >= 0 && column < COLUMNS);
-  m_data[row * COLUMNS + column] = item;
+  m_data[row * COLUMNS + column] = std::move(item);
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 T Gameboard<T, ROWS, COLUMNS>::removeItem(const Index &index)
 {
   assert(hasItemAt(index));
@@ -82,7 +83,7 @@ T Gameboard<T, ROWS, COLUMNS>::removeItem(const Index &index)
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 bool Gameboard<T, ROWS, COLUMNS>::hasItemAt(const Index &index) const
 {
   const int row = index.getRow();
@@ -92,7 +93,7 @@ bool Gameboard<T, ROWS, COLUMNS>::hasItemAt(const Index &index) const
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 T &Gameboard<T, ROWS, COLUMNS>::getItem(const Index &index)
 {
   const int row = index.getRow();
@@ -102,7 +103,7 @@ T &Gameboard<T, ROWS, COLUMNS>::getItem(const Index &index)
 }
 
 
-template <typename T, int ROWS, int COLUMNS>
+template <std::movable T, int ROWS, int COLUMNS>
 const T &Gameboard<T, ROWS, COLUMNS>::getItem(const Index &index) const
 {
   const int row = index.getRow();
