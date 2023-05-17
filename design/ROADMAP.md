@@ -17,7 +17,7 @@
 - [x] Clear the filled rows (with or without visual effect)
 - [x] Increase the speed of dropping the tetromino when a new level is reached
 - [x] Display the ghost tetromino
-- [ ] Display the next tetromino
+- [x] Display the next tetromino
 - [x] Display the current level
 - [ ] Display the score
 - [ ] Display the high score

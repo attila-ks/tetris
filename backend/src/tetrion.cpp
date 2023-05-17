@@ -12,6 +12,7 @@ Tetrion::Tetrion(QObject *parent) :
   m_playfield {QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
+  m_nextTetromino {selectTetromino()},
   m_ghostTetromino {nullopt},
   m_tetrominoDropTimer {},
   m_keyboardEventHandler {},
@@ -108,7 +109,9 @@ void Tetrion::handleTetrominoLanding()
 
 void Tetrion::spawnTetromino()
 {
-  m_currentTetromino = selectTetromino();
+  m_currentTetromino = m_nextTetromino;
+  m_nextTetromino = selectTetromino();
+  emit nextTetrominoChanged(getNextTetrominoImageUrl());
 
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
           &Tetrion::handleTetrominoLanding);
@@ -220,6 +223,27 @@ void Tetrion::setSpeed()
   const int millisecond = 1000;
   const double speed = frames / 60.0 * millisecond;
   m_tetrominoDropTimer.setInterval(speed);
+}
+
+
+QUrl Tetrion::getNextTetrominoImageUrl() const
+{
+  switch (m_nextTetromino->getType()) {
+    case Tetromino::Type::I:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-I.svg"};
+    case Tetromino::Type::J:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-J.svg"};
+    case Tetromino::Type::L:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-L.svg"};
+    case Tetromino::Type::O:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-O.svg"};
+    case Tetromino::Type::S:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-S.svg"};
+    case Tetromino::Type::T:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-T.svg"};
+    case Tetromino::Type::Z:
+      return QUrl {"../resources/images/tetrominoes/Tetromino-Z.svg"};
+  }
 }
 
 

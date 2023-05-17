@@ -42,9 +42,17 @@ qt_add_qml_module(a.out
         frontend/Level.qml
         frontend/Line.qml
         frontend/CircularProgressBar.qml
+        frontend/NextTetrominoDisplay.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf
+        resources/images/tetrominoes/Tetromino-I.svg
+        resources/images/tetrominoes/Tetromino-J.svg
+        resources/images/tetrominoes/Tetromino-L.svg
+        resources/images/tetrominoes/Tetromino-O.svg
+        resources/images/tetrominoes/Tetromino-S.svg
+        resources/images/tetrominoes/Tetromino-T.svg
+        resources/images/tetrominoes/Tetromino-Z.svg
 )
 
 set_target_properties(a.out PROPERTIES

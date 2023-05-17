@@ -27,6 +27,7 @@ class Tetrion : public QObject
     void gameOver();
     void levelIncreased();
     void levelProgressed();
+    void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
 
   private slots:
     void handleTetrominoLanding();
@@ -43,9 +44,12 @@ class Tetrion : public QObject
     void increaseLevel();
     void setSpeed();
 
+    QUrl getNextTetrominoImageUrl() const;
+
     Playfield m_playfield;
     std::vector<std::shared_ptr<Tetromino>> m_bag;
     std::shared_ptr<Tetromino> m_currentTetromino;
+    std::shared_ptr<Tetromino> m_nextTetromino;
     std::optional<GhostTetromino> m_ghostTetromino;
     QTimer m_tetrominoDropTimer;
     KeyboardEventHandler m_keyboardEventHandler;

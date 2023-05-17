@@ -26,6 +26,7 @@ Window {
             visible = false
             playfield.visible = true
             level.visible = true
+            nextTetrominoDisplay.visible = true
             tetrion.startGame()
         }
 
@@ -48,6 +49,14 @@ Window {
         anchors.bottom: playfield.bottom
     }
 
+    NextTetrominoDisplay {
+        id: nextTetrominoDisplay
+        visible: false
+        anchors.left: playfield.right
+        anchors.leftMargin: 17
+        anchors.top: playfield.top
+    }
+
     GameOverMenu {
         id: gameOverMenu
         visible: false
@@ -62,6 +71,7 @@ Window {
         function onGameOver() {
             playfield.visible = false
             level.visible = false
+            nextTetrominoDisplay.visible = false
             gameOverMenu.visible = true
         }
     }
