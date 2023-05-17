@@ -38,7 +38,7 @@ class Playfield : public QAbstractTableModel
     void clearFilledRow(const int row);
     void moveRowDown(const int row, const int offset);
 
-    Gameboard<Block, 22, 10> m_gameboard;
+    Gameboard<std::optional<Block>, 22, 10> m_gameboard;
     const QColor m_emptyCellColor;
 };
 

@@ -37,7 +37,7 @@ QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
   const Index index = {modelIndex.row(), modelIndex.column()};
 
   if (hasBlockAt(index)) {
-    const Block &block = m_gameboard.getItem(index);
+    const Block &block = m_gameboard(index.getRow(), index.getColumn()).value();
     return role == FillColor ? block.getFillColor() : block.getBorderColor();
   } else {
     return m_emptyCellColor;
@@ -48,7 +48,7 @@ QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 void Playfield::addBlock(const Block &block)
 {
   const Index index = block.getIndex();
-  m_gameboard.addItem(block, index);
+  m_gameboard(index.getRow(), index.getColumn()) = std::move(block);
   QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
   emit dataChanged(modelIndex, modelIndex);
 }
@@ -56,7 +56,9 @@ void Playfield::addBlock(const Block &block)
 
 Block Playfield::removeBlock(const Index &index)
 {
-  const Block block = m_gameboard.removeItem(index);
+  optional<Block> &opt = m_gameboard(index.getRow(), index.getColumn());
+  const Block &block = opt.value();
+  opt = nullopt;
   QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
   emit dataChanged(modelIndex, modelIndex);
   return block;
@@ -65,19 +67,19 @@ Block Playfield::removeBlock(const Index &index)
 
 bool Playfield::hasBlockAt(const Index &index) const
 {
-  return m_gameboard.hasItemAt(index);
+  return m_gameboard(index.getRow(), index.getColumn()).has_value();
 }
 
 
 Block &Playfield::getBlock(const Index &index)
 {
-  return m_gameboard.getItem(index);
+  return m_gameboard(index.getRow(), index.getColumn()).value();
 }
 
 
 const Block &Playfield::getBlock(const Index &index) const
 {
-  return m_gameboard.getItem(index);
+  return m_gameboard(index.getRow(), index.getColumn()).value();
 }
 
 
