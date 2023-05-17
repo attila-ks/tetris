@@ -2,7 +2,7 @@
 
 ## Platforms
 
-- [ ] Linux
+- [x] Linux
 - [ ] Windows
 - [ ] Android
 
