@@ -43,6 +43,7 @@ qt_add_qml_module(a.out
         frontend/Line.qml
         frontend/CircularProgressBar.qml
         frontend/NextTetrominoDisplay.qml
+        frontend/InfoDisplay.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf

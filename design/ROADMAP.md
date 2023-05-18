@@ -19,7 +19,7 @@
 - [x] Display the ghost tetromino
 - [x] Display the next tetromino
 - [x] Display the current level
-- [ ] Display the score
+- [x] Display the score
 - [ ] Display the high score
 
 ## Settings

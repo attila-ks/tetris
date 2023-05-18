@@ -28,6 +28,7 @@ class Tetrion : public QObject
     void levelIncreased();
     void levelProgressed();
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
+    void scoreChanged(int score);
 
   private slots:
     void handleTetrominoLanding();
@@ -44,6 +45,8 @@ class Tetrion : public QObject
     void increaseLevel();
     void setSpeed();
 
+    void updateScore(const int clearedRows);
+
     QUrl getNextTetrominoImageUrl() const;
 
     Playfield m_playfield;
@@ -55,6 +58,7 @@ class Tetrion : public QObject
     KeyboardEventHandler m_keyboardEventHandler;
     int m_level;
     float m_levelProgress;
+    int m_score;
 };
 
 #endif

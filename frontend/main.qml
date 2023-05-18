@@ -27,6 +27,7 @@ Window {
             playfield.visible = true
             level.visible = true
             nextTetrominoDisplay.visible = true
+            scoreDisplay.visible = true
             tetrion.startGame()
         }
 
@@ -57,6 +58,27 @@ Window {
         anchors.top: playfield.top
     }
 
+    InfoDisplay {
+        id: scoreDisplay
+        height: 50
+        text: "SCORE"
+        visible: false
+        anchors.left: playfield.right
+        anchors.leftMargin: 17
+        y: 380
+
+        // TODO: Use property alias instead!
+        property int score
+
+        Text {
+            id: score
+            text: parent.score
+            color: "#16faff"
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 10
+        }
+    }
+
     GameOverMenu {
         id: gameOverMenu
         visible: false
@@ -72,7 +94,12 @@ Window {
             playfield.visible = false
             level.visible = false
             nextTetrominoDisplay.visible = false
+            scoreDisplay.visible = false
             gameOverMenu.visible = true
+        }
+
+        function onScoreChanged(score) {
+            scoreDisplay.score = score
         }
     }
 }

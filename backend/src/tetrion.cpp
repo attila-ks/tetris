@@ -17,7 +17,8 @@ Tetrion::Tetrion(QObject *parent) :
   m_tetrominoDropTimer {},
   m_keyboardEventHandler {},
   m_level {1},
-  m_levelProgress {0.0f}
+  m_levelProgress {0.0f},
+  m_score {0}
 {
   initRandomTetrominoGenerator();
 
@@ -93,6 +94,7 @@ void Tetrion::handleTetrominoLanding()
   checkGameOver();
 
   m_levelProgress += clearedRows * 0.1f;
+  updateScore(clearedRows);
 
   if (m_levelProgress >= 1.0f) {
     increaseLevel();
@@ -223,6 +225,13 @@ void Tetrion::setSpeed()
   const int millisecond = 1000;
   const double speed = frames / 60.0 * millisecond;
   m_tetrominoDropTimer.setInterval(speed);
+}
+
+
+inline void Tetrion::updateScore(const int clearedRows)
+{
+  m_score += clearedRows * 10;
+  emit scoreChanged(m_score);
 }
 
 
