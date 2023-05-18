@@ -25,7 +25,7 @@ Window {
         onNewGameButtonClicked: {
             visible = false
             playfield.visible = true
-            level.visible = true
+            levelDisplay.visible = true
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
             tetrion.startGame()
@@ -42,12 +42,38 @@ Window {
         anchors.centerIn: parent
     }
 
-    Level {
-        id: level
+    InfoDisplay {
+        id: levelDisplay
+        text: "LEVEL"
         visible: false
         anchors.right: playfield.left
         anchors.rightMargin: 17
         anchors.bottom: playfield.bottom
+
+        // TODO: Use property alias instead!
+        property double progressBarValue
+        // TODO: Use property alias instead!
+        // TODO: The initial value should come from the `tetrion` too!
+        property int level: 1
+
+        CircularProgressBar {
+            id: progressBar
+            size: 43
+            lineWidth: 3
+            primaryColor: "#16faff"
+            secondaryColor: "#d93ed7"
+            value: parent.progressBarValue
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 27
+        }
+
+        Text {
+            id: level
+            text: parent.level
+            color: "#16faff"
+            anchors.centerIn: progressBar
+        }
+
     }
 
     NextTetrominoDisplay {
@@ -92,10 +118,18 @@ Window {
         target: tetrion
         function onGameOver() {
             playfield.visible = false
-            level.visible = false
+            levelDisplay.visible = false
             nextTetrominoDisplay.visible = false
             scoreDisplay.visible = false
             gameOverMenu.visible = true
+        }
+
+        function onLevelIncreased() {
+            levelDisplay.level = tetrion.getLevel();
+        }
+
+        function onLevelProgressed() {
+            levelDisplay.progressBarValue = tetrion.getLevelProgress();
         }
 
         function onScoreChanged(score) {

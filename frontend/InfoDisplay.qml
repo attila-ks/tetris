@@ -1,8 +1,8 @@
 import QtQuick
 
 Item {
-    width: 80
-    height: 80
+    implicitWidth: 80
+    implicitHeight: 80
 
     property string text
 

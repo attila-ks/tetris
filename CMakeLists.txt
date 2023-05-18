@@ -39,7 +39,6 @@ qt_add_qml_module(a.out
         frontend/TextButton.qml
         frontend/Playfield.qml
         frontend/GameOverMenu.qml
-        frontend/Level.qml
         frontend/Line.qml
         frontend/CircularProgressBar.qml
         frontend/NextTetrominoDisplay.qml
