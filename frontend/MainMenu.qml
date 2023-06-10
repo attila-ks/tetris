@@ -5,6 +5,7 @@ Item {
     height: 560
 
     signal newGameButtonClicked
+    signal loadGameButtonClicked
     signal quitButtonClicked
 
     // TODO: Investigate whether using multiple FontLoaders affects performance,
@@ -49,6 +50,8 @@ Item {
         font.letterSpacing: 8
         anchors.horizontalCenter: parent.horizontalCenter
         y: newGameButton.y + 48
+
+        onClicked: parent.loadGameButtonClicked()
     }
 
     TextButton {

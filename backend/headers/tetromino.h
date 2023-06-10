@@ -32,13 +32,19 @@ class Tetromino : public QObject
     void rotateRight(Playfield &playfield);
     void hardDrop(Playfield &playfield);
 
+    friend std::ofstream &operator<<(std::ofstream &ofstream,
+                                     const Tetromino &tetromino);
+
+    friend std::ifstream &operator>>(std::ifstream &ifstream,
+                                     Tetromino &tetromino);
+
   signals:
     void landed();
 
   protected:
     Tetromino(const Type type, const Block::Type blockType,
               const QColor &fillColor, const QColor &borderColor,
-              const Index &begin);
+              const Index &begin, const int rotationIndex = 0);
 
     bool isLegalMove(const Playfield &playfield) const;
 

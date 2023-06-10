@@ -1,8 +1,15 @@
 #include "../headers/tetromino.h"
+#include "../headers/FileError.h"
 #include "../headers/Playfield.h"
+#include <fstream>
 #include <map>
 
 using namespace std;
+
+// Helper functions
+void saveBlocks(ofstream &ofstream, const vector<Block> &blocks);
+void loadBlocks(ifstream &ifstream, vector<Block> &blocks);
+
 
 static const map<Tetromino::Type, vector<vector<Index>>> rotations {
     {Tetromino::Type::I,
@@ -221,14 +228,63 @@ void Tetromino::hardDrop(Playfield &playfield)
 }
 
 
+ofstream &operator<<(ofstream &ofstream, const Tetromino &tetromino)
+{
+  ofstream << static_cast<int>(tetromino.m_type) << ' '
+           << tetromino.m_begin.getRow() << ' ' << tetromino.m_begin.getColumn()
+           << '\n';
+
+  if (!ofstream) {
+    throw FileError {"An error occurred while saving the tetromino."};
+  }
+
+  saveBlocks(ofstream, tetromino.m_blocks);
+  ofstream << '\n';
+  saveBlocks(ofstream, tetromino.m_previousStateOfBlocks);
+
+  ofstream << '\n' << tetromino.m_rotationIndex;
+  if (!ofstream) {
+    throw FileError {"An error occurred while saving the tetromino."};
+  }
+
+  return ofstream;
+}
+
+
+ifstream &operator>>(ifstream &ifstream, Tetromino &tetromino)
+{
+  int type;
+  int beginRow;
+  int beginColumn;
+  ifstream >> type >> beginRow >> beginColumn;
+
+  if (!ifstream) {
+    throw FileError {"An error occurred while loading the tetromino."};
+  }
+
+  tetromino.m_type = static_cast<Tetromino::Type>(type);
+  tetromino.m_begin = Index {beginRow, beginColumn};
+
+  loadBlocks(ifstream, tetromino.m_blocks);
+  loadBlocks(ifstream, tetromino.m_previousStateOfBlocks);
+
+  ifstream >> tetromino.m_rotationIndex;
+  if (!ifstream) {
+    throw FileError {"An error occurred while loading the tetromino."};
+  }
+
+  return ifstream;
+}
+
+
 Tetromino::Tetromino(const Type type, const Block::Type blockType,
                      const QColor &fillColor, const QColor &borderColor,
-                     const Index &begin) :
+                     const Index &begin, const int rotationIndex) :
   m_type {type},
   m_begin {begin},
   m_blocks {},
   m_previousStateOfBlocks {},
-  m_rotationIndex {0}
+  m_rotationIndex {rotationIndex}
 {
   initBlocks(blockType, fillColor, borderColor);
 }
@@ -283,5 +339,36 @@ void Tetromino::markAsLanded(Playfield &playfield)
   for (Block &block : m_blocks) {
     const Index &index = block.getIndex();
     playfield.getBlock(index).setType(Block::Type::Landed);
+  }
+}
+
+
+void saveBlocks(ofstream &ofstream, const vector<Block> &blocks)
+{
+  ofstream << blocks.size() << '\n';
+
+  for (const Block &block : blocks) {
+    ofstream << block << ' ';
+    if (!ofstream) {
+      throw FileError {"An error occurred while saving the tetromino blocks."};
+    }
+  }
+}
+
+
+void loadBlocks(ifstream &ifstream, vector<Block> &blocks)
+{
+  size_t size;
+  ifstream >> size;
+
+  blocks.reserve(size);
+
+  Block block;
+  for (size_t i = 0; i < size; ++i) {
+    if (!(ifstream >> block)) {
+      throw FileError {"An error occurred while loading the tetromino blocks."};
+    }
+
+    blocks.push_back(std::move(block));
   }
 }

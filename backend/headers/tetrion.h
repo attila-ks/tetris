@@ -14,19 +14,23 @@ class Tetrion : public QObject
 
   public:
     explicit Tetrion(QObject *parent = nullptr);
+    ~Tetrion();
 
     const Playfield *getPlayfield() const;
     Q_INVOKABLE int getLevel() const;
     Q_INVOKABLE float getLevelProgress() const;
+    Q_INVOKABLE int getScore() const;
 
     Q_INVOKABLE void startGame();
+
+    Q_INVOKABLE void load();
 
     void processInput(const Key key, const KeyEvent::Type type);
 
   signals:
     void gameOver();
-    void levelIncreased();
-    void levelProgressed();
+    void levelIncreased(int level);
+    void levelProgressed(float levelProgress);
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
     void scoreChanged(int score);
 
@@ -42,12 +46,22 @@ class Tetrion : public QObject
     std::shared_ptr<Tetromino> selectTetromino();
     void fillBag();
 
-    void increaseLevel();
-    void setSpeed();
+    void setLevel(const int level);
+    void setLevelProgress(const float levelProgress);
+    void calculateSpeed();
 
-    void updateScore(const int clearedRows);
+    void setScore(const int score);
 
     QUrl getNextTetrominoImageUrl() const;
+
+    void save();
+    template <typename T>
+    static void save(std::string_view fileName, const T &t);
+
+    template <typename T>
+    static void load(std::string_view fileName, T &t);
+
+    void clear();
 
     Playfield m_playfield;
     std::vector<std::shared_ptr<Tetromino>> m_bag;

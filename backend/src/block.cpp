@@ -1,4 +1,11 @@
 #include "../headers/block.h"
+#include <cstdint>
+#include <fstream>
+#include <qglobal.h>
+#include <qrgb.h>
+#include <string>
+
+using namespace std;
 
 Block::Block(const Type type, const QColor fillColor, const QColor borderColor,
              const Index index) :
@@ -50,4 +57,32 @@ void Block::setIndex(const Index index)
 const Index &Block::getIndex() const
 {
   return m_index;
+}
+
+
+ostream &operator<<(ostream &ostream, const Block &block)
+{
+  const Index &index = block.getIndex();
+  ostream << static_cast<int>(block.m_type) << ' ' << block.m_fillColor.rgba64()
+          << ' ' << block.m_borderColor.rgba64() << ' ' << index.getRow() << ' '
+          << index.getColumn();
+  return ostream;
+}
+
+
+istream &operator>>(istream &istream, Block &block)
+{
+  int type;
+  quint64 fillColor;
+  quint64 borderColor;
+  int row;
+  int column;
+  istream >> type >> fillColor >> borderColor >> row >> column;
+
+  block.m_type = static_cast<Block::Type>(type);
+  block.m_fillColor.setRgba64(QRgba64::fromRgba64(fillColor));
+  block.m_borderColor.setRgba64(QRgba64::fromRgba64(borderColor));
+  block.setIndex(Index {row, column});
+
+  return istream;
 }

@@ -31,6 +31,14 @@ class Playfield : public QAbstractTableModel
     Block &getBlock(const Index &index);
     const Block &getBlock(const Index &index) const;
 
+    friend std::ofstream &operator<<(std::ofstream &ofstream,
+                                     const Playfield &playfield);
+
+    friend std::ifstream &operator>>(std::ifstream &ifstream,
+                                     Playfield &playfield);
+
+    void clear();
+
     /// @return the number of cleared rows, if any.
     int clearFilledRows();
 

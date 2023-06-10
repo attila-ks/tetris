@@ -28,6 +28,8 @@ qt_add_executable(a.out
     backend/headers/KeyEvent.h
     backend/headers/KeyboardEventHandler.h
     backend/src/KeyboardEventHandler.cpp
+    backend/headers/FileError.h
+    backend/src/FileError.cpp
 )
 
 qt_add_qml_module(a.out

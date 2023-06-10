@@ -1,4 +1,7 @@
 #include "../headers/tetrion.h"
+#include "../headers/FileError.h"
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -12,7 +15,7 @@ Tetrion::Tetrion(QObject *parent) :
   m_playfield {QColor {0x0e001f}},
   m_bag {},
   m_currentTetromino {nullptr},
-  m_nextTetromino {selectTetromino()},
+  m_nextTetromino {nullptr},
   m_ghostTetromino {nullopt},
   m_tetrominoDropTimer {},
   m_keyboardEventHandler {},
@@ -24,9 +27,15 @@ Tetrion::Tetrion(QObject *parent) :
 
   setUpKeyboardEventHandler(m_keyboardEventHandler, *this);
 
-  setSpeed();
+  calculateSpeed();
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
           &Tetrion::dropTetromino);
+}
+
+
+Tetrion::~Tetrion()
+{
+  save();
 }
 
 
@@ -48,10 +57,50 @@ float Tetrion::getLevelProgress() const
 }
 
 
+int Tetrion::getScore() const
+{
+  return m_score;
+}
+
+
 void Tetrion::startGame()
 {
   spawnTetromino();
   m_tetrominoDropTimer.start();
+}
+
+
+void Tetrion::load()
+{
+  try {
+    load("playfield.txt", m_playfield);
+
+    // The previously saved `m_currentTetromino` is loaded as `m_nextTetromino`,
+    // so the `::startGame` method can be called without code modification.
+    m_nextTetromino = make_shared<Tetromino>();
+    load("currentTetromino.txt", *m_nextTetromino);
+
+    ifstream ifstream {"tetrionMisc.txt"};
+    if (ifstream) {
+      int level;
+      float levelProgress;
+      int score;
+      ifstream >> level >> levelProgress >> score;
+      setLevel(level);
+      setLevelProgress(levelProgress);
+      setScore(score);
+    }
+
+    if (!ifstream) {
+      throw FileError {
+          "An error occurred while reading file: 'tetrionMisc.txt'"};
+    }
+  } catch (const FileError &e) {
+    m_playfield.clear();
+    m_nextTetromino = nullptr;
+    clear();
+    cerr << "ERROR: " << e.what();
+  }
 }
 
 
@@ -93,16 +142,16 @@ void Tetrion::handleTetrominoLanding()
 
   checkGameOver();
 
-  m_levelProgress += clearedRows * 0.1f;
-  updateScore(clearedRows);
-
-  if (m_levelProgress >= 1.0f) {
-    increaseLevel();
-    setSpeed();
-    m_levelProgress = m_levelProgress - 1.0f;
-    emit levelProgressed();
-  } else if (clearedRows > 0) {
-    emit levelProgressed();
+  if (clearedRows > 0) {
+    const float levelProgress = m_levelProgress + clearedRows * 0.1f;
+    if (levelProgress >= 1.0f) {
+      setLevel(m_level + 1);
+      setLevelProgress(levelProgress - 1.0f);
+      calculateSpeed();
+    } else {
+      setLevelProgress(levelProgress);
+    }
+    setScore(m_score + clearedRows * 10);
   }
 
   spawnTetromino();
@@ -111,8 +160,15 @@ void Tetrion::handleTetrominoLanding()
 
 void Tetrion::spawnTetromino()
 {
-  m_currentTetromino = m_nextTetromino;
-  m_nextTetromino = selectTetromino();
+  if (m_nextTetromino) {
+    m_currentTetromino = m_nextTetromino;
+    m_nextTetromino = selectTetromino();
+  } else {
+    m_currentTetromino = selectTetromino();
+    m_nextTetromino = selectTetromino();
+  }
+
+
   emit nextTetrominoChanged(getNextTetrominoImageUrl());
 
   connect(m_currentTetromino.get(), &Tetromino::landed, this,
@@ -179,14 +235,21 @@ void Tetrion::fillBag()
 }
 
 
-void Tetrion::increaseLevel()
+void Tetrion::setLevel(const int level)
 {
-  ++m_level;
-  emit levelIncreased();
+  m_level = level;
+  emit levelIncreased(m_level);
 }
 
 
-void Tetrion::setSpeed()
+void Tetrion::setLevelProgress(const float levelProgress)
+{
+  m_levelProgress = levelProgress;
+  emit levelProgressed(m_levelProgress);
+}
+
+
+void Tetrion::calculateSpeed()
 {
   int frames;
 
@@ -228,9 +291,9 @@ void Tetrion::setSpeed()
 }
 
 
-inline void Tetrion::updateScore(const int clearedRows)
+inline void Tetrion::setScore(const int score)
 {
-  m_score += clearedRows * 10;
+  m_score = score;
   emit scoreChanged(m_score);
 }
 
@@ -253,6 +316,59 @@ QUrl Tetrion::getNextTetrominoImageUrl() const
     case Tetromino::Type::Z:
       return QUrl {"../resources/images/tetrominoes/Tetromino-Z.svg"};
   }
+}
+
+
+void Tetrion::save()
+{
+  m_tetrominoDropTimer.stop();
+
+  save("playfield.txt", m_playfield);
+  save("currentTetromino.txt", *m_currentTetromino);
+  // `m_nextTetromino` is intentionally not saved, a new one will be randomly
+  // selected the next time the application runs.
+
+  ofstream ofstream {"tetrionMisc.txt"};
+  if (ofstream) {
+    ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score;
+  }
+
+  if (!ofstream) {
+    throw FileError {
+        "An error occurred while saving to file: 'tetrionMisc.txt'"};
+  }
+}
+
+
+template <typename T>
+void Tetrion::save(string_view fileName, const T &t)
+{
+  ofstream ofstream {fileName.data()};
+  if (!ofstream) {
+    throw FileError {string {"Cannot open file: '"} + fileName.data() + "'"};
+  }
+
+  ofstream << t;
+}
+
+
+template <typename T>
+void Tetrion::load(string_view fileName, T &t)
+{
+  ifstream ifstream {fileName.data()};
+  if (!ifstream) {
+    throw FileError {string {"Cannot open file: '"} + fileName.data() + "'"};
+  }
+
+  ifstream >> t;
+}
+
+
+void Tetrion::clear()
+{
+  m_level = 1;
+  m_levelProgress = 0.0f;
+  m_score = 0;
 }
 
 

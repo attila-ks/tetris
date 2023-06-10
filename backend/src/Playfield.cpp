@@ -1,4 +1,6 @@
 #include "../headers/Playfield.h"
+#include "../headers/FileError.h"
+#include <fstream>
 
 using namespace std;
 
@@ -45,6 +47,7 @@ QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 }
 
 
+// FIXME: param `block` is moved while it's a reference.
 void Playfield::addBlock(const Block &block)
 {
   const Index index = block.getIndex();
@@ -80,6 +83,64 @@ Block &Playfield::getBlock(const Index &index)
 const Block &Playfield::getBlock(const Index &index) const
 {
   return m_gameboard(index.getRow(), index.getColumn()).value();
+}
+
+
+std::ofstream &operator<<(std::ofstream &ofstream, const Playfield &playfield)
+{
+  for (const optional<Block> &opt : playfield.m_gameboard) {
+    if (opt.has_value()) {
+      ofstream << opt.value() << '\n';
+    } else {
+      ofstream << "nullopt\n";
+    }
+    if (!ofstream) {
+      throw FileError {"An error occurred while saving the playfield."};
+    }
+  }
+
+  return ofstream;
+}
+
+
+std::ifstream &operator>>(std::ifstream &ifstream, Playfield &playfield)
+{
+  Block block;
+  string line;
+  int loadedItemCounter = 0;
+  const int gameboardSize =
+      playfield.m_gameboard.getRows() * playfield.m_gameboard.getColumns();
+
+  while (getline(ifstream, line) && loadedItemCounter < gameboardSize) {
+    if (line != "nullopt") {
+      istringstream istrstream {line};
+      istrstream >> block;
+      playfield.addBlock(std::move(block));
+    }
+
+    ++loadedItemCounter;
+  }
+
+  if (!ifstream.eof()) {
+    throw FileError {"Excess data in the file while loading the playfield."};
+  } else if (ifstream.eof() && loadedItemCounter < gameboardSize) {
+    throw FileError {"Missing data from the file while loading the playfield."};
+  }
+
+  return ifstream;
+}
+
+
+void Playfield::clear()
+{
+  for (optional<Block> &opt : m_gameboard) {
+    if (opt.has_value()) {
+      const Index &index = opt->getIndex();
+      opt = nullopt;
+      QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+      emit dataChanged(modelIndex, modelIndex);
+    }
+  }
 }
 
 

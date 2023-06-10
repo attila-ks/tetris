@@ -5,8 +5,12 @@ using namespace std;
 
 GhostTetromino::GhostTetromino(const Tetromino &tetrominoToFollow,
                                const QColor &fillColor) :
-  Tetromino {tetrominoToFollow.getType(), Block::Type::Ghost, fillColor,
-             tetrominoToFollow.getBorderColor(), tetrominoToFollow.getBegin()},
+  Tetromino {tetrominoToFollow.getType(),
+             Block::Type::Ghost,
+             fillColor,
+             tetrominoToFollow.getBorderColor(),
+             tetrominoToFollow.getBegin(),
+             tetrominoToFollow.getRotationIndex()},
   m_followedTetromino {tetrominoToFollow}
 {
 }

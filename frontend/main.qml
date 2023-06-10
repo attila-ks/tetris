@@ -31,6 +31,16 @@ Window {
             tetrion.startGame()
         }
 
+        onLoadGameButtonClicked: {
+            tetrion.load()
+            visible = false
+            playfield.visible = true
+            levelDisplay.visible = true
+            nextTetrominoDisplay.visible = true
+            scoreDisplay.visible = true
+            tetrion.startGame()
+        }
+
         onQuitButtonClicked: {
             Qt.quit()
         }
@@ -50,11 +60,8 @@ Window {
         anchors.rightMargin: 17
         anchors.bottom: playfield.bottom
 
-        // TODO: Use property alias instead!
-        property double progressBarValue
-        // TODO: Use property alias instead!
-        // TODO: The initial value should come from the `tetrion` too!
-        property int level: 1
+        property alias progressBarValue: progressBar.value
+        property alias level: level.text
 
         CircularProgressBar {
             id: progressBar
@@ -62,14 +69,14 @@ Window {
             lineWidth: 3
             primaryColor: "#16faff"
             secondaryColor: "#d93ed7"
-            value: parent.progressBarValue
+            value: tetrion.getLevelProgress()
             anchors.horizontalCenter: parent.horizontalCenter
             y: 27
         }
 
         Text {
             id: level
-            text: parent.level
+            text: tetrion.getLevel()
             color: "#16faff"
             anchors.centerIn: progressBar
         }
@@ -93,12 +100,11 @@ Window {
         anchors.leftMargin: 17
         y: 380
 
-        // TODO: Use property alias instead!
-        property int score
+        property alias score: score.text
 
         Text {
             id: score
-            text: parent.score
+            text: tetrion.getScore()
             color: "#16faff"
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 10
@@ -124,12 +130,12 @@ Window {
             gameOverMenu.visible = true
         }
 
-        function onLevelIncreased() {
-            levelDisplay.level = tetrion.getLevel();
+        function onLevelIncreased(level) {
+            levelDisplay.level = level;
         }
 
-        function onLevelProgressed() {
-            levelDisplay.progressBarValue = tetrion.getLevelProgress();
+        function onLevelProgressed(levelProgress) {
+            levelDisplay.progressBarValue = levelProgress;
         }
 
         function onScoreChanged(score) {
