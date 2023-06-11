@@ -28,17 +28,16 @@ Window {
             levelDisplay.visible = true
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
-            tetrion.startGame()
+            tetrion.startGame(false)
         }
 
         onLoadGameButtonClicked: {
-            tetrion.load()
             visible = false
             playfield.visible = true
             levelDisplay.visible = true
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
-            tetrion.startGame()
+            tetrion.startGame(true)
         }
 
         onQuitButtonClicked: {

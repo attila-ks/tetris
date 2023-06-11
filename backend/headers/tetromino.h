@@ -2,14 +2,11 @@
 #define TETROMINO_H
 
 #include "block.h"
-#include <QObject>
 
 class Playfield;
 
-class Tetromino : public QObject
+class Tetromino
 {
-    Q_OBJECT
-
   public:
     enum class Type { I, J, L, O, S, T, Z };
 
@@ -22,6 +19,7 @@ class Tetromino : public QObject
     const std::vector<Block> &getBlocks() const;
     const QColor &getBorderColor() const;
     int getRotationIndex() const;
+    bool isLanded() const;
 
     void drawOn(Playfield &playfield) const;
 
@@ -37,9 +35,6 @@ class Tetromino : public QObject
 
     friend std::ifstream &operator>>(std::ifstream &ifstream,
                                      Tetromino &tetromino);
-
-  signals:
-    void landed();
 
   protected:
     Tetromino(const Type type, const Block::Type blockType,
@@ -62,6 +57,7 @@ class Tetromino : public QObject
     std::vector<Block> m_blocks;
     std::vector<Block> m_previousStateOfBlocks;
     int m_rotationIndex;
+    bool m_isLanded {false};
 };
 
 #endif

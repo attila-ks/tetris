@@ -21,9 +21,7 @@ class Tetrion : public QObject
     Q_INVOKABLE float getLevelProgress() const;
     Q_INVOKABLE int getScore() const;
 
-    Q_INVOKABLE void startGame();
-
-    Q_INVOKABLE void load();
+    Q_INVOKABLE void startGame(const bool load);
 
     void processInput(const Key key, const KeyEvent::Type type);
 
@@ -43,7 +41,7 @@ class Tetrion : public QObject
 
     void checkGameOver();
 
-    std::shared_ptr<Tetromino> selectTetromino();
+    Tetromino selectTetromino();
     void fillBag();
 
     void setLevel(const int level);
@@ -58,15 +56,16 @@ class Tetrion : public QObject
     template <typename T>
     static void save(std::string_view fileName, const T &t);
 
+    void load();
     template <typename T>
     static void load(std::string_view fileName, T &t);
 
     void clear();
 
     Playfield m_playfield;
-    std::vector<std::shared_ptr<Tetromino>> m_bag;
-    std::shared_ptr<Tetromino> m_currentTetromino;
-    std::shared_ptr<Tetromino> m_nextTetromino;
+    std::vector<Tetromino> m_bag;
+    Tetromino m_currentTetromino;
+    Tetromino m_nextTetromino;
     std::optional<GhostTetromino> m_ghostTetromino;
     QTimer m_tetrominoDropTimer;
     KeyboardEventHandler m_keyboardEventHandler;

@@ -83,6 +83,12 @@ int Tetromino::getRotationIndex() const
 }
 
 
+bool Tetromino::isLanded() const
+{
+  return m_isLanded;
+}
+
+
 void Tetromino::drawOn(Playfield &playfield) const
 {
   for (const Block &block : m_blocks) {
@@ -107,7 +113,7 @@ void Tetromino::moveDown(Playfield &playfield)
   } else {
     m_blocks = m_previousStateOfBlocks;
     markAsLanded(playfield);
-    emit landed();
+    m_isLanded = true;
   }
 }
 
@@ -221,7 +227,7 @@ void Tetromino::hardDrop(Playfield &playfield)
       removeFrom(playfield);
       drawOn(playfield);
       markAsLanded(playfield);
-      emit landed();
+      m_isLanded = true;
       break;
     }
   }

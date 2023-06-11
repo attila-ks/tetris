@@ -14,8 +14,8 @@ Tetrion::Tetrion(QObject *parent) :
   QObject {parent},
   m_playfield {QColor {0x0e001f}},
   m_bag {},
-  m_currentTetromino {nullptr},
-  m_nextTetromino {nullptr},
+  m_currentTetromino {},
+  m_nextTetromino {},
   m_ghostTetromino {nullopt},
   m_tetrominoDropTimer {},
   m_keyboardEventHandler {},
@@ -63,44 +63,16 @@ int Tetrion::getScore() const
 }
 
 
-void Tetrion::startGame()
+void Tetrion::startGame(const bool load)
 {
+  if (load) {
+    this->load();
+  } else {
+    m_nextTetromino = selectTetromino();
+  }
+
   spawnTetromino();
   m_tetrominoDropTimer.start();
-}
-
-
-void Tetrion::load()
-{
-  try {
-    load("playfield.txt", m_playfield);
-
-    // The previously saved `m_currentTetromino` is loaded as `m_nextTetromino`,
-    // so the `::startGame` method can be called without code modification.
-    m_nextTetromino = make_shared<Tetromino>();
-    load("currentTetromino.txt", *m_nextTetromino);
-
-    ifstream ifstream {"tetrionMisc.txt"};
-    if (ifstream) {
-      int level;
-      float levelProgress;
-      int score;
-      ifstream >> level >> levelProgress >> score;
-      setLevel(level);
-      setLevelProgress(levelProgress);
-      setScore(score);
-    }
-
-    if (!ifstream) {
-      throw FileError {
-          "An error occurred while reading file: 'tetrionMisc.txt'"};
-    }
-  } catch (const FileError &e) {
-    m_playfield.clear();
-    m_nextTetromino = nullptr;
-    clear();
-    cerr << "ERROR: " << e.what();
-  }
 }
 
 
@@ -111,21 +83,26 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   bool isTetrominoRotatedOrMovedHorizontally = false;
 
   if (key == Key_S) {
-    m_currentTetromino->moveDown(m_playfield);
+    m_currentTetromino.moveDown(m_playfield);
+    if (m_currentTetromino.isLanded()) {
+      handleTetrominoLanding();
+      // There is no reason to go further in this method.
+      return;
+    }
   } else if (key == Key_A) {
-    m_currentTetromino->moveLeft(m_playfield);
+    m_currentTetromino.moveLeft(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_D) {
-    m_currentTetromino->moveRight(m_playfield);
+    m_currentTetromino.moveRight(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Q) {
-    m_currentTetromino->rotateLeft(m_playfield);
+    m_currentTetromino.rotateLeft(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_E) {
-    m_currentTetromino->rotateRight(m_playfield);
+    m_currentTetromino.rotateRight(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Space) {
-    m_currentTetromino->hardDrop(m_playfield);
+    m_currentTetromino.hardDrop(m_playfield);
   }
 
   // FIXME: This is true even if the `m_currentTetromino` could not move, in
@@ -160,30 +137,23 @@ void Tetrion::handleTetrominoLanding()
 
 void Tetrion::spawnTetromino()
 {
-  if (m_nextTetromino) {
-    m_currentTetromino = m_nextTetromino;
-    m_nextTetromino = selectTetromino();
-  } else {
-    m_currentTetromino = selectTetromino();
-    m_nextTetromino = selectTetromino();
-  }
-
-
+  m_currentTetromino = std::move(m_nextTetromino);
+  m_nextTetromino = selectTetromino();
   emit nextTetrominoChanged(getNextTetrominoImageUrl());
 
-  connect(m_currentTetromino.get(), &Tetromino::landed, this,
-          &Tetrion::handleTetrominoLanding);
+  m_currentTetromino.drawOn(m_playfield);
 
-  m_currentTetromino->drawOn(m_playfield);
-
-  m_ghostTetromino.emplace(*(m_currentTetromino.get()), QColor {0x0e001f});
+  m_ghostTetromino.emplace(m_currentTetromino, QColor {0x0e001f});
   m_ghostTetromino->drawOn(m_playfield);
 }
 
 
 void Tetrion::dropTetromino()
 {
-  m_currentTetromino->moveDown(m_playfield);
+  m_currentTetromino.moveDown(m_playfield);
+  if (m_currentTetromino.isLanded()) {
+    handleTetrominoLanding();
+  }
 }
 
 
@@ -203,14 +173,14 @@ void Tetrion::checkGameOver()
 }
 
 
-shared_ptr<Tetromino> Tetrion::selectTetromino()
+Tetromino Tetrion::selectTetromino()
 {
   if (m_bag.empty()) {
     fillBag();
   }
 
   const unsigned long index {rand() % m_bag.size()};
-  shared_ptr<Tetromino> tetromino = m_bag[index];
+  Tetromino tetromino {std::move(m_bag[index])};
   m_bag.erase(m_bag.begin() + index);
   return tetromino;
 }
@@ -218,20 +188,20 @@ shared_ptr<Tetromino> Tetrion::selectTetromino()
 
 void Tetrion::fillBag()
 {
-  m_bag = {make_shared<Tetromino>(Tetromino::Type::I, QColor {0x00b8d4},
-                                  QColor {0x00b8d4}, Index {1, 3}),
-           make_shared<Tetromino>(Tetromino::Type::J, QColor {0x304ffe},
-                                  QColor {0x304ffe}, Index {0, 3}),
-           make_shared<Tetromino>(Tetromino::Type::L, QColor {0xff6d00},
-                                  QColor {0xff6d00}, Index {0, 3}),
-           make_shared<Tetromino>(Tetromino::Type::O, QColor {0xffd600},
-                                  QColor {0xffd600}, Index {0, 4}),
-           make_shared<Tetromino>(Tetromino::Type::S, QColor {0x00c853},
-                                  QColor {0x00c853}, Index {0, 3}),
-           make_shared<Tetromino>(Tetromino::Type::T, QColor {0xaa00ff},
-                                  QColor {0xaa00ff}, Index {0, 3}),
-           make_shared<Tetromino>(Tetromino::Type::Z, QColor {0xd50000},
-                                  QColor {0xd50000}, Index {0, 3})};
+  m_bag = {Tetromino(Tetromino::Type::I, QColor {0x00b8d4}, QColor {0x00b8d4},
+                     Index {1, 3}),
+           Tetromino(Tetromino::Type::J, QColor {0x304ffe}, QColor {0x304ffe},
+                     Index {0, 3}),
+           Tetromino(Tetromino::Type::L, QColor {0xff6d00}, QColor {0xff6d00},
+                     Index {0, 3}),
+           Tetromino(Tetromino::Type::O, QColor {0xffd600}, QColor {0xffd600},
+                     Index {0, 4}),
+           Tetromino(Tetromino::Type::S, QColor {0x00c853}, QColor {0x00c853},
+                     Index {0, 3}),
+           Tetromino(Tetromino::Type::T, QColor {0xaa00ff}, QColor {0xaa00ff},
+                     Index {0, 3}),
+           Tetromino(Tetromino::Type::Z, QColor {0xd50000}, QColor {0xd50000},
+                     Index {0, 3})};
 }
 
 
@@ -300,7 +270,7 @@ inline void Tetrion::setScore(const int score)
 
 QUrl Tetrion::getNextTetrominoImageUrl() const
 {
-  switch (m_nextTetromino->getType()) {
+  switch (m_nextTetromino.getType()) {
     case Tetromino::Type::I:
       return QUrl {"../resources/images/tetrominoes/Tetromino-I.svg"};
     case Tetromino::Type::J:
@@ -324,7 +294,7 @@ void Tetrion::save()
   m_tetrominoDropTimer.stop();
 
   save("playfield.txt", m_playfield);
-  save("currentTetromino.txt", *m_currentTetromino);
+  save("currentTetromino.txt", m_currentTetromino);
   // `m_nextTetromino` is intentionally not saved, a new one will be randomly
   // selected the next time the application runs.
 
@@ -349,6 +319,39 @@ void Tetrion::save(string_view fileName, const T &t)
   }
 
   ofstream << t;
+}
+
+
+void Tetrion::load()
+{
+  try {
+    load("playfield.txt", m_playfield);
+
+    // The previously saved `m_currentTetromino` is loaded as `m_nextTetromino`,
+    // so the `::startGame` method can be called without code modification.
+    load("currentTetromino.txt", m_nextTetromino);
+
+    ifstream ifstream {"tetrionMisc.txt"};
+    if (ifstream) {
+      int level;
+      float levelProgress;
+      int score;
+      ifstream >> level >> levelProgress >> score;
+      setLevel(level);
+      setLevelProgress(levelProgress);
+      setScore(score);
+    }
+
+    if (!ifstream) {
+      throw FileError {
+          "An error occurred while reading file: 'tetrionMisc.txt'"};
+    }
+  } catch (const FileError &e) {
+    m_playfield.clear();
+    m_nextTetromino = selectTetromino();
+    clear();
+    cerr << "ERROR: " << e.what();
+  }
 }
 
 
