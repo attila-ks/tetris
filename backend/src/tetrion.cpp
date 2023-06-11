@@ -82,17 +82,17 @@ void Tetrion::processInput(const Key key, const KeyEvent::Type type)
   // setUpKeyboardEventHandler method!
   bool isTetrominoRotatedOrMovedHorizontally = false;
 
-  if (key == Key_S) {
+  if (key == Key_S || key == Key_Down) {
     m_currentTetromino.moveDown(m_playfield);
     if (m_currentTetromino.isLanded()) {
       handleTetrominoLanding();
       // There is no reason to go further in this method.
       return;
     }
-  } else if (key == Key_A) {
+  } else if (key == Key_A || key == Key_Left) {
     m_currentTetromino.moveLeft(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
-  } else if (key == Key_D) {
+  } else if (key == Key_D || key == Key_Right) {
     m_currentTetromino.moveRight(m_playfield);
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Q) {
@@ -385,8 +385,9 @@ void initRandomTetrominoGenerator()
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                Tetrion &tetrion)
 {
-  constexpr array<Key, 6> tetrominoMovementKeys = {Key_S, Key_A, Key_D,
-                                                   Key_Q, Key_E, Key_Space};
+  constexpr array<Key, 9> tetrominoMovementKeys = {
+      Key_S,     Key_Down, Key_A, Key_Left, Key_D,
+      Key_Right, Key_Q,    Key_E, Key_Space};
   for (const Key &key : tetrominoMovementKeys) {
     keyboardEventHandler.addKey(key, KeyEvent::Type::KeyPress);
   }
