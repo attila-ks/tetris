@@ -347,7 +347,6 @@ void Tetrion::load()
           "An error occurred while reading file: 'tetrionMisc.txt'"};
     }
   } catch (const FileError &e) {
-    m_playfield.clear();
     // TODO: Implement `Tetromino::clear()` method and call it from here!
     m_nextTetromino = selectTetromino();
     clear();
@@ -370,6 +369,7 @@ void Tetrion::load(string_view fileName, T &t)
 
 void Tetrion::clear()
 {
+  m_playfield.clear();
   m_level = 1;
   m_levelProgress = 0.0f;
   m_score = 0;
