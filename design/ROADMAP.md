@@ -36,8 +36,8 @@
 - [ ] Pause the game
 - [ ] Restart the game (current state is lost, but score is saved if it's the highest score)
 - [ ] Exit the game (current state is saved)
-- [ ] Save the game state automatically on exit
-- [ ] Load the game state manually
+- [x] Save the game state automatically on exit
+- [x] Load the game state manually
 - [x] Display a window at the game over, where the user can choose from the following:
   - [ ] Load the previously saved state
   - [ ] Start a new game
