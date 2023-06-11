@@ -348,6 +348,7 @@ void Tetrion::load()
     }
   } catch (const FileError &e) {
     m_playfield.clear();
+    // TODO: Implement `Tetromino::clear()` method and call it from here!
     m_nextTetromino = selectTetromino();
     clear();
     cerr << "ERROR: " << e.what();
