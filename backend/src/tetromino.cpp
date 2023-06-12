@@ -11,44 +11,44 @@ void saveBlocks(ofstream &ofstream, const vector<Block> &blocks);
 void loadBlocks(ifstream &ifstream, vector<Block> &blocks);
 
 
-static const map<Tetromino::Type, vector<vector<Index>>> rotations {
+static const map<Tetromino::Type, vector<vector<pair<int, int>>>> rotations {
     {Tetromino::Type::I,
-     {{Index {0, 0}, Index {0, 1}, Index {0, 2}, Index {0, 3}},
-      {Index {-1, 2}, Index {0, 2}, Index {1, 2}, Index {2, 2}},
-      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {1, 3}},
-      {Index {-1, 1}, Index {0, 1}, Index {1, 1}, Index {2, 1}}}},
+     {{{0, 0}, {0, 1}, {0, 2}, {0, 3}},
+      {{-1, 2}, {0, 2}, {1, 2}, {2, 2}},
+      {{1, 0}, {1, 1}, {1, 2}, {1, 3}},
+      {{-1, 1}, {0, 1}, {1, 1}, {2, 1}}}},
     {Tetromino::Type::J,
-     {{Index {0, 0}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
-      {Index {0, 1}, Index {0, 2}, Index {1, 1}, Index {2, 1}},
-      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {2, 2}},
-      {Index {0, 1}, Index {1, 1}, Index {2, 0}, Index {2, 1}}}},
+     {{{0, 0}, {1, 0}, {1, 1}, {1, 2}},
+      {{0, 1}, {0, 2}, {1, 1}, {2, 1}},
+      {{1, 0}, {1, 1}, {1, 2}, {2, 2}},
+      {{0, 1}, {1, 1}, {2, 0}, {2, 1}}}},
     {Tetromino::Type::L,
-     {{Index {0, 2}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
-      {Index {0, 1}, Index {1, 1}, Index {2, 1}, Index {2, 2}},
-      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {2, 0}},
-      {Index {0, 0}, Index {0, 1}, Index {1, 1}, Index {2, 1}}}},
-    {Tetromino::Type::O,
-     {{Index {0, 0}, Index {0, 1}, Index {1, 0}, Index {1, 1}}}},
+     {{{0, 2}, {1, 0}, {1, 1}, {1, 2}},
+      {{0, 1}, {1, 1}, {2, 1}, {2, 2}},
+      {{1, 0}, {1, 1}, {1, 2}, {2, 0}},
+      {{0, 0}, {0, 1}, {1, 1}, {2, 1}}}},
+    {Tetromino::Type::O, {{{0, 0}, {0, 1}, {1, 0}, {1, 1}}}},
     {Tetromino::Type::S,
-     {{Index {0, 1}, Index {0, 2}, Index {1, 0}, Index {1, 1}},
-      {Index {0, 1}, Index {1, 1}, Index {1, 2}, Index {2, 2}},
-      {Index {1, 1}, Index {1, 2}, Index {2, 0}, Index {2, 1}},
-      {Index {0, 0}, Index {1, 0}, Index {1, 1}, Index {2, 1}}}},
+     {{{0, 1}, {0, 2}, {1, 0}, {1, 1}},
+      {{0, 1}, {1, 1}, {1, 2}, {2, 2}},
+      {{1, 1}, {1, 2}, {2, 0}, {2, 1}},
+      {{0, 0}, {1, 0}, {1, 1}, {2, 1}}}},
     {Tetromino::Type::T,
-     {{Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {1, 2}},
-      {Index {0, 1}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
-      {Index {1, 0}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
-      {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 1}}}},
+     {{{0, 1}, {1, 0}, {1, 1}, {1, 2}},
+      {{0, 1}, {1, 1}, {1, 2}, {2, 1}},
+      {{1, 0}, {1, 1}, {1, 2}, {2, 1}},
+      {{0, 1}, {1, 0}, {1, 1}, {2, 1}}}},
     {Tetromino::Type::Z,
-     {{Index {0, 0}, Index {0, 1}, Index {1, 1}, Index {1, 2}},
-      {Index {0, 2}, Index {1, 1}, Index {1, 2}, Index {2, 1}},
-      {Index {1, 0}, Index {1, 1}, Index {2, 1}, Index {2, 2}},
-      {Index {0, 1}, Index {1, 0}, Index {1, 1}, Index {2, 0}}}}};
+     {{{0, 0}, {0, 1}, {1, 1}, {1, 2}},
+      {{0, 2}, {1, 1}, {1, 2}, {2, 1}},
+      {{1, 0}, {1, 1}, {2, 1}, {2, 2}},
+      {{0, 1}, {1, 0}, {1, 1}, {2, 0}}}}};
 
 
 Tetromino::Tetromino(const Type type, const QColor &fillColor,
-                     const QColor &borderColor, const Index &begin) :
-  Tetromino(type, Block::Type::Falling, fillColor, borderColor, begin)
+                     const QColor &borderColor, const int row,
+                     const int column) :
+  Tetromino(type, Block::Type::Falling, fillColor, borderColor, row, column)
 {
 }
 
@@ -59,9 +59,15 @@ Tetromino::Type Tetromino::getType() const
 }
 
 
-const Index &Tetromino::getBegin() const
+int Tetromino::getRow() const
 {
-  return m_begin;
+  return m_row;
+}
+
+
+int Tetromino::getColumn() const
+{
+  return m_column;
 }
 
 
@@ -102,12 +108,11 @@ void Tetromino::moveDown(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    const Index &index = block.getIndex();
-    block.setIndex(Index {index.getRow() + 1, index.getColumn()});
+    block.setRow(block.getRow() + 1);
   }
 
   if (isLegalMove(playfield)) {
-    m_begin.setRow(m_begin.getRow() + 1);
+    ++m_row;
     removeFrom(playfield);
     drawOn(playfield);
   } else {
@@ -123,12 +128,11 @@ void Tetromino::moveLeft(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    const Index &index = block.getIndex();
-    block.setIndex(Index {index.getRow(), index.getColumn() - 1});
+    block.setColumn(block.getColumn() - 1);
   }
 
   if (isLegalMove(playfield)) {
-    m_begin.setColumn(m_begin.getColumn() - 1);
+    --m_column;
     removeFrom(playfield);
     drawOn(playfield);
   } else {
@@ -142,12 +146,11 @@ void Tetromino::moveRight(Playfield &playfield)
   m_previousStateOfBlocks = m_blocks;
 
   for (Block &block : m_blocks) {
-    const Index &index = block.getIndex();
-    block.setIndex(Index {index.getRow(), index.getColumn() + 1});
+    block.setColumn(block.getColumn() + 1);
   }
 
   if (isLegalMove(playfield)) {
-    m_begin.setColumn(m_begin.getColumn() + 1);
+    ++m_column;
     removeFrom(playfield);
     drawOn(playfield);
   } else {
@@ -165,9 +168,12 @@ void Tetromino::rotateLeft(Playfield &playfield)
     m_rotationIndex = 0;
   }
 
-  const vector<Index> &rotation = rotations.at(m_type)[m_rotationIndex];
+  const vector<pair<int, int>> &rotation =
+      rotations.at(m_type)[m_rotationIndex];
   for (int i = 0; i < rotation.size(); ++i) {
-    m_blocks[i].setIndex(m_begin + rotation[i]);
+    const auto [row, column] = rotation[i];
+    m_blocks[i].setRow(m_row + row);
+    m_blocks[i].setColumn(m_column + column);
   }
 
   if (isLegalMove(playfield)) {
@@ -190,9 +196,12 @@ void Tetromino::rotateRight(Playfield &playfield)
     m_rotationIndex = rotations.at(m_type).size() - 1;
   }
 
-  const vector<Index> &rotation = rotations.at(m_type)[m_rotationIndex];
+  const vector<pair<int, int>> &rotation =
+      rotations.at(m_type)[m_rotationIndex];
   for (int i = 0; i < rotation.size(); ++i) {
-    m_blocks[i].setIndex(m_begin + rotation[i]);
+    const auto [row, column] = rotation[i];
+    m_blocks[i].setRow(m_row + row);
+    m_blocks[i].setColumn(m_column + column);
   }
 
   if (isLegalMove(playfield)) {
@@ -207,7 +216,6 @@ void Tetromino::rotateRight(Playfield &playfield)
 
 void Tetromino::hardDrop(Playfield &playfield)
 {
-  const int top = m_begin.getRow();
   const int bottom = playfield.rowCount();
 
   m_previousStateOfBlocks = m_blocks;
@@ -217,13 +225,12 @@ void Tetromino::hardDrop(Playfield &playfield)
     const vector<Block> lastLegalStateOfBlocks = m_blocks;
 
     for (Block &block : m_blocks) {
-      const Index &index = block.getIndex();
-      block.setIndex(Index {index.getRow() + 1, index.getColumn()});
+      block.setRow(block.getRow() + 1);
     }
 
     if (!isLegalMove(playfield)) {
       m_blocks = lastLegalStateOfBlocks;
-      m_begin.setRow(m_begin.getRow() + i);
+      m_row += i;
       removeFrom(playfield);
       drawOn(playfield);
       markAsLanded(playfield);
@@ -236,9 +243,8 @@ void Tetromino::hardDrop(Playfield &playfield)
 
 ofstream &operator<<(ofstream &ofstream, const Tetromino &tetromino)
 {
-  ofstream << static_cast<int>(tetromino.m_type) << ' '
-           << tetromino.m_begin.getRow() << ' ' << tetromino.m_begin.getColumn()
-           << '\n';
+  ofstream << static_cast<int>(tetromino.m_type) << ' ' << tetromino.m_row
+           << ' ' << tetromino.m_column << '\n';
 
   if (!ofstream) {
     throw FileError {"An error occurred while saving the tetromino."};
@@ -269,7 +275,8 @@ ifstream &operator>>(ifstream &ifstream, Tetromino &tetromino)
   }
 
   tetromino.m_type = static_cast<Tetromino::Type>(type);
-  tetromino.m_begin = Index {beginRow, beginColumn};
+  tetromino.m_row = beginRow;
+  tetromino.m_column = beginColumn;
 
   loadBlocks(ifstream, tetromino.m_blocks);
   loadBlocks(ifstream, tetromino.m_previousStateOfBlocks);
@@ -285,9 +292,10 @@ ifstream &operator>>(ifstream &ifstream, Tetromino &tetromino)
 
 Tetromino::Tetromino(const Type type, const Block::Type blockType,
                      const QColor &fillColor, const QColor &borderColor,
-                     const Index &begin, const int rotationIndex) :
+                     const int row, const int column, const int rotationIndex) :
   m_type {type},
-  m_begin {begin},
+  m_row {row},
+  m_column {column},
   m_blocks {},
   m_previousStateOfBlocks {},
   m_rotationIndex {rotationIndex}
@@ -302,15 +310,15 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
   const int playfieldColumnCount = playfield.columnCount();
 
   for (const Block &block : m_blocks) {
-    const Index &index = block.getIndex();
-    const int row = index.getRow();
-    const int column = index.getColumn();
+    const int row = block.getRow();
+    const int column = block.getColumn();
 
     if (row >= playfieldRowCount || column < 0 ||
         column >= playfieldColumnCount) {
       return false;
-    } else if (playfield.hasBlockAt(index) &&
-               playfield.getBlock(index).getType() == Block::Type::Landed) {
+    } else if (playfield.hasBlockAt(row, column) &&
+               playfield.getBlock(row, column).getType() ==
+                   Block::Type::Landed) {
       return false;
     }
   }
@@ -322,8 +330,7 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
 void Tetromino::removeFrom(Playfield &playfield)
 {
   for (const Block &block : m_previousStateOfBlocks) {
-    const Index &index = block.getIndex();
-    playfield.removeBlock(index);
+    playfield.removeBlock(block.getRow(), block.getColumn());
   }
 }
 
@@ -331,9 +338,9 @@ void Tetromino::removeFrom(Playfield &playfield)
 void Tetromino::initBlocks(const Block::Type type, const QColor &fillColor,
                            const QColor &borderColor)
 {
-  for (const Index &blockIndex : rotations.at(m_type)[m_rotationIndex]) {
+  for (const auto [row, column] : rotations.at(m_type)[m_rotationIndex]) {
     m_blocks.push_back(
-        Block {type, fillColor, borderColor, blockIndex + m_begin});
+        Block {type, fillColor, borderColor, m_row + row, m_column + column});
   }
 }
 
@@ -342,9 +349,9 @@ void Tetromino::markAsLanded(Playfield &playfield)
 {
   // This tetromino is going to be destroyed, so only the blocks of playfield
   // are updated.
-  for (Block &block : m_blocks) {
-    const Index &index = block.getIndex();
-    playfield.getBlock(index).setType(Block::Type::Landed);
+  for (const Block &block : m_blocks) {
+    playfield.getBlock(block.getRow(), block.getColumn())
+        .setType(Block::Type::Landed);
   }
 }
 

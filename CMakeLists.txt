@@ -22,8 +22,6 @@ qt_add_executable(a.out
     backend/src/GhostTetromino.cpp
     backend/headers/block.h
     backend/src/block.cpp
-    backend/headers/index.h
-    backend/src/index.cpp
     backend/headers/Key.h
     backend/headers/KeyEvent.h
     backend/headers/KeyboardEventHandler.h

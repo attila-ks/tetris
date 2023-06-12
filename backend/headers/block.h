@@ -1,7 +1,6 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include "index.h"
 #include <QColor>
 
 class Block
@@ -11,7 +10,7 @@ class Block
 
     Block() = default;
     Block(const Type type, const QColor fillColor, const QColor borderColor,
-          const Index index);
+          const int row, const int column);
 
     void setType(const Type type);
     Type getType() const;
@@ -21,8 +20,10 @@ class Block
 
     const QColor &getBorderColor() const;
 
-    void setIndex(const Index index);
-    const Index &getIndex() const;
+    void setRow(const int row);
+    int getRow() const;
+    void setColumn(const int column);
+    int getColumn() const;
 
     friend std::ostream &operator<<(std::ostream &ostream, const Block &block);
     friend std::istream &operator>>(std::istream &istream, Block &block);
@@ -31,7 +32,8 @@ class Block
     Type m_type;
     QColor m_fillColor;
     QColor m_borderColor;
-    Index m_index;
+    int m_row;
+    int m_column;
 };
 
 #endif

@@ -4,11 +4,10 @@
 
 using namespace std;
 
-Playfield::Playfield(const QColor &emptyCellColor,
-                     QAbstractTableModel *parent) :
+Playfield::Playfield(const QColor emptyCellColor, QAbstractTableModel *parent) :
   QAbstractTableModel {parent},
   m_gameboard {},
-  m_emptyCellColor {emptyCellColor}
+  m_emptyCellColor {std::move(emptyCellColor)}
 {
 }
 
@@ -36,10 +35,11 @@ QHash<int, QByteArray> Playfield::roleNames() const
 
 QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 {
-  const Index index = {modelIndex.row(), modelIndex.column()};
+  const int row = modelIndex.row();
+  const int column = modelIndex.column();
 
-  if (hasBlockAt(index)) {
-    const Block &block = m_gameboard(index.getRow(), index.getColumn()).value();
+  if (hasBlockAt(row, column)) {
+    const Block &block = m_gameboard(row, column).value();
     return role == FillColor ? block.getFillColor() : block.getBorderColor();
   } else {
     return m_emptyCellColor;
@@ -47,42 +47,42 @@ QVariant Playfield::data(const QModelIndex &modelIndex, int role) const
 }
 
 
-// FIXME: param `block` is moved while it's a reference.
-void Playfield::addBlock(const Block &block)
+void Playfield::addBlock(const Block block)
 {
-  const Index index = block.getIndex();
-  m_gameboard(index.getRow(), index.getColumn()) = std::move(block);
-  QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+  const int row = block.getRow();
+  const int column = block.getColumn();
+  m_gameboard(row, column) = std::move(block);
+  QModelIndex modelIndex = createIndex(row, column);
   emit dataChanged(modelIndex, modelIndex);
 }
 
 
-Block Playfield::removeBlock(const Index &index)
+Block Playfield::removeBlock(const int row, const int column)
 {
-  optional<Block> &opt = m_gameboard(index.getRow(), index.getColumn());
+  optional<Block> &opt = m_gameboard(row, column);
   const Block &block = opt.value();
   opt = nullopt;
-  QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+  QModelIndex modelIndex = createIndex(row, column);
   emit dataChanged(modelIndex, modelIndex);
   return block;
 }
 
 
-bool Playfield::hasBlockAt(const Index &index) const
+bool Playfield::hasBlockAt(const int row, const int column) const
 {
-  return m_gameboard(index.getRow(), index.getColumn()).has_value();
+  return m_gameboard(row, column).has_value();
 }
 
 
-Block &Playfield::getBlock(const Index &index)
+Block &Playfield::getBlock(const int row, const int column)
 {
-  return m_gameboard(index.getRow(), index.getColumn()).value();
+  return m_gameboard(row, column).value();
 }
 
 
-const Block &Playfield::getBlock(const Index &index) const
+const Block &Playfield::getBlock(const int row, const int column) const
 {
-  return m_gameboard(index.getRow(), index.getColumn()).value();
+  return m_gameboard(row, column).value();
 }
 
 
@@ -135,9 +135,8 @@ void Playfield::clear()
 {
   for (optional<Block> &opt : m_gameboard) {
     if (opt.has_value()) {
-      const Index &index = opt->getIndex();
+      QModelIndex modelIndex = createIndex(opt->getRow(), opt->getColumn());
       opt = nullopt;
-      QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
       emit dataChanged(modelIndex, modelIndex);
     }
   }
@@ -155,10 +154,9 @@ int Playfield::clearFilledRows()
     int blockCounter = 0;
 
     for (int column = 0; column < columns; ++column) {
-      const Index index {row, column};
-      const bool result = hasBlockAt(index);
+      const bool result = hasBlockAt(row, column);
       if (!result ||
-          (result && getBlock(index).getType() != Block::Type::Landed)) {
+          (result && getBlock(row, column).getType() != Block::Type::Landed)) {
         break;
       }
 
@@ -181,9 +179,8 @@ void Playfield::clearFilledRow(const int row)
 {
   const int columns = columnCount();
   for (int column = 0; column < columns; ++column) {
-    const Index index {row, column};
-    removeBlock(index);
-    QModelIndex modelIndex = createIndex(index.getRow(), index.getColumn());
+    removeBlock(row, column);
+    QModelIndex modelIndex = createIndex(row, column);
     emit dataChanged(modelIndex, modelIndex);
   }
 }
@@ -194,11 +191,10 @@ void Playfield::moveRowDown(const int row, const int offset)
   const int columns = columnCount();
 
   for (int column = 0; column < columns; ++column) {
-    Index index {row, column};
-    if (hasBlockAt(index) && getBlock(index).getType() == Block::Type::Landed) {
-      Block block = removeBlock(index);
-      index.setRow(index.getRow() + offset);
-      block.setIndex(index);
+    if (hasBlockAt(row, column) &&
+        getBlock(row, column).getType() == Block::Type::Landed) {
+      Block block = removeBlock(row, column);
+      block.setRow(row + offset);
       addBlock(block);
     }
   }

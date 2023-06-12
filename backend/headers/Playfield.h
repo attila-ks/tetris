@@ -11,7 +11,7 @@ class Playfield : public QAbstractTableModel
     Q_OBJECT
 
   public:
-    Playfield(const QColor &emptyCellColor,
+    Playfield(const QColor emptyCellColor,
               QAbstractTableModel *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -25,11 +25,11 @@ class Playfield : public QAbstractTableModel
     QVariant data(const QModelIndex &modelIndex,
                   int role = Qt::DisplayRole) const override;
 
-    void addBlock(const Block &block);
-    Block removeBlock(const Index &index);
-    bool hasBlockAt(const Index &index) const;
-    Block &getBlock(const Index &index);
-    const Block &getBlock(const Index &index) const;
+    void addBlock(const Block block);
+    Block removeBlock(const int row, const int column);
+    bool hasBlockAt(const int row, const int column) const;
+    Block &getBlock(const int row, const int column);
+    const Block &getBlock(const int row, const int column) const;
 
     friend std::ofstream &operator<<(std::ofstream &ofstream,
                                      const Playfield &playfield);

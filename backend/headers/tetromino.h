@@ -12,10 +12,11 @@ class Tetromino
 
     Tetromino() = default;
     Tetromino(const Type type, const QColor &fillColor,
-              const QColor &borderColor, const Index &begin);
+              const QColor &borderColor, const int row, const int column);
 
     Type getType() const;
-    const Index &getBegin() const;
+    int getRow() const;
+    int getColumn() const;
     const std::vector<Block> &getBlocks() const;
     const QColor &getBorderColor() const;
     int getRotationIndex() const;
@@ -38,8 +39,8 @@ class Tetromino
 
   protected:
     Tetromino(const Type type, const Block::Type blockType,
-              const QColor &fillColor, const QColor &borderColor,
-              const Index &begin, const int rotationIndex = 0);
+              const QColor &fillColor, const QColor &borderColor, const int row,
+              const int column, const int rotationIndex = 0);
 
     bool isLegalMove(const Playfield &playfield) const;
 
@@ -53,7 +54,8 @@ class Tetromino
 
   protected:
     Type m_type;
-    Index m_begin;
+    int m_row;
+    int m_column;
     std::vector<Block> m_blocks;
     std::vector<Block> m_previousStateOfBlocks;
     int m_rotationIndex;

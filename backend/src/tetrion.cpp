@@ -161,9 +161,8 @@ void Tetrion::checkGameOver()
 {
   const int playfieldColumnCount = m_playfield.columnCount();
   for (int i = 0; i < playfieldColumnCount; ++i) {
-    const Index index {1, i};
-    if (m_playfield.hasBlockAt(index) &&
-        m_playfield.getBlock(index).getType() == Block::Type::Landed) {
+    if (m_playfield.hasBlockAt(1, i) &&
+        m_playfield.getBlock(1, i).getType() == Block::Type::Landed) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
       emit gameOver();
@@ -188,20 +187,15 @@ Tetromino Tetrion::selectTetromino()
 
 void Tetrion::fillBag()
 {
-  m_bag = {Tetromino(Tetromino::Type::I, QColor {0x00b8d4}, QColor {0x00b8d4},
-                     Index {1, 3}),
-           Tetromino(Tetromino::Type::J, QColor {0x304ffe}, QColor {0x304ffe},
-                     Index {0, 3}),
-           Tetromino(Tetromino::Type::L, QColor {0xff6d00}, QColor {0xff6d00},
-                     Index {0, 3}),
-           Tetromino(Tetromino::Type::O, QColor {0xffd600}, QColor {0xffd600},
-                     Index {0, 4}),
-           Tetromino(Tetromino::Type::S, QColor {0x00c853}, QColor {0x00c853},
-                     Index {0, 3}),
-           Tetromino(Tetromino::Type::T, QColor {0xaa00ff}, QColor {0xaa00ff},
-                     Index {0, 3}),
-           Tetromino(Tetromino::Type::Z, QColor {0xd50000}, QColor {0xd50000},
-                     Index {0, 3})};
+  m_bag = {
+      Tetromino(Tetromino::Type::I, QColor {0x00b8d4}, QColor {0x00b8d4}, 1, 3),
+      Tetromino(Tetromino::Type::J, QColor {0x304ffe}, QColor {0x304ffe}, 0, 3),
+      Tetromino(Tetromino::Type::L, QColor {0xff6d00}, QColor {0xff6d00}, 0, 3),
+      Tetromino(Tetromino::Type::O, QColor {0xffd600}, QColor {0xffd600}, 0, 4),
+      Tetromino(Tetromino::Type::S, QColor {0x00c853}, QColor {0x00c853}, 0, 3),
+      Tetromino(Tetromino::Type::T, QColor {0xaa00ff}, QColor {0xaa00ff}, 0, 3),
+      Tetromino(Tetromino::Type::Z, QColor {0xd50000}, QColor {0xd50000}, 0,
+                3)};
 }
 
 

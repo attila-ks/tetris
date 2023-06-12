@@ -8,11 +8,12 @@
 using namespace std;
 
 Block::Block(const Type type, const QColor fillColor, const QColor borderColor,
-             const Index index) :
+             const int row, const int column) :
   m_type {type},
   m_fillColor {std::move(fillColor)},
   m_borderColor {std::move(borderColor)},
-  m_index {std::move(index)}
+  m_row {row},
+  m_column {column}
 {
   // TODO: Consider to add assertion for `index` param.
 }
@@ -48,24 +49,35 @@ const QColor &Block::getBorderColor() const
 }
 
 
-void Block::setIndex(const Index index)
+void Block::setRow(const int row)
 {
-  m_index = std::move(index);
+  m_row = row;
 }
 
 
-const Index &Block::getIndex() const
+int Block::getRow() const
 {
-  return m_index;
+  return m_row;
+}
+
+
+void Block::setColumn(const int column)
+{
+  m_column = column;
+}
+
+
+int Block::getColumn() const
+{
+  return m_column;
 }
 
 
 ostream &operator<<(ostream &ostream, const Block &block)
 {
-  const Index &index = block.getIndex();
   ostream << static_cast<int>(block.m_type) << ' ' << block.m_fillColor.rgba64()
-          << ' ' << block.m_borderColor.rgba64() << ' ' << index.getRow() << ' '
-          << index.getColumn();
+          << ' ' << block.m_borderColor.rgba64() << ' ' << block.getRow() << ' '
+          << block.getColumn();
   return ostream;
 }
 
@@ -82,7 +94,8 @@ istream &operator>>(istream &istream, Block &block)
   block.m_type = static_cast<Block::Type>(type);
   block.m_fillColor.setRgba64(QRgba64::fromRgba64(fillColor));
   block.m_borderColor.setRgba64(QRgba64::fromRgba64(borderColor));
-  block.setIndex(Index {row, column});
+  block.setRow(row);
+  block.setColumn(column);
 
   return istream;
 }
