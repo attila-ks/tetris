@@ -28,6 +28,7 @@ Window {
             levelDisplay.visible = true
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
+            highScoreDisplay.visible = true
             tetrion.startGame(false)
         }
 
@@ -37,6 +38,7 @@ Window {
             levelDisplay.visible = true
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
+            highScoreDisplay.visible = true
             tetrion.startGame(true)
         }
 
@@ -97,13 +99,34 @@ Window {
         visible: false
         anchors.left: playfield.right
         anchors.leftMargin: 17
-        y: 380
+        anchors.bottom: highScoreDisplay.top
+        anchors.bottomMargin: 17
 
         property alias score: score.text
 
         Text {
             id: score
             text: tetrion.getScore()
+            color: "#16faff"
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 10
+        }
+    }
+
+    InfoDisplay {
+        id: highScoreDisplay
+        height: 50
+        text: "BEST"
+        visible: false
+        anchors.left: playfield.right
+        anchors.leftMargin: 17
+        anchors.bottom: playfield.bottom
+
+        property alias highScore: highScore.text
+
+        Text {
+            id: highScore
+            text: tetrion.getHighScore()
             color: "#16faff"
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 10
@@ -126,6 +149,7 @@ Window {
             levelDisplay.visible = false
             nextTetrominoDisplay.visible = false
             scoreDisplay.visible = false
+            highScoreDisplay.visible = false
             gameOverMenu.visible = true
         }
 
@@ -139,6 +163,10 @@ Window {
 
         function onScoreChanged(score) {
             scoreDisplay.score = score
+        }
+
+        function onHighScoreChanged(highScore) {
+            highScoreDisplay.highScore = highScore
         }
     }
 }

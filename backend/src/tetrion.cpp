@@ -21,7 +21,8 @@ Tetrion::Tetrion(QObject *parent) :
   m_keyboardEventHandler {},
   m_level {1},
   m_levelProgress {0.0f},
-  m_score {0}
+  m_score {0},
+  m_highScore {0}
 {
   initRandomTetrominoGenerator();
 
@@ -63,11 +64,27 @@ int Tetrion::getScore() const
 }
 
 
+int Tetrion::getHighScore() const
+{
+  return m_highScore;
+}
+
+
 void Tetrion::startGame(const bool load)
 {
   if (load) {
     this->load();
   } else {
+    try {
+      // TODO: Throw an exception if something goes wrong while loading
+      // `highScore.txt`!
+      int highScore = 0;
+      this->load("highScore.txt", highScore);
+      setHighScore(highScore);
+    } catch (const FileError &e) {
+      cerr << "ERROR: " << e.what();
+    }
+
     m_nextTetromino = selectTetromino();
   }
 
@@ -129,6 +146,9 @@ void Tetrion::handleTetrominoLanding()
       setLevelProgress(levelProgress);
     }
     setScore(m_score + clearedRows * 10);
+    if (m_score > m_highScore) {
+      setHighScore(m_score);
+    }
   }
 
   spawnTetromino();
@@ -262,6 +282,13 @@ inline void Tetrion::setScore(const int score)
 }
 
 
+inline void Tetrion::setHighScore(const int highScore)
+{
+  m_highScore = highScore;
+  emit highScoreChanged(m_highScore);
+}
+
+
 QUrl Tetrion::getNextTetrominoImageUrl() const
 {
   switch (m_nextTetromino.getType()) {
@@ -285,21 +312,29 @@ QUrl Tetrion::getNextTetrominoImageUrl() const
 
 void Tetrion::save()
 {
-  m_tetrominoDropTimer.stop();
+  try {
+    m_tetrominoDropTimer.stop();
 
-  save("playfield.txt", m_playfield);
-  save("currentTetromino.txt", m_currentTetromino);
-  // `m_nextTetromino` is intentionally not saved, a new one will be randomly
-  // selected the next time the application runs.
+    save("playfield.txt", m_playfield);
+    save("currentTetromino.txt", m_currentTetromino);
+    // `m_nextTetromino` is intentionally not saved, a new one will be randomly
+    // selected the next time the application runs.
 
-  ofstream ofstream {"tetrionMisc.txt"};
-  if (ofstream) {
-    ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score;
-  }
+    ofstream ofstream {"tetrionMisc.txt"};
+    if (ofstream) {
+      ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score;
+    }
 
-  if (!ofstream) {
-    throw FileError {
-        "An error occurred while saving to file: 'tetrionMisc.txt'"};
+    if (!ofstream) {
+      throw FileError {
+          "An error occurred while saving to file: 'tetrionMisc.txt'"};
+    }
+
+    // `m_highScore` is saved separately because we want to load it in a new
+    // game too.
+    save("highScore.txt", m_highScore);
+  } catch (const FileError &e) {
+    cerr << "ERROR: " << e.what();
   }
 }
 
@@ -313,6 +348,11 @@ void Tetrion::save(string_view fileName, const T &t)
   }
 
   ofstream << t;
+
+  if (!ofstream) {
+    throw FileError {string {"An error occured while saving to file: '"} +
+                     fileName.data() + "'"};
+  }
 }
 
 
@@ -340,8 +380,13 @@ void Tetrion::load()
       throw FileError {
           "An error occurred while reading file: 'tetrionMisc.txt'"};
     }
+
+    // TODO: Throw an exception if something goes wrong while loading
+    // `highScore.txt`!
+    int highScore = 0;
+    load("highScore.txt", highScore);
+    setHighScore(highScore);
   } catch (const FileError &e) {
-    // TODO: Implement `Tetromino::clear()` method and call it from here!
     m_nextTetromino = selectTetromino();
     clear();
     cerr << "ERROR: " << e.what();
@@ -367,6 +412,7 @@ void Tetrion::clear()
   m_level = 1;
   m_levelProgress = 0.0f;
   m_score = 0;
+  m_highScore = 0;
 }
 
 

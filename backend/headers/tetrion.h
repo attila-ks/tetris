@@ -20,6 +20,7 @@ class Tetrion : public QObject
     Q_INVOKABLE int getLevel() const;
     Q_INVOKABLE float getLevelProgress() const;
     Q_INVOKABLE int getScore() const;
+    Q_INVOKABLE int getHighScore() const;
 
     Q_INVOKABLE void startGame(const bool load);
 
@@ -31,6 +32,7 @@ class Tetrion : public QObject
     void levelProgressed(float levelProgress);
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
     void scoreChanged(int score);
+    void highScoreChanged(int highScore);
 
   private slots:
     void handleTetrominoLanding();
@@ -49,6 +51,7 @@ class Tetrion : public QObject
     void calculateSpeed();
 
     void setScore(const int score);
+    void setHighScore(const int highScore);
 
     QUrl getNextTetrominoImageUrl() const;
 
@@ -72,6 +75,7 @@ class Tetrion : public QObject
     int m_level;
     float m_levelProgress;
     int m_score;
+    int m_highScore;
 };
 
 #endif

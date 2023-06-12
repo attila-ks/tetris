@@ -20,7 +20,7 @@
 - [x] Display the next tetromino
 - [x] Display the current level
 - [x] Display the score
-- [ ] Display the high score
+- [x] Display the high score
 
 ## Settings
 
