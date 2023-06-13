@@ -182,7 +182,7 @@ void Tetrion::checkGameOver()
   const int playfieldColumnCount = m_playfield.columnCount();
   for (int i = 0; i < playfieldColumnCount; ++i) {
     if (m_playfield.hasBlockAt(1, i) &&
-        m_playfield.getBlock(1, i).getType() == Block::Type::Landed) {
+        m_playfield(1, i).getType() == Block::Type::Landed) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
       emit gameOver();

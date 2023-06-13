@@ -74,13 +74,13 @@ bool Playfield::hasBlockAt(const int row, const int column) const
 }
 
 
-Block &Playfield::getBlock(const int row, const int column)
+Block &Playfield::operator()(const int row, const int column)
 {
   return m_gameboard(row, column).value();
 }
 
 
-const Block &Playfield::getBlock(const int row, const int column) const
+const Block &Playfield::operator()(const int row, const int column) const
 {
   return m_gameboard(row, column).value();
 }
@@ -155,8 +155,8 @@ int Playfield::clearFilledRows()
 
     for (int column = 0; column < columns; ++column) {
       const bool result = hasBlockAt(row, column);
-      if (!result ||
-          (result && getBlock(row, column).getType() != Block::Type::Landed)) {
+      if (!result || (result && m_gameboard(row, column)->getType() !=
+                                    Block::Type::Landed)) {
         break;
       }
 
@@ -192,7 +192,7 @@ void Playfield::moveRowDown(const int row, const int offset)
 
   for (int column = 0; column < columns; ++column) {
     if (hasBlockAt(row, column) &&
-        getBlock(row, column).getType() == Block::Type::Landed) {
+        m_gameboard(row, column)->getType() == Block::Type::Landed) {
       Block block = removeBlock(row, column);
       block.setRow(row + offset);
       addBlock(block);

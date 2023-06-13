@@ -28,8 +28,8 @@ class Playfield : public QAbstractTableModel
     void addBlock(const Block block);
     Block removeBlock(const int row, const int column);
     bool hasBlockAt(const int row, const int column) const;
-    Block &getBlock(const int row, const int column);
-    const Block &getBlock(const int row, const int column) const;
+    Block &operator()(const int row, const int column);
+    const Block &operator()(const int row, const int column) const;
 
     friend std::ofstream &operator<<(std::ofstream &ofstream,
                                      const Playfield &playfield);

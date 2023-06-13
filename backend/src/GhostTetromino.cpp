@@ -66,7 +66,7 @@ void GhostTetromino::removeFrom(Playfield &playfield)
     const int row = block.getRow();
     const int column = block.getColumn();
     if (playfield.hasBlockAt(row, column) &&
-        playfield.getBlock(row, column).getType() == Block::Type::Ghost) {
+        playfield(row, column).getType() == Block::Type::Ghost) {
       playfield.removeBlock(row, column);
     }
   }

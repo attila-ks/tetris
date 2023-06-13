@@ -317,8 +317,7 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
         column >= playfieldColumnCount) {
       return false;
     } else if (playfield.hasBlockAt(row, column) &&
-               playfield.getBlock(row, column).getType() ==
-                   Block::Type::Landed) {
+               playfield(row, column).getType() == Block::Type::Landed) {
       return false;
     }
   }
@@ -350,8 +349,7 @@ void Tetromino::markAsLanded(Playfield &playfield)
   // This tetromino is going to be destroyed, so only the blocks of playfield
   // are updated.
   for (const Block &block : m_blocks) {
-    playfield.getBlock(block.getRow(), block.getColumn())
-        .setType(Block::Type::Landed);
+    playfield(block.getRow(), block.getColumn()).setType(Block::Type::Landed);
   }
 }
 
