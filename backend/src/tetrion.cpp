@@ -10,19 +10,8 @@ void initRandomTetrominoGenerator();
 void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
                                Tetrion &tetrion);
 
-Tetrion::Tetrion(QObject *parent) :
-  QObject {parent},
-  m_playfield {QColor {0x0e001f}},
-  m_bag {},
-  m_currentTetromino {},
-  m_nextTetromino {},
-  m_ghostTetromino {nullopt},
-  m_tetrominoDropTimer {},
-  m_keyboardEventHandler {},
-  m_level {1},
-  m_levelProgress {0.0f},
-  m_score {0},
-  m_highScore {0}
+Tetrion::Tetrion() :
+  QObject {nullptr}
 {
   initRandomTetrominoGenerator();
 

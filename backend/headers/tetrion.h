@@ -13,7 +13,7 @@ class Tetrion : public QObject
     Q_PROPERTY(const Playfield *playfield READ getPlayfield CONSTANT)
 
   public:
-    explicit Tetrion(QObject *parent = nullptr);
+    Tetrion();
     ~Tetrion();
 
     const Playfield *getPlayfield() const;
@@ -65,17 +65,17 @@ class Tetrion : public QObject
 
     void clear();
 
-    Playfield m_playfield;
+    Playfield m_playfield {QColor {0x0e001f}};
     std::vector<Tetromino> m_bag;
     Tetromino m_currentTetromino;
     Tetromino m_nextTetromino;
-    std::optional<GhostTetromino> m_ghostTetromino;
+    std::optional<GhostTetromino> m_ghostTetromino {std::nullopt};
     QTimer m_tetrominoDropTimer;
     KeyboardEventHandler m_keyboardEventHandler;
-    int m_level;
-    float m_levelProgress;
-    int m_score;
-    int m_highScore;
+    int m_level {1};
+    float m_levelProgress {0.0f};
+    int m_score {0};
+    int m_highScore {0};
 };
 
 #endif
