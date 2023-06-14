@@ -24,7 +24,7 @@ class Tetrion : public QObject
 
     Q_INVOKABLE void startGame(const bool load);
 
-    void processInput(const Key key, const KeyEvent::Type type);
+    void processInput(const Key key, const KeyEvent keyEvent);
 
   signals:
     void gameOver();

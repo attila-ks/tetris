@@ -3,10 +3,6 @@
 
 #include <QKeyEvent>
 
-// Is it okay to use namespace instead of class?
-namespace KeyEvent
-{
-  enum Type { KeyPress = QEvent::Type::KeyPress };
-};
+enum KeyEvent { KeyPress = QEvent::Type::KeyPress };
 
 #endif

@@ -11,11 +11,11 @@ class KeyboardEventHandler : public QObject
   public:
     explicit KeyboardEventHandler(QObject *parent = nullptr);
 
-    void addKey(const Key key, const KeyEvent::Type type);
+    void addKey(const Key key, const KeyEvent keyEvent);
 
     // Should the method accept a reference to `std::function`?
     void addCallback(
-        std::function<void(const Key key, const KeyEvent::Type type)> callback);
+        std::function<void(const Key key, const KeyEvent keyEvent)> callback);
 
     void pause(const bool value);
 
@@ -24,8 +24,8 @@ class KeyboardEventHandler : public QObject
 
   private:
     // FIXME: Cannot store the same `Key` with different `KeyEvent::Type`!
-    std::map<Key const, KeyEvent::Type> m_filteredKeys;
-    std::vector<std::function<void(Key, KeyEvent::Type)>> m_callbacks;
+    std::map<Key const, KeyEvent> m_filteredKeys;
+    std::vector<std::function<void(Key, KeyEvent)>> m_callbacks;
     bool m_pauseEventHandle;
 };
 

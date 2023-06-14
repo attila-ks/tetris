@@ -13,14 +13,14 @@ KeyboardEventHandler::KeyboardEventHandler(QObject *parent) :
 }
 
 
-void KeyboardEventHandler::addKey(const Key key, const KeyEvent::Type type)
+void KeyboardEventHandler::addKey(const Key key, const KeyEvent keyEvent)
 {
-  m_filteredKeys[key] = type;
+  m_filteredKeys[key] = keyEvent;
 }
 
 
 void KeyboardEventHandler::addCallback(
-    function<void(const Key key, const KeyEvent::Type type)> callback)
+    function<void(const Key key, const KeyEvent keyEvent)> callback)
 {
   m_callbacks.push_back(callback);
 }
@@ -42,9 +42,9 @@ bool KeyboardEventHandler::eventFilter(QObject *obj, QEvent *event)
     const QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
     // Is it okay to use `std::static_cast` here?
     const Key key = static_cast<Key>(keyEvent->key());
-    map<Key, KeyEvent::Type>::const_iterator itr = m_filteredKeys.find(key);
+    map<Key, KeyEvent>::const_iterator itr = m_filteredKeys.find(key);
 
-    // FIXME: Check the `KeyEvent::Type` too!
+    // FIXME: `KeyEvent` is not checked!
     if (itr != m_filteredKeys.cend()) {
       for (auto &callback : m_callbacks) {
         callback(itr->first, itr->second);

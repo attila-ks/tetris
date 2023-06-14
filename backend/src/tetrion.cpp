@@ -82,7 +82,7 @@ void Tetrion::startGame(const bool load)
 }
 
 
-void Tetrion::processInput(const Key key, const KeyEvent::Type type)
+void Tetrion::processInput(const Key key, const KeyEvent keyEvent)
 {
   // FIXME: Movement keys are duplicated: here and in the
   // setUpKeyboardEventHandler method!
@@ -418,11 +418,11 @@ void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
       Key_S,     Key_Down, Key_A, Key_Left, Key_D,
       Key_Right, Key_Q,    Key_E, Key_Space};
   for (const Key &key : tetrominoMovementKeys) {
-    keyboardEventHandler.addKey(key, KeyEvent::Type::KeyPress);
+    keyboardEventHandler.addKey(key, KeyEvent::KeyPress);
   }
 
   keyboardEventHandler.addCallback(
-      [&tetrion](const Key key, const KeyEvent::Type type) -> void {
-        return tetrion.processInput(key, type);
+      [&tetrion](const Key key, const KeyEvent keyEvent) {
+        tetrion.processInput(key, keyEvent);
       });
 }
