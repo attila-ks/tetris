@@ -344,7 +344,7 @@ void Tetromino::initBlocks(const Block::Type type, const QColor &fillColor,
 }
 
 
-void Tetromino::markAsLanded(Playfield &playfield)
+inline void Tetromino::markAsLanded(Playfield &playfield)
 {
   // This tetromino is going to be destroyed, so only the blocks of playfield
   // are updated.

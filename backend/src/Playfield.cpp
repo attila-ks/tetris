@@ -145,7 +145,7 @@ void Playfield::clear()
 
 int Playfield::clearFilledRows()
 {
-  const int top = 0;
+  constexpr int top = 0;
   const int bottom = rowCount() - 1;
   const int columns = columnCount();
   int clearedRowCounter = 0;
@@ -180,8 +180,6 @@ void Playfield::clearFilledRow(const int row)
   const int columns = columnCount();
   for (int column = 0; column < columns; ++column) {
     removeBlock(row, column);
-    QModelIndex modelIndex = createIndex(row, column);
-    emit dataChanged(modelIndex, modelIndex);
   }
 }
 
@@ -189,13 +187,14 @@ void Playfield::clearFilledRow(const int row)
 void Playfield::moveRowDown(const int row, const int offset)
 {
   const int columns = columnCount();
+  Block block;
 
   for (int column = 0; column < columns; ++column) {
     if (hasBlockAt(row, column) &&
         m_gameboard(row, column)->getType() == Block::Type::Landed) {
-      Block block = removeBlock(row, column);
+      block = removeBlock(row, column);
       block.setRow(row + offset);
-      addBlock(block);
+      addBlock(std::move(block));
     }
   }
 }

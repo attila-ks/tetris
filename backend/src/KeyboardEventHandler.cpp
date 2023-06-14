@@ -42,7 +42,7 @@ bool KeyboardEventHandler::eventFilter(QObject *obj, QEvent *event)
     const QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
     // Is it okay to use `static_cast` here?
     const Key key = static_cast<Key>(keyEvent->key());
-    map<Key, KeyEvent>::const_iterator itr = m_filteredKeys.find(key);
+    unordered_map<Key, KeyEvent>::const_iterator itr = m_filteredKeys.find(key);
 
     // FIXME: `KeyEvent` is not checked!
     if (itr != m_filteredKeys.cend()) {

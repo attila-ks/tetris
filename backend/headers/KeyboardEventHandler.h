@@ -23,7 +23,7 @@ class KeyboardEventHandler : public QObject
 
   private:
     // FIXME: Cannot store the same `Key` with different `KeyEvent::Type`!
-    std::map<Key const, KeyEvent> m_filteredKeys;
+    std::unordered_map<Key const, KeyEvent> m_filteredKeys;
     std::vector<std::function<void(Key, KeyEvent)>> m_callbacks;
     bool m_pauseEventHandle;
 };

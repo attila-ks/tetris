@@ -157,7 +157,7 @@ void Tetrion::spawnTetromino()
 }
 
 
-void Tetrion::dropTetromino()
+inline void Tetrion::dropTetromino()
 {
   m_currentTetromino.moveDown(m_playfield);
   if (m_currentTetromino.isLanded()) {
@@ -208,14 +208,14 @@ void Tetrion::fillBag()
 }
 
 
-void Tetrion::setLevel(const int level)
+inline void Tetrion::setLevel(const int level)
 {
   m_level = level;
   emit levelIncreased(m_level);
 }
 
 
-void Tetrion::setLevelProgress(const float levelProgress)
+inline void Tetrion::setLevelProgress(const float levelProgress)
 {
   m_levelProgress = levelProgress;
   emit levelProgressed(m_levelProgress);
@@ -258,7 +258,7 @@ void Tetrion::calculateSpeed()
       frames = 6;
   }
 
-  const int millisecond = 1000;
+  constexpr int millisecond = 1000;
   const double speed = frames / 60.0 * millisecond;
   m_tetrominoDropTimer.setInterval(speed);
 }
@@ -395,7 +395,7 @@ void Tetrion::load(string_view fileName, T &t)
 }
 
 
-void Tetrion::clear()
+inline void Tetrion::clear()
 {
   m_playfield.clear();
   m_level = 1;
@@ -405,7 +405,7 @@ void Tetrion::clear()
 }
 
 
-void initRandomTetrominoGenerator()
+inline void initRandomTetrominoGenerator()
 {
   srand(time(nullptr));
 }
