@@ -9,7 +9,7 @@ class KeyboardEventHandler : public QObject
     Q_OBJECT
 
   public:
-    explicit KeyboardEventHandler(QObject *parent = nullptr);
+    KeyboardEventHandler();
 
     void addKey(const Key key, const KeyEvent keyEvent);
 

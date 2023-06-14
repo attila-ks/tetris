@@ -3,8 +3,8 @@
 
 using namespace std;
 
-KeyboardEventHandler::KeyboardEventHandler(QObject *parent) :
-  QObject {parent},
+KeyboardEventHandler::KeyboardEventHandler() :
+  QObject {nullptr},
   m_filteredKeys {},
   m_callbacks {},
   m_pauseEventHandle {false}

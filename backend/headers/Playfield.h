@@ -11,8 +11,7 @@ class Playfield : public QAbstractTableModel
     Q_OBJECT
 
   public:
-    Playfield(const QColor emptyCellColor,
-              QAbstractTableModel *parent = nullptr);
+    Playfield(const QColor emptyCellColor);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 

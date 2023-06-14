@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Playfield::Playfield(const QColor emptyCellColor, QAbstractTableModel *parent) :
-  QAbstractTableModel {parent},
+Playfield::Playfield(const QColor emptyCellColor) :
+  QAbstractTableModel {nullptr},
   m_gameboard {},
   m_emptyCellColor {std::move(emptyCellColor)}
 {
