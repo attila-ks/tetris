@@ -13,7 +13,6 @@ class KeyboardEventHandler : public QObject
 
     void addKey(const Key key, const KeyEvent keyEvent);
 
-    // Should the method accept a reference to `std::function`?
     void addCallback(
         std::function<void(const Key key, const KeyEvent keyEvent)> callback);
 

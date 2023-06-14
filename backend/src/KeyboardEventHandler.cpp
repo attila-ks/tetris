@@ -40,7 +40,7 @@ bool KeyboardEventHandler::eventFilter(QObject *obj, QEvent *event)
   if (const QEvent::Type eventType = event->type();
       eventType == QEvent::KeyPress) {
     const QKeyEvent *const keyEvent = static_cast<QKeyEvent *>(event);
-    // Is it okay to use `std::static_cast` here?
+    // Is it okay to use `static_cast` here?
     const Key key = static_cast<Key>(keyEvent->key());
     map<Key, KeyEvent>::const_iterator itr = m_filteredKeys.find(key);
 
