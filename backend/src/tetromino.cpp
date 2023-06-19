@@ -316,8 +316,7 @@ bool Tetromino::isLegalMove(const Playfield &playfield) const
     if (row >= playfieldRowCount || column < 0 ||
         column >= playfieldColumnCount) {
       return false;
-    } else if (playfield.hasBlockAt(row, column) &&
-               playfield(row, column).getType() == Block::Type::Landed) {
+    } else if (playfield.hasLandedBlockAt(row, column)) {
       return false;
     }
   }
