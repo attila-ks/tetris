@@ -76,6 +76,7 @@ class Tetrion : public QObject
     float m_levelProgress {0.0f};
     int m_score {0};
     int m_highScore {0};
+    bool m_isGameOver {false};
 };
 
 #endif

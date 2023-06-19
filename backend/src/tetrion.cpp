@@ -173,6 +173,7 @@ void Tetrion::checkGameOver()
     if (m_playfield.hasLandedBlockAt(1, i)) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
+      m_isGameOver = true;
       emit gameOver();
       break;
     }
@@ -301,6 +302,14 @@ QUrl Tetrion::getNextTetrominoImageUrl() const
 void Tetrion::save()
 {
   try {
+    // `m_highScore` is saved separately because we want to load it in a new
+    // game too.
+    save("highScore.txt", m_highScore);
+
+    if (m_isGameOver) {
+      return;
+    }
+
     m_tetrominoDropTimer.stop();
 
     save("playfield.txt", m_playfield);
@@ -317,10 +326,6 @@ void Tetrion::save()
       throw FileError {
           "An error occurred while saving to file: 'tetrionMisc.txt'"};
     }
-
-    // `m_highScore` is saved separately because we want to load it in a new
-    // game too.
-    save("highScore.txt", m_highScore);
   } catch (const FileError &e) {
     cerr << "ERROR: " << e.what();
   }
