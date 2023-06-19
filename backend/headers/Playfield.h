@@ -4,7 +4,6 @@
 #include "block.h"
 #include "gameboard.h"
 #include <QAbstractTableModel>
-#include <QColor>
 
 class Playfield : public QAbstractTableModel
 {
