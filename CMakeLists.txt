@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 
 project(tetris VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "$ENV{QTHOME}")
 
-find_package(Qt6 6.2 COMPONENTS Quick REQUIRED)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
+
+qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(a.out
     backend/src/main.cpp
@@ -34,7 +35,7 @@ qt_add_qml_module(a.out
     URI tetris
     VERSION 1.0
     QML_FILES
-        frontend/main.qml
+        frontend/Main.qml
         frontend/MainMenu.qml
         frontend/TextButton.qml
         frontend/Playfield.qml
@@ -68,4 +69,5 @@ target_link_libraries(a.out
 
 install(TARGETS a.out
     BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -22,6 +22,8 @@ Window {
     // Do components use resources when their `visible` attribute is set to false?
 
     MainMenu {
+        id: mainMenu
+
         onNewGameButtonClicked: {
             visible = false
             playfield.visible = true
@@ -136,6 +138,11 @@ Window {
     GameOverMenu {
         id: gameOverMenu
         visible: false
+
+        onNewGameButtonClicked: {
+            visible = false
+            mainMenu.newGameButtonClicked()
+        }
 
         onQuitButtonClicked: {
             Qt.quit()

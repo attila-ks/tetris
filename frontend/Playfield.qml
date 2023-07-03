@@ -29,8 +29,8 @@ Frame {
 
         TableView {
             id: grid
-            width: childrenRect.width
-            height: childrenRect.height
+            width: columns * (20 + columnSpacing)
+            height: rows * (20 + rowSpacing)
             rowSpacing: 0.5
             columnSpacing: 0.5
             anchors.horizontalCenter: parent.horizontalCenter
