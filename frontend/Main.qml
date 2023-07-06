@@ -144,6 +144,11 @@ Window {
             mainMenu.newGameButtonClicked()
         }
 
+        onLoadGameButtonClicked: {
+            visible = false
+            mainMenu.loadGameButtonClicked()
+        }
+
         onQuitButtonClicked: {
             Qt.quit()
         }
