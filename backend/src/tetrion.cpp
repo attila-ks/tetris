@@ -410,6 +410,7 @@ inline void Tetrion::clear()
   setLevel(1);
   setLevelProgress(0.0f);
   setScore(0);
+  m_isGameOver = false;
 }
 
 
