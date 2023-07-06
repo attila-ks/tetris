@@ -71,6 +71,7 @@ void Tetrion::startGame(const bool load)
   loadHighScore();
 
   spawnTetromino();
+  m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
 }
 
