@@ -16,7 +16,6 @@ Item {
         source: "../resources/fonts/Streamster.ttf"
     }
 
-    // TODO: Add drop shadow.
     Text {
         id: title
         text: "Tetris"
@@ -27,8 +26,6 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         y: 60
     }
-
-    // TODO: Add drop shadow to the hovered and/or selected button.
 
     TextButton {
         id: newGameButton
