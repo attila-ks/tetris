@@ -61,10 +61,12 @@ int Tetrion::getHighScore() const
 
 void Tetrion::startGame(const bool load)
 {
+  // FIXME: State is unnecessarily cleared for the first game!
+  clear();
+
   if (load) {
     this->load();
   } else {
-    clear();
     m_nextTetromino = selectTetromino();
   }
 
