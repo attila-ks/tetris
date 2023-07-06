@@ -60,6 +60,7 @@ class Tetrion : public QObject
     static void save(std::string_view fileName, const T &t);
 
     void load();
+    void loadHighScore();
     template <typename T>
     static void load(std::string_view fileName, T &t);
 

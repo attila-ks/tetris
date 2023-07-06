@@ -64,18 +64,11 @@ void Tetrion::startGame(const bool load)
   if (load) {
     this->load();
   } else {
-    try {
-      // TODO: Throw an exception if something goes wrong while loading
-      // `highScore.txt`!
-      int highScore = 0;
-      this->load("highScore.txt", highScore);
-      setHighScore(highScore);
-    } catch (const FileError &e) {
-      cerr << "ERROR: " << e.what();
-    }
-
+    clear();
     m_nextTetromino = selectTetromino();
   }
+
+  loadHighScore();
 
   spawnTetromino();
   m_tetrominoDropTimer.start();
@@ -374,14 +367,21 @@ void Tetrion::load()
           "An error occurred while reading file: 'tetrionMisc.txt'"};
     }
 
-    // TODO: Throw an exception if something goes wrong while loading
-    // `highScore.txt`!
+  } catch (const FileError &e) {
+    cerr << "ERROR: " << e.what();
+    clear();
+    m_nextTetromino = selectTetromino();
+  }
+}
+
+
+void Tetrion::loadHighScore()
+{
+  try {
     int highScore = 0;
-    load("highScore.txt", highScore);
+    this->load("highScore.txt", highScore);
     setHighScore(highScore);
   } catch (const FileError &e) {
-    m_nextTetromino = selectTetromino();
-    clear();
     cerr << "ERROR: " << e.what();
   }
 }
@@ -396,16 +396,19 @@ void Tetrion::load(string_view fileName, T &t)
   }
 
   ifstream >> t;
+  if (!ifstream.eof()) {
+    throw FileError {string {"An error occurred while reading file: '"} +
+                     fileName.data() + "'"};
+  }
 }
 
 
 inline void Tetrion::clear()
 {
   m_playfield.clear();
-  m_level = 1;
-  m_levelProgress = 0.0f;
-  m_score = 0;
-  m_highScore = 0;
+  setLevel(1);
+  setLevelProgress(0.0f);
+  setScore(0);
 }
 
 
