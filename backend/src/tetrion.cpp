@@ -78,6 +78,13 @@ void Tetrion::startGame(const bool load)
 }
 
 
+void Tetrion::resumeGame()
+{
+  m_keyboardEventHandler.pause(false);
+  m_tetrominoDropTimer.start();
+}
+
+
 void Tetrion::processInput(const Key key, const KeyEvent keyEvent)
 {
   // FIXME: Movement keys are duplicated: here and in the
@@ -105,6 +112,8 @@ void Tetrion::processInput(const Key key, const KeyEvent keyEvent)
     isTetrominoRotatedOrMovedHorizontally = true;
   } else if (key == Key_Space) {
     m_currentTetromino.hardDrop(m_playfield);
+  } else if (key == Key_Escape) {
+    pauseGame();
   }
 
   // FIXME: This is true even if the `m_currentTetromino` could not move, in
@@ -174,6 +183,14 @@ void Tetrion::checkGameOver()
       break;
     }
   }
+}
+
+
+void Tetrion::pauseGame()
+{
+  m_keyboardEventHandler.pause(true);
+  m_tetrominoDropTimer.stop();
+  emit gamePaused();
 }
 
 
@@ -431,6 +448,8 @@ void setUpKeyboardEventHandler(KeyboardEventHandler &keyboardEventHandler,
   for (const Key &key : tetrominoMovementKeys) {
     keyboardEventHandler.addKey(key, KeyEvent::KeyPress);
   }
+
+  keyboardEventHandler.addKey(Key_Escape, KeyEvent::KeyPress);
 
   keyboardEventHandler.addCallback(
       [&tetrion](const Key key, const KeyEvent keyEvent) {

@@ -44,6 +44,7 @@ qt_add_qml_module(a.out
         frontend/CircularProgressBar.qml
         frontend/NextTetrominoDisplay.qml
         frontend/InfoDisplay.qml
+        frontend/PauseMenu.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf

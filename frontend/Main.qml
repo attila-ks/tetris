@@ -49,6 +49,35 @@ Window {
         }
     }
 
+   PauseMenu {
+      id: pauseMenu
+      visible: false
+
+      onResumeGameButtonClicked: {
+        visible = false
+        playfield.visible = true
+        levelDisplay.visible = true
+        nextTetrominoDisplay.visible = true
+        scoreDisplay.visible = true
+        highScoreDisplay.visible = true
+        tetrion.resume()
+      }
+
+      onMainMenuButtonClicked: {
+        visible = false
+        playfield.visible = false
+        levelDisplay.visible = false
+        nextTetrominoDisplay.visible = false
+        scoreDisplay.visible = false
+        highScoreDisplay.visible = false
+        mainMenu.visible = true
+      }
+
+      onQuitButtonClicked: {
+        Qt.quit()
+      }
+    }
+
     Playfield {
         id: playfield
         visible: false
@@ -163,6 +192,15 @@ Window {
             scoreDisplay.visible = false
             highScoreDisplay.visible = false
             gameOverMenu.visible = true
+        }
+
+        function onGamePaused() {
+          playfield.visible = false
+          levelDisplay.visible = false
+          nextTetrominoDisplay.visible = false
+          scoreDisplay.visible = false
+          highScoreDisplay.visible = false
+          pauseMenu.visible = true
         }
 
         function onLevelIncreased(level) {

@@ -23,11 +23,13 @@ class Tetrion : public QObject
     Q_INVOKABLE int getHighScore() const;
 
     Q_INVOKABLE void startGame(const bool load);
+    Q_INVOKABLE void resumeGame();
 
     void processInput(const Key key, const KeyEvent keyEvent);
 
   signals:
     void gameOver();
+    void gamePaused();
     void levelIncreased(int level);
     void levelProgressed(float levelProgress);
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
@@ -42,6 +44,8 @@ class Tetrion : public QObject
     void dropTetromino();
 
     void checkGameOver();
+
+    void pauseGame();
 
     Tetromino selectTetromino();
     void fillBag();

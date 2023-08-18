@@ -33,7 +33,7 @@
 
 ## Other
 
-- [ ] Pause the game
+- [x] Pause the game
 - [ ] Restart the game (current state is lost, but score is saved if it's the highest score)
 - [ ] Exit the game (current state is saved)
 - [x] Save the game state automatically on exit
