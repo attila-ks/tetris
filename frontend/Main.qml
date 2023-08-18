@@ -31,7 +31,7 @@ Window {
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
             highScoreDisplay.visible = true
-            tetrion.startGame(false)
+            tetrion.startGame()
         }
 
         onLoadGameButtonClicked: {
@@ -41,7 +41,7 @@ Window {
             nextTetrominoDisplay.visible = true
             scoreDisplay.visible = true
             highScoreDisplay.visible = true
-            tetrion.startGame(true)
+            tetrion.loadGame()
         }
 
         onQuitButtonClicked: {
@@ -60,7 +60,7 @@ Window {
         nextTetrominoDisplay.visible = true
         scoreDisplay.visible = true
         highScoreDisplay.visible = true
-        tetrion.resume()
+        tetrion.resumeGame()
       }
 
       onMainMenuButtonClicked: {

@@ -22,7 +22,8 @@ class Tetrion : public QObject
     Q_INVOKABLE int getScore() const;
     Q_INVOKABLE int getHighScore() const;
 
-    Q_INVOKABLE void startGame(const bool load);
+    Q_INVOKABLE void startGame();
+    Q_INVOKABLE void loadGame();
     Q_INVOKABLE void resumeGame();
 
     void processInput(const Key key, const KeyEvent keyEvent);

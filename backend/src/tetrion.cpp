@@ -20,6 +20,8 @@ Tetrion::Tetrion() :
   calculateSpeed();
   connect(&m_tetrominoDropTimer, &QTimer::timeout, this,
           &Tetrion::dropTetromino);
+
+  loadHighScore();
 }
 
 
@@ -59,19 +61,25 @@ int Tetrion::getHighScore() const
 }
 
 
-void Tetrion::startGame(const bool load)
+void Tetrion::startGame()
 {
   // FIXME: State is unnecessarily cleared for the first game!
   clear();
 
-  if (load) {
-    this->load();
-  } else {
-    m_nextTetromino = selectTetromino();
-  }
+  m_nextTetromino = selectTetromino();
 
-  loadHighScore();
+  spawnTetromino();
+  m_keyboardEventHandler.pause(false);
+  m_tetrominoDropTimer.start();
+}
 
+
+void Tetrion::loadGame()
+{
+  // FIXME: State is unnecessarily cleared for the first game!
+  clear();
+
+  load();
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
