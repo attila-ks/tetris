@@ -434,6 +434,7 @@ void Tetrion::load(string_view fileName, T &t)
 inline void Tetrion::clear()
 {
   m_playfield.clear();
+  m_nextTetromino.clear();
   setLevel(1);
   setLevelProgress(0.0f);
   setScore(0);

@@ -14,6 +14,8 @@ class Tetromino
     Tetromino(const Type type, const QColor &fillColor,
               const QColor &borderColor, const int row, const int column);
 
+    void clear();
+
     Type getType() const;
     int getRow() const;
     int getColumn() const;

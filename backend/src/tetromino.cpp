@@ -53,6 +53,12 @@ Tetromino::Tetromino(const Type type, const QColor &fillColor,
 }
 
 
+void Tetromino::clear()
+{
+  m_blocks.clear();
+}
+
+
 Tetromino::Type Tetromino::getType() const
 {
   return m_type;
