@@ -3,7 +3,9 @@
 
 #include "GhostTetromino.h"
 #include "KeyboardEventHandler.h"
+#include "MediaPlayer.h"
 #include "Playfield.h"
+#include <QFileInfo>
 #include <QObject>
 #include <QTimer>
 
@@ -25,6 +27,7 @@ class Tetrion : public QObject
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void loadGame();
     Q_INVOKABLE void resumeGame();
+    Q_INVOKABLE void stopGame();
 
     void processInput(const Key key, const KeyEvent keyEvent);
 
@@ -83,6 +86,10 @@ class Tetrion : public QObject
     int m_score {0};
     int m_highScore {0};
     bool m_isGameOver {false};
+    MediaPlayer m_mediaPlayer {
+        QFileInfo("resources/soundtrack/Optimum 125bpm Cminor song.mp3")
+            .absoluteFilePath()
+            .toStdString()};
 };
 
 #endif

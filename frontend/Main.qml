@@ -71,6 +71,7 @@ Window {
         scoreDisplay.visible = false
         highScoreDisplay.visible = false
         mainMenu.visible = true
+        tetrion.stopGame()
       }
 
       onQuitButtonClicked: {

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "$ENV{QTHOME}")
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -29,6 +29,8 @@ qt_add_executable(a.out
     backend/src/KeyboardEventHandler.cpp
     backend/headers/FileError.h
     backend/src/FileError.cpp
+    backend/headers/MediaPlayer.h
+    backend/src/MediaPlayer.cpp
 )
 
 qt_add_qml_module(a.out
@@ -66,7 +68,7 @@ set_target_properties(a.out PROPERTIES
 )
 
 target_link_libraries(a.out
-    PRIVATE Qt6::Quick)
+  PRIVATE Qt6::Quick Qt6::Multimedia)
 
 install(TARGETS a.out
     BUNDLE DESTINATION .
