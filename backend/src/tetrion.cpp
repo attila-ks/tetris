@@ -22,6 +22,9 @@ Tetrion::Tetrion() :
           &Tetrion::dropTetromino);
 
   loadHighScore();
+
+  m_mediaPlayer.setVolume(10);
+  m_mediaPlayer.setLoops(MediaPlayer::Infinite);
 }
 
 
@@ -63,26 +66,28 @@ int Tetrion::getHighScore() const
 
 void Tetrion::startGame()
 {
-  // FIXME: State is unnecessarily cleared for the first game!
   clear();
+  m_mediaPlayer.stop();
 
   m_nextTetromino = selectTetromino();
 
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
+  m_mediaPlayer.play();
 }
 
 
 void Tetrion::loadGame()
 {
-  // FIXME: State is unnecessarily cleared for the first game!
   clear();
+  m_mediaPlayer.stop();
 
   load();
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
+  m_mediaPlayer.play();
 }
 
 
@@ -90,6 +95,7 @@ void Tetrion::resumeGame()
 {
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
+  m_mediaPlayer.play();
 }
 
 
@@ -184,8 +190,7 @@ void Tetrion::checkGameOver()
   const int playfieldColumnCount = m_playfield.columnCount();
   for (int i = 0; i < playfieldColumnCount; ++i) {
     if (m_playfield.hasLandedBlockAt(1, i)) {
-      m_keyboardEventHandler.pause(true);
-      m_tetrominoDropTimer.stop();
+      m_mediaPlayer.stop();
       m_isGameOver = true;
       emit gameOver();
       break;
@@ -198,6 +203,7 @@ void Tetrion::pauseGame()
 {
   m_keyboardEventHandler.pause(true);
   m_tetrominoDropTimer.stop();
+  m_mediaPlayer.pause();
   emit gamePaused();
 }
 
