@@ -27,7 +27,6 @@ class Tetrion : public QObject
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void loadGame();
     Q_INVOKABLE void resumeGame();
-    Q_INVOKABLE void stopGame();
 
     void processInput(const Key key, const KeyEvent keyEvent);
 

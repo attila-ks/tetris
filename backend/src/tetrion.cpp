@@ -66,6 +66,9 @@ int Tetrion::getHighScore() const
 
 void Tetrion::startGame()
 {
+  clear();
+  m_mediaPlayer.stop();
+
   m_nextTetromino = selectTetromino();
 
   spawnTetromino();
@@ -77,6 +80,9 @@ void Tetrion::startGame()
 
 void Tetrion::loadGame()
 {
+  clear();
+  m_mediaPlayer.stop();
+
   load();
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
@@ -90,15 +96,6 @@ void Tetrion::resumeGame()
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
   m_mediaPlayer.play();
-}
-
-
-void Tetrion::stopGame()
-{
-  clear();
-  m_keyboardEventHandler.pause(true);
-  m_tetrominoDropTimer.stop();
-  m_mediaPlayer.stop();
 }
 
 
@@ -146,6 +143,9 @@ void Tetrion::handleTetrominoLanding()
   const int clearedRows = m_playfield.clearFilledRows();
 
   checkGameOver();
+  if (m_isGameOver) {
+    return;
+  }
 
   if (clearedRows > 0) {
     const float levelProgress = m_levelProgress + clearedRows * 0.1f;
@@ -193,7 +193,9 @@ void Tetrion::checkGameOver()
   const int playfieldColumnCount = m_playfield.columnCount();
   for (int i = 0; i < playfieldColumnCount; ++i) {
     if (m_playfield.hasLandedBlockAt(1, i)) {
-      stopGame();
+      m_keyboardEventHandler.pause(true);
+      m_tetrominoDropTimer.stop();
+      m_mediaPlayer.stop();
       m_isGameOver = true;
       emit gameOver();
       break;
