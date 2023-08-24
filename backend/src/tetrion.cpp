@@ -143,6 +143,9 @@ void Tetrion::handleTetrominoLanding()
   const int clearedRows = m_playfield.clearFilledRows();
 
   checkGameOver();
+  if (m_isGameOver) {
+    return;
+  }
 
   if (clearedRows > 0) {
     const float levelProgress = m_levelProgress + clearedRows * 0.1f;
