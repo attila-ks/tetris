@@ -14,9 +14,10 @@ class GhostTetromino : private Tetromino
 
     void move(Playfield &playfield);
 
+    void removeFrom(Playfield &playfield);
+
   private:
     void hardDrop(Playfield &playfield);
-    void removeFrom(Playfield &playfield);
 
     void copyFollowedTetrominoBlockPositions();
 

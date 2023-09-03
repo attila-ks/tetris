@@ -28,6 +28,16 @@ class Tetrion : public QObject
     Q_INVOKABLE void loadGame();
     Q_INVOKABLE void resumeGame();
 
+    Q_INVOKABLE void enableSound();
+    Q_INVOKABLE void disableSound();
+    Q_INVOKABLE bool isSoundEnabled() const;
+    Q_INVOKABLE void showGhostTetromino();
+    Q_INVOKABLE void hideGhostTetromino();
+    Q_INVOKABLE bool isGhostTetrominoVisible() const;
+    Q_INVOKABLE void showPlayfieldGrid();
+    Q_INVOKABLE void hidePlayfieldGrid();
+    Q_INVOKABLE bool isPlayfieldGridVisible() const;
+
     void processInput(const Key key, const KeyEvent keyEvent);
 
   signals:
@@ -38,6 +48,7 @@ class Tetrion : public QObject
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
     void scoreChanged(int score);
     void highScoreChanged(int highScore);
+    void playfieldGridVisibilityChanged(bool visible);
 
   private slots:
     void handleTetrominoLanding();
@@ -45,6 +56,7 @@ class Tetrion : public QObject
   private:
     void spawnTetromino();
     void dropTetromino();
+    void spawnGhostTetromino();
 
     void checkGameOver();
 
@@ -73,6 +85,9 @@ class Tetrion : public QObject
 
     void clear();
 
+    void playSound();
+    void stopSound();
+
     Playfield m_playfield {QColor {0x0e001f}};
     std::vector<Tetromino> m_bag;
     Tetromino m_currentTetromino;
@@ -89,6 +104,10 @@ class Tetrion : public QObject
         QFileInfo("resources/soundtrack/Optimum 125bpm Cminor song.mp3")
             .absoluteFilePath()
             .toStdString()};
+    bool m_isSoundEnabled {true};
+    bool m_isGhostTetrominoEnabled {true};
+    bool m_isGhostTetrominoEnabledChanged {false};
+    bool m_isPlayfieldGridVisible {true};
 };
 
 #endif

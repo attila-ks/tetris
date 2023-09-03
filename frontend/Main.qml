@@ -11,6 +11,11 @@ Window {
     visible: true
     title: "Tetris"
 
+    FontLoader {
+        id: fontLoader
+        source: "../resources/fonts/Streamster.ttf"
+    }
+
     Image {
         id: background
         source: "../resources/images/background.jpg"
@@ -44,38 +49,65 @@ Window {
             tetrion.loadGame()
         }
 
+        onSettingsButtonClicked: {
+            visible = false
+            settingsMenu.visible = true
+            settingsMenuCalledFromThis = true
+        }
+
         onQuitButtonClicked: {
             Qt.quit()
         }
     }
 
-   PauseMenu {
-      id: pauseMenu
-      visible: false
+    PauseMenu {
+        id: pauseMenu
+        visible: false
 
-      onResumeGameButtonClicked: {
-        visible = false
-        playfield.visible = true
-        levelDisplay.visible = true
-        nextTetrominoDisplay.visible = true
-        scoreDisplay.visible = true
-        highScoreDisplay.visible = true
-        tetrion.resumeGame()
-      }
+        onResumeGameButtonClicked: {
+            visible = false
+            playfield.visible = true
+            levelDisplay.visible = true
+            nextTetrominoDisplay.visible = true
+            scoreDisplay.visible = true
+            highScoreDisplay.visible = true
+            tetrion.resumeGame()
+        }
 
-      onMainMenuButtonClicked: {
-        visible = false
-        playfield.visible = false
-        levelDisplay.visible = false
-        nextTetrominoDisplay.visible = false
-        scoreDisplay.visible = false
-        highScoreDisplay.visible = false
-        mainMenu.visible = true
-      }
+        onMainMenuButtonClicked: {
+            visible = false
+            playfield.visible = false
+            levelDisplay.visible = false
+            nextTetrominoDisplay.visible = false
+            scoreDisplay.visible = false
+            highScoreDisplay.visible = false
+            mainMenu.visible = true
+        }
 
-      onQuitButtonClicked: {
-        Qt.quit()
-      }
+        onSettingsButtonClicked: {
+            visible = false
+            settingsMenu.visible = true
+        }
+
+        onQuitButtonClicked: {
+            Qt.quit()
+        }
+    }
+
+    SettingsMenu {
+        id: settingsMenu
+        visible: false
+        anchors.centerIn: parent
+
+        onBackButtonClicked: {
+            visible = false
+            if (mainMenu.settingsMenuCalledFromThis) {
+                mainMenu.settingsMenuCalledFromThis = false
+                mainMenu.visible = true
+            } else {
+                pauseMenu.visible = true
+            }
+        }
     }
 
     Playfield {
@@ -195,12 +227,12 @@ Window {
         }
 
         function onGamePaused() {
-          playfield.visible = false
-          levelDisplay.visible = false
-          nextTetrominoDisplay.visible = false
-          scoreDisplay.visible = false
-          highScoreDisplay.visible = false
-          pauseMenu.visible = true
+            playfield.visible = false
+            levelDisplay.visible = false
+            nextTetrominoDisplay.visible = false
+            scoreDisplay.visible = false
+            highScoreDisplay.visible = false
+            pauseMenu.visible = true
         }
 
         function onLevelIncreased(level) {

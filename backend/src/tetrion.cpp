@@ -67,35 +67,109 @@ int Tetrion::getHighScore() const
 void Tetrion::startGame()
 {
   clear();
-  m_mediaPlayer.stop();
+  stopSound();
 
   m_nextTetromino = selectTetromino();
 
   spawnTetromino();
+  spawnGhostTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
 }
 
 
 void Tetrion::loadGame()
 {
   clear();
-  m_mediaPlayer.stop();
+  stopSound();
 
   load();
   spawnTetromino();
+  spawnGhostTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
 }
 
 
 void Tetrion::resumeGame()
 {
+  if (m_isGhostTetrominoEnabledChanged) {
+    m_isGhostTetrominoEnabledChanged = false;
+    spawnGhostTetromino();
+  }
+
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
+}
+
+
+void Tetrion::enableSound()
+{
+  m_isSoundEnabled = true;
+}
+
+
+void Tetrion::disableSound()
+{
+  m_isSoundEnabled = false;
+}
+
+
+bool Tetrion::isSoundEnabled() const
+{
+  return m_isSoundEnabled;
+}
+
+
+void Tetrion::showGhostTetromino()
+{
+  if (!m_isGhostTetrominoEnabled) {
+    m_isGhostTetrominoEnabled = true;
+    m_isGhostTetrominoEnabledChanged = true;
+  }
+}
+
+
+void Tetrion::hideGhostTetromino()
+{
+  if (m_isGhostTetrominoEnabled) {
+    m_isGhostTetrominoEnabled = false;
+    m_ghostTetromino->removeFrom(m_playfield);
+    m_ghostTetromino.reset();
+  }
+}
+
+
+bool Tetrion::isGhostTetrominoVisible() const
+{
+  return m_isGhostTetrominoEnabled;
+}
+
+
+void Tetrion::showPlayfieldGrid()
+{
+  if (!m_isPlayfieldGridVisible) {
+    m_isPlayfieldGridVisible = true;
+    emit playfieldGridVisibilityChanged(true);
+  }
+}
+
+
+void Tetrion::hidePlayfieldGrid()
+{
+  if (m_isPlayfieldGridVisible) {
+    m_isPlayfieldGridVisible = false;
+    emit playfieldGridVisibilityChanged(false);
+  }
+}
+
+
+bool Tetrion::isPlayfieldGridVisible() const
+{
+  return m_isPlayfieldGridVisible;
 }
 
 
@@ -163,6 +237,7 @@ void Tetrion::handleTetrominoLanding()
   }
 
   spawnTetromino();
+  spawnGhostTetromino();
 }
 
 
@@ -173,9 +248,6 @@ void Tetrion::spawnTetromino()
   emit nextTetrominoChanged(getNextTetrominoImageUrl());
 
   m_currentTetromino.drawOn(m_playfield);
-
-  m_ghostTetromino.emplace(m_currentTetromino, QColor {0x0e001f});
-  m_ghostTetromino->drawOn(m_playfield);
 }
 
 
@@ -188,6 +260,15 @@ inline void Tetrion::dropTetromino()
 }
 
 
+void Tetrion::spawnGhostTetromino()
+{
+  if (m_isGhostTetrominoEnabled) {
+    m_ghostTetromino.emplace(m_currentTetromino, QColor {0x0e001f});
+    m_ghostTetromino->drawOn(m_playfield);
+  }
+}
+
+
 void Tetrion::checkGameOver()
 {
   const int playfieldColumnCount = m_playfield.columnCount();
@@ -195,7 +276,7 @@ void Tetrion::checkGameOver()
     if (m_playfield.hasLandedBlockAt(1, i)) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
-      m_mediaPlayer.stop();
+      stopSound();
       m_isGameOver = true;
       emit gameOver();
       break;
@@ -351,7 +432,9 @@ void Tetrion::save()
 
     ofstream ofstream {"tetrionMisc.txt"};
     if (ofstream) {
-      ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score;
+      ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score << ' '
+               << m_isSoundEnabled << ' ' << m_isGhostTetrominoEnabled << ' '
+               << m_isPlayfieldGridVisible;
     }
 
     if (!ofstream) {
@@ -395,7 +478,8 @@ void Tetrion::load()
       int level;
       float levelProgress;
       int score;
-      ifstream >> level >> levelProgress >> score;
+      ifstream >> level >> levelProgress >> score >> m_isSoundEnabled >>
+          m_isGhostTetrominoEnabled >> m_isPlayfieldGridVisible;
       setLevel(level);
       setLevelProgress(levelProgress);
       setScore(score);
@@ -450,6 +534,22 @@ inline void Tetrion::clear()
   setLevelProgress(0.0f);
   setScore(0);
   m_isGameOver = false;
+}
+
+
+void Tetrion::playSound()
+{
+  if (m_isSoundEnabled) {
+    m_mediaPlayer.play();
+  }
+}
+
+
+void Tetrion::stopSound()
+{
+  if (!m_isSoundEnabled) {
+    m_mediaPlayer.stop();
+  }
 }
 
 

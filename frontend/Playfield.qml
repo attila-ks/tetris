@@ -44,6 +44,20 @@ Frame {
                 border.color: model.borderColor
                 opacity: 0.9
             }
+
+            Connections {
+                target: tetrion
+
+                function onPlayfieldGridVisibilityChanged(visible) {
+                    if (visible) {
+                        grid.rowSpacing = 0.5
+                        grid.columnSpacing = 0.5
+                    } else {
+                        grid.rowSpacing = 0
+                        grid.columnSpacing = 0
+                    }
+                }
+            }
         }
     }
 }
