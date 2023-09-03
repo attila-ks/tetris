@@ -67,27 +67,27 @@ int Tetrion::getHighScore() const
 void Tetrion::startGame()
 {
   clear();
-  m_mediaPlayer.stop();
+  stopSound();
 
   m_nextTetromino = selectTetromino();
 
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
 }
 
 
 void Tetrion::loadGame()
 {
   clear();
-  m_mediaPlayer.stop();
+  stopSound();
 
   load();
   spawnTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
 }
 
 
@@ -95,7 +95,25 @@ void Tetrion::resumeGame()
 {
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
-  m_mediaPlayer.play();
+  playSound();
+}
+
+
+void Tetrion::enableSound()
+{
+  m_isSoundEnabled = true;
+}
+
+
+void Tetrion::disableSound()
+{
+  m_isSoundEnabled = false;
+}
+
+
+bool Tetrion::isSoundEnabled() const
+{
+  return m_isSoundEnabled;
 }
 
 
@@ -195,7 +213,7 @@ void Tetrion::checkGameOver()
     if (m_playfield.hasLandedBlockAt(1, i)) {
       m_keyboardEventHandler.pause(true);
       m_tetrominoDropTimer.stop();
-      m_mediaPlayer.stop();
+      stopSound();
       m_isGameOver = true;
       emit gameOver();
       break;
@@ -351,7 +369,8 @@ void Tetrion::save()
 
     ofstream ofstream {"tetrionMisc.txt"};
     if (ofstream) {
-      ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score;
+      ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score << ' '
+               << m_isSoundEnabled;
     }
 
     if (!ofstream) {
@@ -395,7 +414,7 @@ void Tetrion::load()
       int level;
       float levelProgress;
       int score;
-      ifstream >> level >> levelProgress >> score;
+      ifstream >> level >> levelProgress >> score >> m_isSoundEnabled;
       setLevel(level);
       setLevelProgress(levelProgress);
       setScore(score);
@@ -450,6 +469,22 @@ inline void Tetrion::clear()
   setLevelProgress(0.0f);
   setScore(0);
   m_isGameOver = false;
+}
+
+
+void Tetrion::playSound()
+{
+  if (m_isSoundEnabled) {
+    m_mediaPlayer.play();
+  }
+}
+
+
+void Tetrion::stopSound()
+{
+  if (!m_isSoundEnabled) {
+    m_mediaPlayer.stop();
+  }
 }
 
 

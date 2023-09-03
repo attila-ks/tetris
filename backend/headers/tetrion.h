@@ -28,6 +28,10 @@ class Tetrion : public QObject
     Q_INVOKABLE void loadGame();
     Q_INVOKABLE void resumeGame();
 
+    Q_INVOKABLE void enableSound();
+    Q_INVOKABLE void disableSound();
+    Q_INVOKABLE bool isSoundEnabled() const;
+
     void processInput(const Key key, const KeyEvent keyEvent);
 
   signals:
@@ -73,6 +77,9 @@ class Tetrion : public QObject
 
     void clear();
 
+    void playSound();
+    void stopSound();
+
     Playfield m_playfield {QColor {0x0e001f}};
     std::vector<Tetromino> m_bag;
     Tetromino m_currentTetromino;
@@ -89,6 +96,7 @@ class Tetrion : public QObject
         QFileInfo("resources/soundtrack/Optimum 125bpm Cminor song.mp3")
             .absoluteFilePath()
             .toStdString()};
+    bool m_isSoundEnabled {true};
 };
 
 #endif

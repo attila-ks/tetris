@@ -44,6 +44,12 @@ Window {
             tetrion.loadGame()
         }
 
+        onSettingsButtonClicked: {
+            visible = false
+            settingsMenu.visible = true
+            settingsMenuCalledFromThis = true
+        }
+
         onQuitButtonClicked: {
             Qt.quit()
         }
@@ -73,9 +79,30 @@ Window {
         mainMenu.visible = true
       }
 
+      onSettingsButtonClicked: {
+        visible = false
+        settingsMenu.visible = true
+      }
+
       onQuitButtonClicked: {
         Qt.quit()
       }
+    }
+
+    SettingsMenu {
+        id: settingsMenu
+        visible: false
+        anchors.centerIn: parent
+
+        onBackButtonClicked: {
+            visible = false
+            if (mainMenu.settingsMenuCalledFromThis) {
+                mainMenu.settingsMenuCalledFromThis = false
+                mainMenu.visible = true
+            } else {
+                pauseMenu.visible = true
+            }
+        }
     }
 
     Playfield {

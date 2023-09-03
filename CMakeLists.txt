@@ -47,6 +47,8 @@ qt_add_qml_module(a.out
         frontend/NextTetrominoDisplay.qml
         frontend/InfoDisplay.qml
         frontend/PauseMenu.qml
+        frontend/SettingsMenu.qml
+        frontend/CustomCheckBox.qml
     RESOURCES
         resources/images/background.jpg
         resources/fonts/Streamster.ttf
@@ -57,6 +59,7 @@ qt_add_qml_module(a.out
         resources/images/tetrominoes/Tetromino-S.svg
         resources/images/tetrominoes/Tetromino-T.svg
         resources/images/tetrominoes/Tetromino-Z.svg
+        resources/icons/done_black_24dp.svg
 )
 
 set_target_properties(a.out PROPERTIES

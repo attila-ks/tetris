@@ -24,7 +24,7 @@
 
 ## Settings
 
-- [ ] Turn the sound on and off
+- [x] Turn the sound on and off
 - [ ] Change the keyboard settings
 - [ ] Reset the keyboard settings
 - [ ] Turn the ghost tetromino display on and off
