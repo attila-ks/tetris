@@ -60,38 +60,38 @@ Window {
         }
     }
 
-   PauseMenu {
-      id: pauseMenu
-      visible: false
+    PauseMenu {
+        id: pauseMenu
+        visible: false
 
-      onResumeGameButtonClicked: {
-        visible = false
-        playfield.visible = true
-        levelDisplay.visible = true
-        nextTetrominoDisplay.visible = true
-        scoreDisplay.visible = true
-        highScoreDisplay.visible = true
-        tetrion.resumeGame()
-      }
+        onResumeGameButtonClicked: {
+            visible = false
+            playfield.visible = true
+            levelDisplay.visible = true
+            nextTetrominoDisplay.visible = true
+            scoreDisplay.visible = true
+            highScoreDisplay.visible = true
+            tetrion.resumeGame()
+        }
 
-      onMainMenuButtonClicked: {
-        visible = false
-        playfield.visible = false
-        levelDisplay.visible = false
-        nextTetrominoDisplay.visible = false
-        scoreDisplay.visible = false
-        highScoreDisplay.visible = false
-        mainMenu.visible = true
-      }
+        onMainMenuButtonClicked: {
+            visible = false
+            playfield.visible = false
+            levelDisplay.visible = false
+            nextTetrominoDisplay.visible = false
+            scoreDisplay.visible = false
+            highScoreDisplay.visible = false
+            mainMenu.visible = true
+        }
 
-      onSettingsButtonClicked: {
-        visible = false
-        settingsMenu.visible = true
-      }
+        onSettingsButtonClicked: {
+            visible = false
+            settingsMenu.visible = true
+        }
 
-      onQuitButtonClicked: {
-        Qt.quit()
-      }
+        onQuitButtonClicked: {
+            Qt.quit()
+        }
     }
 
     SettingsMenu {
@@ -227,12 +227,12 @@ Window {
         }
 
         function onGamePaused() {
-          playfield.visible = false
-          levelDisplay.visible = false
-          nextTetrominoDisplay.visible = false
-          scoreDisplay.visible = false
-          highScoreDisplay.visible = false
-          pauseMenu.visible = true
+            playfield.visible = false
+            levelDisplay.visible = false
+            nextTetrominoDisplay.visible = false
+            scoreDisplay.visible = false
+            highScoreDisplay.visible = false
+            pauseMenu.visible = true
         }
 
         function onLevelIncreased(level) {
