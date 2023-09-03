@@ -11,6 +11,11 @@ Window {
     visible: true
     title: "Tetris"
 
+    FontLoader {
+        id: fontLoader
+        source: "../resources/fonts/Streamster.ttf"
+    }
+
     Image {
         id: background
         source: "../resources/images/background.jpg"

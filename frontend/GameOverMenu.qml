@@ -8,14 +8,6 @@ Item {
     signal loadGameButtonClicked
     signal quitButtonClicked
 
-    // TODO: Investigate whether using multiple FontLoaders affects performance,
-    // and if so, how to load just one and use it everywhere it needed? Because
-    // there are multiple FontLoader now.
-    FontLoader {
-        id: fontLoader
-        source: "../resources/fonts/Streamster.ttf"
-    }
-
     // TODO: Add drop shadow.
     Text {
         id: title
