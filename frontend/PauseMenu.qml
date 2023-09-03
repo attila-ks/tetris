@@ -6,6 +6,7 @@ Item {
 
     signal resumeGameButtonClicked
     signal mainMenuButtonClicked
+    signal settingsButtonClicked
     signal quitButtonClicked
 
     Text {
@@ -51,6 +52,8 @@ Item {
         font.letterSpacing: 8
         anchors.horizontalCenter: parent.horizontalCenter
         y: mainMenuButton.y + 48
+
+        onClicked: parent.settingsButtonClicked()
     }
 
     TextButton {
