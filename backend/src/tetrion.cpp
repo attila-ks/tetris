@@ -145,6 +145,30 @@ bool Tetrion::isGhostTetrominoVisible() const
 }
 
 
+void Tetrion::showPlayfieldGrid()
+{
+  if (!m_isPlayfieldGridVisible) {
+    m_isPlayfieldGridVisible = true;
+    emit playfieldGridVisibilityChanged(true);
+  }
+}
+
+
+void Tetrion::hidePlayfieldGrid()
+{
+  if (m_isPlayfieldGridVisible) {
+    m_isPlayfieldGridVisible = false;
+    emit playfieldGridVisibilityChanged(false);
+  }
+}
+
+
+bool Tetrion::isPlayfieldGridVisible() const
+{
+  return m_isPlayfieldGridVisible;
+}
+
+
 void Tetrion::processInput(const Key key, const KeyEvent keyEvent)
 {
   // FIXME: Movement keys are duplicated: here and in the
@@ -405,7 +429,8 @@ void Tetrion::save()
     ofstream ofstream {"tetrionMisc.txt"};
     if (ofstream) {
       ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score << ' '
-               << m_isSoundEnabled << ' ' << m_isGhostTetrominoEnabled;
+               << m_isSoundEnabled << ' ' << m_isGhostTetrominoEnabled << ' '
+               << m_isPlayfieldGridVisible;
     }
 
     if (!ofstream) {
@@ -450,7 +475,7 @@ void Tetrion::load()
       float levelProgress;
       int score;
       ifstream >> level >> levelProgress >> score >> m_isSoundEnabled >>
-          m_isGhostTetrominoEnabled;
+          m_isGhostTetrominoEnabled >> m_isPlayfieldGridVisible;
       setLevel(level);
       setLevelProgress(levelProgress);
       setScore(score);

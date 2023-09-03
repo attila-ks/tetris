@@ -66,7 +66,7 @@ Item {
 
         CustomCheckBox {
             text: "Display Grid"
-            checked: true
+            checked: tetrion.isPlayfieldGridVisible()
             borderColor: "#16faff"
             fillColor: "transparent"
             checkMarkColor: "#16faff"
@@ -74,6 +74,14 @@ Item {
             font.family: fontLoader.font.family
             font.pixelSize: 17
             font.letterSpacing: 5
+
+            onCheckStateChanged: {
+                if (checked) {
+                    tetrion.showPlayfieldGrid()
+                } else {
+                    tetrion.hidePlayfieldGrid()
+                }
+            }
         }
 
     }

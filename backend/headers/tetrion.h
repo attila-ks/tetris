@@ -34,6 +34,9 @@ class Tetrion : public QObject
     Q_INVOKABLE void showGhostTetromino();
     Q_INVOKABLE void hideGhostTetromino();
     Q_INVOKABLE bool isGhostTetrominoVisible() const;
+    Q_INVOKABLE void showPlayfieldGrid();
+    Q_INVOKABLE void hidePlayfieldGrid();
+    Q_INVOKABLE bool isPlayfieldGridVisible() const;
 
     void processInput(const Key key, const KeyEvent keyEvent);
 
@@ -45,6 +48,7 @@ class Tetrion : public QObject
     void nextTetrominoChanged(QUrl nextTetrominoImageUrl);
     void scoreChanged(int score);
     void highScoreChanged(int highScore);
+    void playfieldGridVisibilityChanged(bool visible);
 
   private slots:
     void handleTetrominoLanding();
@@ -103,6 +107,7 @@ class Tetrion : public QObject
     bool m_isSoundEnabled {true};
     bool m_isGhostTetrominoEnabled {true};
     bool m_isGhostTetrominoEnabledChanged {false};
+    bool m_isPlayfieldGridVisible {true};
 };
 
 #endif
