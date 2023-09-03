@@ -40,6 +40,9 @@ CMakeLists.txt.user
 .xdp-.*
 build/
 .cache/
+cmake_build_Release/
+compile_commands.json
+save/
 
 # qtcreator generated files
 *.pro.user*
