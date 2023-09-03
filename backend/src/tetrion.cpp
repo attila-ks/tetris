@@ -126,16 +126,20 @@ bool Tetrion::isSoundEnabled() const
 
 void Tetrion::showGhostTetromino()
 {
-  m_isGhostTetrominoEnabled = true;
-  m_isGhostTetrominoEnabledChanged = true;
+  if (!m_isGhostTetrominoEnabled) {
+    m_isGhostTetrominoEnabled = true;
+    m_isGhostTetrominoEnabledChanged = true;
+  }
 }
 
 
 void Tetrion::hideGhostTetromino()
 {
-  m_isGhostTetrominoEnabled = false;
-  m_ghostTetromino->removeFrom(m_playfield);
-  m_ghostTetromino.reset();
+  if (m_isGhostTetrominoEnabled) {
+    m_isGhostTetrominoEnabled = false;
+    m_ghostTetromino->removeFrom(m_playfield);
+    m_ghostTetromino.reset();
+  }
 }
 
 
