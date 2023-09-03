@@ -31,6 +31,9 @@ class Tetrion : public QObject
     Q_INVOKABLE void enableSound();
     Q_INVOKABLE void disableSound();
     Q_INVOKABLE bool isSoundEnabled() const;
+    Q_INVOKABLE void showGhostTetromino();
+    Q_INVOKABLE void hideGhostTetromino();
+    Q_INVOKABLE bool isGhostTetrominoVisible() const;
 
     void processInput(const Key key, const KeyEvent keyEvent);
 
@@ -49,6 +52,7 @@ class Tetrion : public QObject
   private:
     void spawnTetromino();
     void dropTetromino();
+    void spawnGhostTetromino();
 
     void checkGameOver();
 
@@ -97,6 +101,8 @@ class Tetrion : public QObject
             .absoluteFilePath()
             .toStdString()};
     bool m_isSoundEnabled {true};
+    bool m_isGhostTetrominoEnabled {true};
+    bool m_isGhostTetrominoEnabledChanged {false};
 };
 
 #endif

@@ -72,6 +72,7 @@ void Tetrion::startGame()
   m_nextTetromino = selectTetromino();
 
   spawnTetromino();
+  spawnGhostTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
   playSound();
@@ -85,6 +86,7 @@ void Tetrion::loadGame()
 
   load();
   spawnTetromino();
+  spawnGhostTetromino();
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
   playSound();
@@ -93,6 +95,11 @@ void Tetrion::loadGame()
 
 void Tetrion::resumeGame()
 {
+  if (m_isGhostTetrominoEnabledChanged) {
+    m_isGhostTetrominoEnabledChanged = false;
+    spawnGhostTetromino();
+  }
+
   m_keyboardEventHandler.pause(false);
   m_tetrominoDropTimer.start();
   playSound();
@@ -114,6 +121,27 @@ void Tetrion::disableSound()
 bool Tetrion::isSoundEnabled() const
 {
   return m_isSoundEnabled;
+}
+
+
+void Tetrion::showGhostTetromino()
+{
+  m_isGhostTetrominoEnabled = true;
+  m_isGhostTetrominoEnabledChanged = true;
+}
+
+
+void Tetrion::hideGhostTetromino()
+{
+  m_isGhostTetrominoEnabled = false;
+  m_ghostTetromino->removeFrom(m_playfield);
+  m_ghostTetromino.reset();
+}
+
+
+bool Tetrion::isGhostTetrominoVisible() const
+{
+  return m_isGhostTetrominoEnabled;
 }
 
 
@@ -181,6 +209,7 @@ void Tetrion::handleTetrominoLanding()
   }
 
   spawnTetromino();
+  spawnGhostTetromino();
 }
 
 
@@ -191,9 +220,6 @@ void Tetrion::spawnTetromino()
   emit nextTetrominoChanged(getNextTetrominoImageUrl());
 
   m_currentTetromino.drawOn(m_playfield);
-
-  m_ghostTetromino.emplace(m_currentTetromino, QColor {0x0e001f});
-  m_ghostTetromino->drawOn(m_playfield);
 }
 
 
@@ -202,6 +228,15 @@ inline void Tetrion::dropTetromino()
   m_currentTetromino.moveDown(m_playfield);
   if (m_currentTetromino.isLanded()) {
     handleTetrominoLanding();
+  }
+}
+
+
+void Tetrion::spawnGhostTetromino()
+{
+  if (m_isGhostTetrominoEnabled) {
+    m_ghostTetromino.emplace(m_currentTetromino, QColor {0x0e001f});
+    m_ghostTetromino->drawOn(m_playfield);
   }
 }
 
@@ -370,7 +405,7 @@ void Tetrion::save()
     ofstream ofstream {"tetrionMisc.txt"};
     if (ofstream) {
       ofstream << m_level << ' ' << m_levelProgress << ' ' << m_score << ' '
-               << m_isSoundEnabled;
+               << m_isSoundEnabled << ' ' << m_isGhostTetrominoEnabled;
     }
 
     if (!ofstream) {
@@ -414,7 +449,8 @@ void Tetrion::load()
       int level;
       float levelProgress;
       int score;
-      ifstream >> level >> levelProgress >> score >> m_isSoundEnabled;
+      ifstream >> level >> levelProgress >> score >> m_isSoundEnabled >>
+          m_isGhostTetrominoEnabled;
       setLevel(level);
       setLevelProgress(levelProgress);
       setScore(score);

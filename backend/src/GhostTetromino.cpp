@@ -38,6 +38,19 @@ void GhostTetromino::move(Playfield &playfield)
 }
 
 
+void GhostTetromino::removeFrom(Playfield &playfield)
+{
+  for (const Block &block : m_blocks) {
+    const int row = block.getRow();
+    const int column = block.getColumn();
+    if (playfield.hasBlockAt(row, column) &&
+        playfield(row, column).getType() == Block::Type::Ghost) {
+      playfield.removeBlock(row, column);
+    }
+  }
+}
+
+
 void GhostTetromino::hardDrop(Playfield &playfield)
 {
   const int bottom = playfield.rowCount();
@@ -55,19 +68,6 @@ void GhostTetromino::hardDrop(Playfield &playfield)
       m_row += i;
       removeFrom(playfield);
       break;
-    }
-  }
-}
-
-
-void GhostTetromino::removeFrom(Playfield &playfield)
-{
-  for (const Block &block : m_blocks) {
-    const int row = block.getRow();
-    const int column = block.getColumn();
-    if (playfield.hasBlockAt(row, column) &&
-        playfield(row, column).getType() == Block::Type::Ghost) {
-      playfield.removeBlock(row, column);
     }
   }
 }

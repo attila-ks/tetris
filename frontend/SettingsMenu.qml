@@ -46,7 +46,7 @@ Item {
 
         CustomCheckBox {
             text: "Display Ghost Tetromino"
-            checked: true
+            checked: tetrion.isGhostTetrominoVisible()
             borderColor: "#16faff"
             fillColor: "transparent"
             checkMarkColor: "#16faff"
@@ -54,6 +54,14 @@ Item {
             font.family: fontLoader.font.family
             font.pixelSize: 17
             font.letterSpacing: 5
+
+            onCheckStateChanged: {
+                if (checked) {
+                    tetrion.showGhostTetromino()
+                } else {
+                    tetrion.hideGhostTetromino()
+                }
+            }
         }
 
         CustomCheckBox {
